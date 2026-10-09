@@ -1,0 +1,50 @@
+# Templates are authored expert judgment, versioned as product assets. The template drives the
+# outline; the corpus never defines scope.
+#
+# PROVISIONAL v1 — landed under autonomous-run rules 2026-07-17; operator review by exception pending.
+# Fill modes: corpus | recommend | operator | structural | informational.
+
+template: hr-policy-handbook
+version: 1
+ruled: "2026-07-17"
+title: HR Policy Handbook
+deliverable: hr-handbook
+applies_to: [PEOPLE-07, PEOPLE-08]
+default_mode: artifact   # MODE MATRIX (operator-ruled 2026-07-18); per-company default, subject to generation-time mode_conditions.
+# professional_review ruled HR for PEOPLE-07; attorney logged as the ruled ALTERNATIVE (operator, 2026-07-18).
+professional_review: hr
+
+exclusions:
+  - No benchmark pass/fail values — never present a "good/bad" threshold as a judgment.
+  - No internal reference-model language (B-##, band names, tile ids) in customer documents.
+  - No padding metrics or filler — every element earns its place.
+
+sections:
+  - id: leave-pto
+    title: Leave & PTO
+    fill_mode: [recommend, operator]
+    required_content:
+      - Vacation/PTO, sick leave, holidays, parental-leave posture (a "state program + unpaid supplement" posture qualifies).
+    conditionality: Jurisdiction-conditional — counsel-confirm state minimums; do NOT assert a legal threshold.
+  - id: at-will
+    title: At-will employment statement
+    fill_mode: [operator]
+    required_content:
+      - At-will policy text (signed instruments route to Legal; template-only here).
+  - id: anti-harassment
+    title: Anti-harassment & anti-discrimination
+    fill_mode: [recommend, operator]
+    required_content:
+      - Policy with a defined complaint/reporting channel.
+    conditionality: Written-policy and training mandates are jurisdiction-conditional (counsel-confirm).
+  - id: confidentiality
+    title: Confidentiality expectations
+    fill_mode: [recommend]
+    required_content:
+      - A confidentiality-expectations policy statement.
+  - id: decisions-required
+    title: Decisions required
+    fill_mode: [structural]
+    required_content:
+      - Aggregate every per-company decision as a plain-language question.
+    conditionality: Always present.

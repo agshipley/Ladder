@@ -1,0 +1,44 @@
+# Templates are authored expert judgment, versioned as product assets. The template drives the
+# outline; the corpus never defines scope.
+#
+# PROVISIONAL v1 — landed under autonomous-run rules 2026-07-17; operator review by exception pending.
+# Fill modes: corpus | recommend | operator | structural | informational.
+
+template: operating-runbooks
+version: 1
+ruled: "2026-07-17"
+title: Core Operating Runbooks (SOP set)
+deliverable: runbooks
+applies_to: [OPS-04]
+default_mode: artifact   # MODE MATRIX (operator-ruled 2026-07-18); per-company default, subject to generation-time mode_conditions.
+# NOTE: OPS-04 operator-ruled for disaggregation; NOT split unilaterally here — proposed split is in the round-2 report; template left single until ruled.
+professional_review: none
+
+exclusions:
+  - No benchmark pass/fail values — never present a "good/bad" threshold as a judgment.
+  - No internal reference-model language (B-##, band names, tile ids) in customer documents.
+  - No padding metrics or filler — every element earns its place.
+
+sections:
+  - id: process-inventory
+    title: Load-bearing process inventory
+    fill_mode: [corpus, operator]
+    required_content:
+      - The handful of operations the business actually depends on (e.g. release/deploy, onboarding, incident, on/offboarding).
+    conditionality: Load-bearing is stage-scoped — which processes are load-bearing for this stage is an operator call.
+  - id: runbooks
+    title: Written runbooks
+    fill_mode: [corpus, recommend]
+    required_content:
+      - A written SOP per load-bearing process (how we do X).
+  - id: owner-currency
+    title: Owner & currency
+    fill_mode: [structural]
+    required_content:
+      - Named owner (from the ownership map) and last-reviewed date on each process artifact.
+  - id: decisions-required
+    title: Decisions required
+    fill_mode: [structural]
+    required_content:
+      - Aggregate every per-company decision as a plain-language question.
+    conditionality: Always present.

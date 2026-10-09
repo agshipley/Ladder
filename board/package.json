@@ -1,0 +1,27 @@
+{
+  "name": "ladder-maturity-board",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Thin, replaceable tile-board view over the classifier results store.",
+  "scripts": {
+    "gen": "node build-data.mjs && node build-review-html.mjs",
+    "dev": "npm run gen && vite",
+    "build": "npm run gen && vite build",
+    "preview": "vite preview",
+    "gen:review": "node build-review-html.mjs"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.6.3",
+    "vite": "^6.0.3",
+    "yaml": "^2.6.1"
+  },
+  "dependencies": {
+    "docx": "9.7.1"
+  }
+}

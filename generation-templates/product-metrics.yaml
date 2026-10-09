@@ -1,0 +1,53 @@
+# Templates are authored expert judgment, versioned as product assets. The template drives the
+# outline; the corpus never defines scope.
+#
+# PROVISIONAL v1 — landed under autonomous-run rules 2026-07-17; operator review by exception pending.
+# Fill modes: corpus | recommend | operator | structural | informational.
+
+template: product-metrics
+version: 1
+ruled: "2026-07-17"
+title: Product Metrics & Analytics Definitions
+deliverable: product-metrics
+applies_to: [PRODUCT-05]
+default_mode: artifact   # MODE MATRIX (operator-ruled 2026-07-18); per-company default, subject to generation-time mode_conditions.
+professional_review: none
+
+exclusions:
+  - No benchmark pass/fail values — never present a "good/bad" threshold as a judgment.
+  - No internal reference-model language (B-##, band names, tile ids) in customer documents.
+  - No padding metrics or filler — every element earns its place.
+
+sections:
+  - id: purpose-ownership
+    title: Purpose & ownership
+    fill_mode: [operator]
+    required_content:
+      - Who owns product metrics and the review cadence.
+  - id: instrumentation
+    title: Instrumentation state
+    fill_mode: [corpus]
+    required_content:
+      - What event tracking is wired into the product so behavior is measurable.
+  - id: north-star
+    title: Primary product metric (North Star)
+    fill_mode: [corpus, recommend, operator]
+    required_content:
+      - A value-expressing, leading, non-vanity primary metric with its named input metrics (the North-Star tree).
+    conditionality: The company's actual North Star is an operator choice — propose candidates, do not pick one.
+  - id: metric-definitions
+    title: Metric definitions
+    fill_mode: [corpus, operator]
+    required_content:
+      - What "active" means; the cohort behind each dashboard number, written down.
+  - id: vanity-exclusions
+    title: Vanity-metric exclusions
+    fill_mode: [recommend]
+    required_content:
+      - What is explicitly NOT tracked as a value metric.
+  - id: decisions-required
+    title: Decisions required
+    fill_mode: [structural]
+    required_content:
+      - Aggregate every per-company decision as a plain-language question.
+    conditionality: Always present.

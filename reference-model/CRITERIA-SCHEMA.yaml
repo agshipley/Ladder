@@ -1,0 +1,1880 @@
+# ============================================================================
+# CRITERIA-SCHEMA.yaml  --  SCHEMA OF RECORD  v1.5  (2026-07-15)
+# v1.5 (2026-07-15): GTM v2 — GTM-01..06 retired, GTM-07..22 landed (operator-ruled
+#   decomposition); sdr-loop-ready inputs remapped; fixture targets remapped.
+# v1.4 (2026-07-15): definitions +rollup precedence (v3); naming note; FIN-06 v1.1,
+#   FIN-07 v1.1, AIOPS-02 v1.1, COMP-01 v1.2 (operator-ruled amendments); rollup v3.1;
+#   FIN-08 v1.2; fixture set n=56 (FX-34/35/36/37 element-grain re-rules, FX-53..56 added).
+# v1.3 (2026-07-11): +config-present-not-flowing trigger (ENG-07 tool-present->thin,
+#   parallels interim-tool-thin), referenced by ENG-07 -- completes the closure-encoding
+#   sweep post-v1.2. No criterion prose changed.
+# v1.2 (2026-07-11): closure-encoding of already-ruled dispositions as resolvable
+#   definitions (8 new triggers) so they reach the judge's definitions closure --
+#   inactive-licensure-sector (LEGAL-01), current-assessment-green (FIN-08),
+#   contradicted-artifact (ENG-01/PEOPLE-08), + sweep (GTM-11, CAP-01, COMP-01,
+#   PEOPLE-01, LEGAL-04); B-11 exclusion-class->placeholder mapping made explicit;
+#   PEOPLE-04 gains B-11/exclusion-class refs. No criterion prose changed.
+# Status: RULED -- schema of record; POPULATED byte-verbatim (9E-b, 2026-07-11); briefs point here.
+# v1.1 (9E-b fixture review, 2026-07-11): added `thin` state (board->orange); criterion
+# amendments to COMP-01, PEOPLE-01, CAP-01, LEGAL-04, FIN-08, GTM-11 (per-entry version v1.1).
+# Binding authority: reference-model/CRITERIA-YAML-FIDELITY.md (v3, RULED 2026-07-10).
+# Ruling: operator APPROVED AS AMENDED 2026-07-10. Amendment JC-1 (references
+#   admits four token classes) + conformance notes N1 (LINT-2 scope) and
+#   N2 (byte-verbatim population rule) baked in below.
+# ----------------------------------------------------------------------------
+# Structure only what a clerk could fill in without judgment; everything else is prose.
+# ============================================================================
+#
+# READING THE SCHEMA
+# ------------------
+# criterion: prose is NORMATIVE and carried VERBATIM. It is never translated
+# into structured fields. The structured fields are addressability handles for
+# a judgment layer (LLM judge reading the prose), not a replacement for it.
+# The line sits at "decidable without judgment": states/triggers/grain are the
+# deterministic layer; the prose + judge is the judgment layer.
+#
+# PER-SUBCATEGORY FIELD SET (closed -- these ten, nothing more; see LINT-4)
+# ------------------------------------------------------------------------
+#   id            stable subcategory ID (e.g. GTM-11); never renumbered
+#   criterion     verbatim-normative prose (block scalar); the sole handle the
+#                 judge scores against
+#   state         alias to the ONE definitions.state_vocabulary; which states
+#                 are reachable is governed by conditionality (STATE-REACH rule),
+#                 not by a per-entry subset
+#   grain         detection grain: per-subcategory (default) | whole-artifact
+#   conditionality  class: unconditional | stage-conditional | covenant-conditional
+#                 | context-conditional | trigger-conditional | informational
+#   references    list of registry tokens. Per JC-1 (ruled 2026-07-10) references
+#                 admits EXACTLY FOUR token classes: B-numbers, T-codes,
+#                 trigger/derivation keys, and entry IDs (e.g. GTM-07). Every
+#                 token MUST resolve per LINT-1; any other class => failure.
+#   signals       non-normative recall backstop ONLY. Never scores presence;
+#                 sole diagnostic use is the exhaustion sweep (fidelity Sec.6)
+#   provenance    authority-backed | expert-authored | corpus-observed |
+#                 operator-authored | mixed(<a>/<b>)
+#   refresh       list of refresh flags, e.g. [refresh: calibration-run]; [] if none
+#   version       per-entry criterion version, vX.Y; bumps when prose is amended
+#
+# NON-ASSUMPTION (recorded per fidelity Sec.2, constraint C6)
+# ----------------------------------------------------------
+# one-call-per-subcategory is a COST MODEL for absence/thinness detection ONLY.
+# Inconsistency detection is cross-entry (e.g. GTM-10 messaging vs GTM-08
+# positioning) and needs a different call shape. This schema MUST NOT foreclose
+# that shape: entries are individually addressable AND co-addressable by id set.
+# No field here assumes the single-entry call is the only call.
+#
+# SINGLE NORMATIVE COPY (NOTED, not implemented here -- fidelity Sec.3 / C7)
+# -------------------------------------------------------------------------
+# From the 9E-b landing forward, the criterion: prose in this file becomes the
+# SOLE normative copy; each brief's criterion text is replaced by a pointer
+# "Normative criterion text: CRITERIA.yaml <id> (as of vX.Y)." THIS SCHEMA
+# CHANGES NO BRIEFS and creates no pointers. It is schema + one illustrative
+# category only.
+#
+# LANDING PROCEDURE (N2, ruled 2026-07-10) -- population is 9E-b's job
+# -------------------------------------------------------------------
+# At 9E-b population, criterion text is lifted BYTE-VERBATIM UTF-8 from each
+# brief and identity-checked in the landing commit BEFORE any brief is converted
+# to a pointer. The v0.1 GTM illustration below is ASCII-TRANSLITERATED and
+# NON-NORMATIVE; it does NOT satisfy this rule and is re-lifted at population.
+#
+# RESOLUTION CLOSURE + LINT RULES (fidelity Sec.4 / C5)
+# ----------------------------------------------------
+# The harness assembles each call as: the subcategory entry + every definition
+# reachable from its references: (closure). Closure is computed, never guessed.
+#   LINT-1 (closure)     every token in any references: MUST resolve. Per JC-1:
+#                        B-numbers / T-codes / trigger keys / derivation keys
+#                        resolve against definitions:; entry IDs resolve against
+#                        the categories: tree. A token of any other class, or an
+#                        unresolvable token, => COMMIT-TIME FAILURE, never a
+#                        runtime guess.
+#   LINT-2 (prose-field) structured fields are checked against the embedded prose
+#                        for the ENUMERATED token classes ONLY (B-numbers and
+#                        trigger keys): if criterion: names one (e.g. "B-9",
+#                        "physical footprint", "SDR-loop prereq"), the matching
+#                        token MUST appear in references:. Mismatch => failure.
+#                        (N1) Brief-side pointers in prose (e.g. "see Conflict
+#                        C-2") are canonical brief references, NOT schema tokens,
+#                        and never trip LINT-2.
+#   LINT-3 (state-once)  state: MUST alias definitions.state_vocabulary; any inline
+#                        or per-entry state definition => failure (enforces C4).
+#   LINT-4 (field-creep) any key on a subcategory entry outside the closed ten-field
+#                        set => failure. (Armed guard: field-creep, as a lint.)
+#   STATE-REACH          the states an entry may emit are derived from its
+#                        conditionality class (e.g. trigger-conditional admits
+#                        documented-n-a / placeholder; informational admits only
+#                        informational), NOT declared per entry. `thin` (v1.1) is
+#                        reachable by every SCORED entry (stage/trigger/covenant/
+#                        context-conditional); informational entries emit only
+#                        informational.
+
+# ============================================================================
+# definitions:  --  referents exist ONCE here; no per-subcategory inlining (C4)
+# ============================================================================
+# Naming (operator-ruled 2026-07-15): "CRITERIA.yaml" is the
+# doctrinal short name for this file (per the ruled fidelity
+# position); "CRITERIA-SCHEMA.yaml" is the filename. Both refer
+# here. Existing references in either form are correct; no
+# reconciliation required.
+definitions:
+
+  state_vocabulary: &state_vocabulary
+    # The full ruled output vocabulary. state: on every entry aliases THIS.
+    # Tile color (green/orange/red) is a DISPLAY projection of state, computed
+    # downstream; an unconstrained "vibes-orange" is a schema violation
+    # (fidelity Sec.7). The judge emits one of these; never free text.
+    - evidence-found        # evidence present in corpus (B-13 outcome 1)
+    - thin                  # scored-DEGRADED (9E-b v1.1): the artifact/practice
+                            #   exists but is underdeveloped, unused, stale, or
+                            #   missing an element. Board projection: ORANGE.
+                            #   Reachable by any scored entry; NOT informational.
+    - genuine-absence       # nothing found + clean ingest log; a finding about
+                            #   the COMPANY, not classifier error (B-13 outcome 2)
+    - not-ingested          # nothing found + skip/fail/exclusion ingest-log entry
+                            #   (B-13 outcome 3); never counts as company absence
+    - documented-n-a        # conditional subcategory whose trigger is unmet
+                            #   (B-22); never absent, never red
+    - placeholder           # exclusion-class / litigation-hold: maintained
+                            #   outside corpus by policy (B-11); never absent,
+                            #   never green; never counts toward completeness
+    - informational         # detection-level signal only, never a scored tile
+                            #   (B-20)
+    - loop-ready            # DERIVED board indicator, not a judge verdict; set
+                            #   when a derivation's prerequisites are all
+                            #   evidence-found (B-13 / GTM E-5)
+
+  conditionality_classes: &conditionality_classes
+    unconditional:        "Only where PRIMARY/statutory authority makes it so (T-1 genre ladder, highest rung). Rare at Band 1."
+    stage-conditional:    "Criterion calibrated to a maturity band; conditions stated in prose."
+    covenant-conditional: "Activated by a contractual covenant/obligation."
+    context-conditional:  "Activated by instance context other than stage."
+    trigger-conditional:  "Activated by a registered trigger; unmet => documented-n-a or placeholder."
+    informational:        "Never scored (B-20 pattern); detection signal set only."
+
+  triggers:
+    physical-footprint:   # B-22
+      rule: "Any physical footprint activates the entry for scoring, GRADED TO THE FOOTPRINT: real property/facilities (an office lease) activates facilities-grade elements (obligations owned and tracked); supply chain, inventory, physical product, or physical assets activate those respective elements. Elements outside the actual footprint render documented-n-a at ELEMENT scope (R1(ii)). Only a fully remote instance with no premises, real property, or physical assets of any kind renders documented-n-a at ENTRY scope. An office-only SaaS instance is therefore SCORED at facilities grade — never entry-level n/a, and its supply-chain elements are never scored absent. First real exercise expected at the Customer A deployment."
+      unmet_state: documented-n-a
+      ruling: B-22
+    exclusion-class:      # B-11
+      rule: "Where an instance's exclusion class keeps dispute materials out of the corpus by policy, the affected area renders placeholder -- 'maintained outside the corpus by policy' -- with neutral data-minimization framing. Scorable elements are the organization/hold process record and the affirmative none-record; never contents. Classifier evidence is the ingest log's exclusion entry."
+      unmet_state: placeholder
+      ruling: B-11
+    inactive-licensure-sector:   # LEGAL-01 (9E-b v1.2 closure-encoding of an already-ruled disposition)
+      rule: "LEGAL-01's industry-licensure element (f) is sector-conditional: a company in a regulated/licensure-bearing sector activates it for scoring; a company in an unregulated sector (pure B2B SaaS with no industry-licensure regime) renders that element documented-n-a -- never scored absent or red. Extends the B-6/B-22 conditional-n-a pattern to industry licensure."
+      unmet_state: documented-n-a
+    current-assessment-green:    # FIN-08 (9E-b v1.2 closure-encoding)
+      rule: "A dated, current nexus/tax-obligation assessment record is itself FIN-08's completeness artifact and renders evidence-found -- the GREEN path, not a floor. DISTINCT from the B-6/B-22 documented-n-a patterns: having assessed is the mature state whatever the assessment concluded; documented-n-a applies to physical-footprint/supply-chain conditionality, never to a completed tax-nexus assessment. Absent assessment but WITH an accountant/tax-firm relationship -> informational; neither -> scored gap per the ingest log."
+      state: evidence-found
+    contradicted-artifact:       # ENG-01, PEOPLE-08 (9E-b v1.2 closure-encoding)
+      rule: "An artifact that materially contradicts the deployed system or observed reality (e.g. an architecture doc naming a monolith while deploy configs show N services; an org/role doc contradicting actual staffing) is a staleness/contradiction finding that renders THIN -- scored-degraded (the artifact exists but is not trustworthy), worse than a clean partial but NEVER placeholder and NEVER genuine-absence."
+      state: thin
+    interim-tool-thin:           # GTM-11 (9E-b v1.2 closure-encoding; supersedes C-3)
+      rule: "An interim/degraded system-of-record where a dedicated tool is the Band-1 bar (a spreadsheet-maintained pipeline where a CRM is expected) scores THIN at the system-of-record element grain -- practice evidenced, element underdeveloped, fix = migration -- NOT genuine-absence/red at the subcategory grain (red = no record found anywhere). loop-ready still requires evidence-found (thin blocks the derivation)."
+      state: thin
+    presentation-without-model-thin:  # CAP-01 (9E-b v1.2 closure-encoding)
+      rule: "For a capital plan the underlying burn/runway + projection model (Finance-owned, R-3) is the PRIMARY artifact of the solvency/dilution elements; a board-deck-embedded plan is an acceptable PRESENTATION of it, never a substitute. A deck section present with NO underlying model anywhere (clean ingest log) renders THIN ('presentation-layer plan without underlying model'); the model present (with or without a deck) supports evidence-found."
+      state: thin
+    certification-awareness-floor:    # COMP-01 (9E-b v1.2 closure-encoding)
+      rule: "COMP-01 certification default is documented-n-a; the only in-scope sector is B2B SaaS/infra handling customer data (off-sector -> documented-n-a). In-sector but PRE-DEMAND (no T-A/T-B/T-E trigger): score the certification-awareness/roadmap record -- its absence anywhere renders THIN. Demand-trigger met: score the certification posture per (a)-(c)."
+      state: thin
+    hiring-infra-awareness-flat:      # PEOPLE-01 (9E-b v1.2 closure-encoding)
+      rule: "PEOPLE-01's Band-1 floor additionally requires a hiring-infrastructure AWARENESS record (a roadmap/notes line acknowledging future hiring tooling, e.g. ATS exploration). This element is FLAT -- it applies regardless of hiring velocity -- and its absence anywhere in the corpus renders THIN."
+      state: thin
+    convertible-only-informational:   # LEGAL-04 (9E-b v1.2 closure-encoding)
+      rule: "LEGAL-04's securities-filing record is scored ONLY on a PRICED equity round (SPA/closing set in corpus): a missing Form D with a clean ingest log then renders genuine-absence (event-activated). A convertible-only raise (SAFE/notes) renders INFORMATIONAL ('exemption approach is counsel's judgment; confirm with counsel') -- never a scored gap. Governs (b)(i)-(ii); the (a) written-plan artifact is unchanged."
+      state: informational
+    config-present-not-flowing:  # ENG-07 (9E-b v1.3 closure-encoding; parallels interim-tool-thin)
+      rule: "A committed automation/config artifact (e.g. a Dependabot/Renovate config) with NO evidence of the process actually flowing (zero merged update PRs, a stale lockfile) is tool-present-but-not-flowing: the capability is set up but not in use. Mere config presence is NOT the score -- but a present-and-configured tool is a partial that renders THIN, NOT genuine-absence/red (red = no config and no flow anywhere). Parallels interim-tool-thin (GTM-11)."
+      state: thin
+
+  derivations:
+    sdr-loop-ready:       # E-5 / B-13
+      rule: "Set the derived board state loop-ready when all four SDR-loop prerequisites are evidence-found: GTM-11 (CRM/system of record), GTM-12 (scheduler), GTM-15 (talk track), GTM-22 (segmented KPIs). Derived indicator only; never a judge verdict, never renders presence for its inputs."
+      inputs: [GTM-11, GTM-12, GTM-15, GTM-22]
+      ruling: B-13
+
+  rollup:   # operator-ruled 2026-07-15, v3.2
+            # (v3 + thin/absence disambiguation; gates: 40/52, 42/52, 45/52; v3.2 + R1(iv) ruled-prescription finality)
+    precedence: |-
+      R1 — dispositions dominate, at their stated scope.
+      (i) Entry-scoped unmet trigger or condition: the entry
+      renders its registered unmet_state; sibling elements never
+      override. (ii) Element-scoped disposition (an element
+      rendering documented-n-a, informational, or complete-by-event
+      per the criterion's own text): that element EXITS the scored
+      set. (iii) Ingest-log signals are first-class and route by
+      KIND: a skip or failure covering the entry's evidence sources
+      renders not-ingested; a policy exclusion (B-11
+      exclusion-class) renders placeholder. Signals presented
+      within the evidence itself (synthetic fixture entries
+      included) count. A rationale that names non-ingestion or
+      policy exclusion and then renders genuine-absence is a
+      contract violation. (iv) Where a registered trigger or ruled
+      amendment prescribes a specific state for a specific
+      condition — including scored states (e.g., a missing Form D
+      on a priced round renders genuine-absence per
+      convertible-only-informational's priced branch) — that
+      prescription is final at its stated scope. R3's holistic
+      judgment applies only where no ruled prescription governs; it
+      never overrides one.
+      R2 — genuine-absence requires affirmative absence; silence
+      is not absence. Affirmative absence is established when the
+      criterion's core substance is unfound across the COMPLETE
+      evidence context: in live runs, retrieval plus the exhaustion
+      sweep with a clean ingest log; in self-contained runs
+      (fixtures), the injected evidence set, which is complete by
+      construction. Where the only findings are affirmative
+      dispositions (R1) and no complete-context absence is
+      established, the entry renders per the disposition, never
+      genuine-absence.
+      R3 — among in-scope scored elements, the rollup judges
+      whether the criterion's Band-1 bar is met on the evidence —
+      never element arithmetic. evidence-found is reachable when
+      the criterion's substance is evidenced even though secondary
+      elements are silent; a single unsatisfied or silent element
+      never mechanically caps the verdict — it lands in
+      missing_elements. thin means the artifact or practice EXISTS
+      but is degraded, stale, unused, or incomplete. Where a
+      required artifact is wholly absent across a complete evidence
+      context, that is genuine-absence per R2 even when related raw
+      material, trigger context, or adjacent artifacts are present
+      — trigger context activates scoring; it never softens
+      absence. genuine-absence only per R2; dispositions only per
+      R1.
+
+  rulings:   # operative text of every referenced B-ruling; carried ONCE (source: TAXONOMY.md §2)
+    B-1: "Strategy divides by scope and horizon together: function-scoped, operational-horizon strategy belongs to the function (a quarterly/annual sales-motion document is GTM); enterprise-scoped, long-horizon strategy belongs to Vision (a two-to-five-year company positioning document is Vision)."
+    B-2: "Three-way planning split final: Vision owns strategic content (mission/identity, long-range positioning strategy, company-level goal content); Ops owns goal-setting and review machinery (cadence, rhythm, meeting architecture — the B-21 line one tier up); Finance owns the financial plan (FIN-04). Vision-side stress test: the strongest single-artifact challenge (the EOS V/TO, carrying content and machinery in one document) divides along the same line its own practitioners draw (Vision page vs. Traction page), corroborating the boundary; counterpart sides previously held (Ops 2026-07-08 with third-lineage corroboration; Finance 2026-07-09). Plan artifacts multi-home as evidence (B-17); requirement ownership never merges."
+    B-3: "IP splits: IP strategy and moat thinking → Product; IP legal paperwork (assignments, PIIAs, registrations) → Legal."
+    B-4: "IT splits (APQC 8.0): product infrastructure → Engineering; internal tooling, IT, and access management → Ops."
+    B-5: "Insurance → Compliance. (Scope clarified by B-26: corporate risk insurance only; employee-benefit insurance → People per B-26.)"
+    B-6: "Supply chain → Ops (n/a at Band 1 SaaS; documented n/a, never scored absent)."
+    B-7: "Market analysis, TAM, positioning → GTM."
+    B-8: "Customer Success is a GTM subcategory at Band 1; promotion to its own category deferred until a real corpus demands it."
+    B-9: "Form customer agreements and pricing/order templates → GTM (enablement assets); executed customer contracts → Legal (the legal record)."
+    B-10: "Employment and contractor paperwork (offer letters, PIIAs, classification) → Legal; the People category owns the talent function itself, not its legal artifacts."
+    B-11: "Litigation-hold / exclusion-class surfacing: where an instance's exclusion class keeps dispute materials out of the corpus by policy, every affected tile area renders a PLACEHOLDER state — \"maintained outside the corpus by policy\" — visible to board viewers, with neutral data-minimization framing (sensitive dispute materials are deliberately not routed through third-party processing services the instance cannot fully track). Never \"absent,\" never green; never counts toward absence or completeness. The placeholder affirms the obligation to keep the files organized: scorable elements are the organization/hold process record and the affirmative none-record — never contents. Classifier evidence for the state is the ingest log's exclusion entry (B-13). One rule, both faces: LEGAL-08 and PEOPLE-04/08 render identically. (Legal run E-1; brief at legal/BRIEF.md §5.) MAPPING (9E-b v1.2, explicit): an active exclusion-class renders PLACEHOLDER — NEVER documented-n-a and NEVER genuine-absence/not-ingested; a deliberate policy exclusion is not an absence and not an ingest skip. Referenced by PEOPLE-04, LEGAL-08, CAP-02."
+    B-12: "Capability, not performance: completeness criteria score whether an artifact, process, or measurement exists, is defined, and is honest — never whether metric values clear benchmark bands. Benchmarks render as dated, sourced context annotations; a non-scoring \"metric distress\" annotation layer is permitted. Applies to every metric-bearing category."
+    B-13: "Calibration corpora are test cases, never oracles. No corpus is presumed complete. Classifier precision is measured against ingest-log ground truth only; genuine absence in a calibration corpus is a finding about the company. Derived board state: the four SDR-loop prerequisites (GTM-11 crm/system-of-record, GTM-12 scheduler, GTM-15 talk track, GTM-22 segmented KPIs) compute a displayed \"loop-ready\" indicator (per E-5)."
+    B-16: "Technical defensibility splits: the defensibility thesis/strategy (which power, benefit, barrier) → PRODUCT-06, scored with a low-confidence flag; the architecture implementing it → Engineering."
+    B-17: "Evidence multi-homing: a single corpus artifact may establish completeness evidence across multiple categories. The boundary registry governs requirement ownership, never evidence exclusivity. Classifier and calibration plans treat cross-category evidence reuse as normal, not double-counting. (Protocol §9D companion.)"
+    B-18: "Vendor management splits: the vendor OPERATING process (inventory, intake/approval, named owners, renewals, offboarding) → Ops (OPS-05); the vendor SECURITY-RISK-ASSESSMENT posture (TPRM: questionnaires, continuous monitoring, risk scoring; SOC 2 CC9.2 controls (citation verified against AICPA TSP §100 primary text, 2026-07-09)) → Compliance (detection-and-referral). The vendor inventory is multi-homed evidence (B-17). Binds the Compliance run."
+    B-19: "Change management splits three ways: the change-management OPERATING process (documented practice, risk-matched approval posture) → Ops (OPS-07); TECHNICAL change control (CI/CD gating, deploy automation) → Engineering; the SOC-2 change-management control → Compliance detection. Evidence multi-homes (B-17). Binds the Engineering run."
+    B-21: "The management-rhythm machinery/content line (B-2 pattern, one tier down): Ops owns the MACHINERY — that 1:1s exist on a cadence, that a review CYCLE exists with a defined process, the meeting architecture, and the ownership map (function → owner) as an operating artifact. People owns the PRACTICE CONTENT — how performance is evaluated, compensation philosophy, feedback quality, and org design (reporting structure). Evidence multi-homes heavily (B-17). Binds the People run."
+    B-22: "Physical operations (supply chain, real property, facilities, physical assets) is a first-class CONDITIONAL Ops subcategory (OPS-08), extending the B-6 pattern to assets/real property (APQC 10.0): a physical footprint activates it for scoring; a pure-SaaS instance renders documented-n/a, never absent, never red. First real exercise expected at the Customer A deployment. Also conditions the PEOPLE-08 workplace-safety & injury-reporting handbook element (9EA-B-PEOPLE-01, ruled 2026-07-10): a physical footprint activates it, an office-only instance renders documented-n/a for that element. 2026-07-16 refinement (operator-ruled): activation is GRADED TO THE FOOTPRINT — an office lease activates facilities-grade elements (scored), while supply-chain/inventory/physical- product elements outside the actual footprint render documented-n/a at ELEMENT scope; only a fully remote instance with no premises or physical assets renders documented-n/a at ENTRY scope. The OPS-08 `physical-footprint` trigger in CRITERIA-SCHEMA.yaml carries the operational detail of this ruling."
+    B-23: "Documentation-default with earned override (the C-3 ruling; applies to every process-bearing tile): at Band 1 the reference direction is documentation — grounded product-constitutively (Ladder ingests, diagnoses, and automates a documented corpus), by canon weight, and by the counter-canon's own staging (context-not-control is an earned later-stage state per its author). A deliberate-lean posture converts a tile to complete-with-annotation only when the corpus contains BOTH an articulated operating-philosophy artifact AND the evidenced substitute machinery that philosophy calls for; a philosophy memo alone renders thin with annotation. The menu (draft the doc vs document the divergence) is offered in generation, never in diagnosis."
+    B-24: "Values split by scope and horizon (B-1/B-2/B-21 pattern): enterprise identity and mission → Vision; operationalized behavioral norms (operating principles, how-we-work content) → People (PEOPLE-06). One values artifact multi-homes (B-17)."
+    B-25: "Compensation philosophy, leveling, and bands — including the equity band by level — → People (PEOPLE-02). Equity instruments and their administration (option plan, 409A valuations, 83(b) elections, grant/cap-table administration) → Capital. The equity dataset multi-homes (B-17)."
+    B-26: "B-5's \"Insurance → Compliance\" scopes to corporate risk insurance (D&O, E&O/professional liability, cyber, general liability, workers' compensation). Employee-benefit insurance (health/dental/vision/life offered as compensation) is a People program (PEOPLE-07): executed carrier contracts → Legal (B-9 pattern); vendor operating process → Ops (B-18). The benefits package must be documented in employee-facing form communicable before/at offer (PEOPLE-07(c))."
+    B-27: "Operating-law compliance split: privacy and data-protection instruments and applicability assessments, and marketing/accessibility compliance records, → Legal (LEGAL-09/10). Compliance's \"regulatory posture\" scope is narrowed to certification-class detection-and-referral (SOC 2-class artifacts, insurance per B-5/B-26, vendor TPRM per B-18), which CROSS-REFERENCES LEGAL-09/10 and never re-scores their content. Evidence multi-homes (B-17); requirements never do. Binds the Compliance run."
+    B-28: "AI split (B-3/B-19 pattern): the AI regulatory-applicability record (which statutes reach the company's development or deployment of automated decision-making technology, assessed and dated) → Legal (LEGAL-09(h)); the AI governance plan (where and how AI is applied, under what internal governance) → AI Operations. One AI-use inventory multi-homes both (B-17). Assessment-level criteria only with hard refresh flags — the state AI landscape is being rewritten annually (Colorado SB 24-205 repealed before effectiveness; SB 26-189 effective 2027-01-01, rulemaking pending)."
+    B-29: "§6039/Form 3921 ISO information-return capability — the records-for-filing and the filing act — → Finance (Capital is not an administrative/ops category). The underlying grant/exercise records (dates, prices, FMV tied to the governing 409A) are Capital securities-record content (CAP-03) and multi-home as evidence (B-17)."
+    B-30: "Fundraising-facing narrative and projection artifacts (pitch deck, fundraising projections) → Capital. Enterprise-identity content they draw on (mission → Vision; culture → People) is cross-referenced and multi-homed as evidence (B-17), never owned or re-scored by Capital."
+    B-31: "Payroll split: payroll-tax compliance records and filings → Finance (FIN-07); the payroll-vendor OPERATING process (selection, owner, offboarding) → Ops (OPS-05, B-18 pattern); compensation content → People (B-25). The payroll register multi-homes as evidence (B-17)."
+    B-32: "Practice-over-policy: operating categories score practice-in-use through the artifacts the work naturally produces (repo state, CI configuration, deploy history, monitoring wiring, postmortem records, restore records); SOC 2-class policy documents are never a required artifact in an operating category — they home in Compliance detection, may corroborate, and never substitute for practice evidence; their absence never renders an operating tile thin or red. Substance extraction permitted: where a scrutiny-regime control encodes real operational substance (e.g., redundancy of production data, backup restore verification), the operating category adopts the substance as an observable practice criterion, never the policy artifact. Certification status itself (SOC 2 report, ISO 27001) is a Compliance-scored artifact, cross-referenced by operating categories as corroboration (B-17)."
+
+  thread_types:   # T-codes referenced by entries (LIFECYCLE / RESEARCH-PROTOCOL)
+    T-1: "Creation run (governed by RESEARCH-PROTOCOL)."
+    T-4: "Retroactive-audit thread (9E-a)."
+
+  provenance_tags: &provenance_tags
+    - authority-backed
+    - expert-authored
+    - corpus-observed
+    - operator-authored
+    - mixed
+
+# ============================================================================
+# categories:  --  FULL POPULATION (11 categories, 73 subcategories).
+# criterion: prose is BYTE-VERBATIM UTF-8 from each brief (N2), lifted at 9E-b 2026-07-11.
+# From this commit the YAML is the SOLE normative copy; briefs carry pointers.
+# ============================================================================
+categories:
+  GTM:
+    band: "Band 1 -- seed-funded B2B SaaS/infra, pre-Series A (reference-corpus-calibrated), US scope"
+    subcategories:
+
+      - id: GTM-07
+        criterion: |-
+          **Complete at Band 1 means:**
+          - A **documented ICP**: firmographic definition (size, industry, stage), the persona(s) inside it, and the trigger events that create buying intent — specific enough that a stranger could build a target list from it. "SaaS companies" is not an ICP.
+          - **Evidence the ICP is *derived*, not asserted**: discovery-conversation notes, win analysis, or best-customer analysis behind it.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-7"]
+        signals: ["ICP", "ideal customer profile", "persona", "segmentation", "discovery notes", "win analysis", "best customer"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: GTM-08
+        criterion: |-
+          **Complete at Band 1 means:**
+          - A **positioning thesis** covering Dunford's five components in some written form: what we're the alternative to, what we uniquely do, the value that follows, who cares most, and the market category we claim.
+          - At Band 1 this is a *living thesis with revision history*, not a frozen statement (see Conflict C-2). Versioned supersession is a maturity *positive*; the inconsistency detector must never flag a superseded positioning doc as contradiction.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: []
+        signals: ["positioning", "alternatives", "differentiat-", "category", "value proposition"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: GTM-09
+        criterion: |-
+          **Complete at Band 1 means:**
+          - A **TAM/SAM/SOM estimate with stated assumptions** (B-7).
+          - A **competitive landscape doc naming the status-quo alternative** — in B2B, ~40% of deals lose to "no decision"; the spreadsheet is a competitor and the doc should treat it as one.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-7"]
+        signals: ["TAM", "SAM", "SOM", "market size", "competitive", "landscape", "status quo"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: GTM-10
+        criterion: |-
+          **Complete at Band 1 means:**
+          - **Messaging assets exist and cohere with GTM-08**: website/landing copy, a sales deck or one-pager, whose claims trace to the positioning thesis rather than contradicting it (an inconsistency check, not just presence).
+          - **A documented demand motion**, however small: which channels are being worked (founder-led content, outbound, community, paid), with some record of what has been tried and what responded. At Band 1 the criterion is *a written account of the motion*, not channel sophistication.
+          - Not required at Band 1, and affirmatively not gaps: brand systems, attribution stacks, marketing headcount.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["GTM-08"]
+        signals: ["messaging", "landing page", "campaign", "outbound", "sequence", "content calendar", "demand gen", "one-pager", "sales deck"]
+        provenance: expert-authored
+        refresh: []
+        version: v1.0
+
+      - id: GTM-11
+        criterion: |-
+          **Complete at Band 1 means:**
+          - **A single system of record for the pipeline** — a CRM in the functional sense: every active deal visible in one view, with stage, owner, value, and next step. Tool-agnostic. **[SDR-loop prereq: CRM]** Spreadsheet-only maintenance scores THIN at the system-of-record element grain (practice evidenced; the element underdeveloped; fix = migration), NOT red at the subcategory grain — RED = no pipeline record found anywhere (interim-tool-thin; supersedes C-3 as ruled 2026-07-11). loop-ready requires evidence-found; thin blocks the derivation.
+          - **Lead handling is defined**: what happens when interest arrives — who follows up, where it's recorded. The intake into the system of record.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["sdr-loop-ready", "interim-tool-thin"]
+        signals: ["pipeline", "CRM", "stage", "opportunity", "next step", "deal review", "lead routing", "HubSpot", "spreadsheet pipeline"]
+        provenance: authority-backed
+        refresh: ["calibration-run"]
+        version: v1.0
+
+      - id: GTM-12
+        criterion: |-
+          **Complete at Band 1 means:**
+          - **A structured way calls get booked and tied to pipeline records**, rather than ad-hoc threads. **[SDR-loop prereq: scheduler]**
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["sdr-loop-ready", "GTM-11"]
+        signals: ["scheduling", "booking link", "calendar", "Calendly", "meeting booked"]
+        provenance: mixed
+        refresh: []
+        version: v1.0
+
+      - id: GTM-13
+        criterion: |-
+          **Complete at Band 1 means:**
+          - **The documented sales motion** end to end: first contact → discovery → demo/proof → commercial agreement, in enough detail that a first hire could attempt it. The playbook-before-the-hire rule is the maturity bar.
+          - **Evidence-based stage definitions**: stages advance on buyer-verifiable evidence ("buyer confirmed the problem, named cost of inaction, agreed a dated next step"), not activity ("demo done"). The stage-definition doc is itself the artifact.
+          - **A named qualification discipline** embedded in the motion — MEDDIC-class, SPICED-class, or homegrown, but written down and reflected in system-of-record fields. Which framework is immaterial; that one exists is the criterion (see Conflict C-1).
+          - A monolithic "sales playbook" doc evidences GTM-13, GTM-15, and GTM-16 without double-penalty (C-5 arbitration; evidence multi-homing per B-17).
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["GTM-11", "B-17"]
+        signals: ["qualification", "MEDDIC", "SPICED", "stage definition", "playbook", "sales motion", "exit criteria"]
+        provenance: authority-backed
+        refresh: ["calibration-run"]
+        version: v1.0
+
+      - id: GTM-14
+        criterion: |-
+          **Complete at Band 1 means:**
+          - **Pipeline reviewed on a cadence with a written record**; forecast categories optional until a sales hire exists.
+          - Practice-in-use (B-32): the evidence is naturally-produced review records (dated notes, recurring-review artifacts), never a policy document describing a cadence.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-32", "GTM-11"]
+        signals: ["forecast", "pipeline review", "deal review", "weekly review", "commit"]
+        provenance: authority-backed
+        refresh: ["calibration-run"]
+        version: v1.0
+
+      - id: GTM-15
+        criterion: |-
+          **Complete at Band 1 means:**
+          - **A talk track / sales narrative**: the pitch in written form — problem framing, demo flow, proof points. Where call transcripts exist in the corpus but no distilled talk track does, that is the concept doc's canonical red tile, and the maturity layer's flagship generation target. **[SDR-loop prereq: talk track]**
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["sdr-loop-ready"]
+        signals: ["talk track", "demo script", "narrative", "pitch", "call transcript", "call script", "master discovery call sheet", "pitch narrative"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: GTM-16
+        criterion: |-
+          **Complete at Band 1 means:**
+          - **Discovery guide**: the questions that qualify and open deals.
+          - **Objection handling**: the top objections and their answers, captured from real calls.
+          - **Pricing documentation** (B-9): the pricing/packaging structure written down, with any discount policy. Founder-discounted, bespoke-scoped deals are repeatability *anti-evidence* per the standard-deal test.
+          - **Form customer agreement and order templates** (B-9): the enablement-side instance; executed contracts remain Legal's record.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-9", "B-17"]
+        signals: ["objection", "battlecard", "discovery questions", "pricing", "discount", "order form", "MSA template"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: GTM-17
+        criterion: |-
+          **Complete at Band 1 means:**
+          - **Win/loss capture**: reasons recorded per closed deal — the raw material every enablement artifact improves from. "I don't know why they churned/lost" is the named failure mode.
+          - **Churn-reason capture**: every lost customer has a recorded reason.
+          - Practice-in-use (B-32): the evidence is the records themselves, accumulating; churn *rates* score in GTM-21 (B-15 as refined), and the underlying records multi-home as evidence (B-17).
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-32", "B-17", "GTM-21"]
+        signals: ["win/loss", "churn reason", "lost deal", "loss reason", "post-mortem"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: GTM-18
+        criterion: |-
+          **Complete at Band 1 means:**
+          - **A documented onboarding sequence** — even a rudimentary v1: signed contract → first value, as steps someone else could run. (93% of renewal decisions trace to the first-thirty-days experience per the CS canon; time-to-first-value is the number that matters.)
+          - **Defined success milestones** per customer: what "getting value" means, written down.
+          - **Founder-led CS is the compliant Band 1 state** — a dedicated CSM is expected around the 15–25-employee / Series A boundary, and its absence at Band 1 is affirmatively not a gap. What must exist is the *process record*, whoever runs it. (B-8.)
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: []
+        signals: ["onboarding", "kickoff", "time to value", "success plan", "milestone", "implementation"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: GTM-19
+        criterion: |-
+          **Complete at Band 1 means:**
+          - **Support handling defined**: where customer issues land and who answers — a defined intake and named ownership, however lightweight the tooling.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: []
+        signals: ["support", "ticket", "helpdesk", "customer issue", "escalation"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: GTM-20
+        criterion: |-
+          **Complete at Band 1 means:**
+          - **A metrics definitions document**: what counts as recurring revenue, what's inside CAC, how NRR/GRR are computed. Without it every downstream number distorts; with it the metrics are auditable. This is the quiet keystone artifact of the GTM metrics family. (Capability framing per B-12.)
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-12"]
+        signals: ["definitions", "MRR", "CAC", "NRR", "GRR", "glossary", "recurring revenue"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: GTM-21
+        criterion: |-
+          **Complete at Band 1 means:**
+          - **The canonical KPI set tracked on a cadence**: MRR/ARR with an **ARR bridge** (opening + new + expansion − contraction − churn = closing; requested in nearly every diligence), logo/revenue churn, CAC with payback, pipeline coverage, and — as motion matures — NRR, LTV:CAC, burn multiple.
+          - **Churn measurement homes here** (B-15): logo and revenue churn tracked with written cohort definitions; churn-*reason* capture scores in GTM-17, the records multi-homing as evidence (B-17).
+          - **Benchmark values are context, never criteria** (C-4, E-1, B-12): what scores is that measurement exists, is defined, and runs on a cadence — never whether values clear benchmark bands.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-12", "B-17", "GTM-17"]
+        signals: ["ARR", "MRR", "NRR", "churn", "CAC", "payback", "pipeline coverage", "dashboard", "ARR bridge"]
+        provenance: authority-backed
+        refresh: ["calibration-run"]
+        version: v1.0
+
+      - id: GTM-22
+        criterion: |-
+          **Complete at Band 1 means:**
+          - **Targets segmented** by the dimensions the company actually operates on (segment, rep once reps exist, stage) rather than a single top-line number. **[SDR-loop prereq: segmented KPIs]**
+          - **The funnel-math operating model** (SignalFire's formulation): documented conversion assumptions stage-to-stage, so plan-vs-actual deviations are diagnosable. At Band 1 assumptions may be estimates; that they are *written* is the criterion.
+          - **Repeatability evidence** consolidated: the standard-deal test record — deals won at standard origin/price/scope — as the artifact that certifies the motion is transferring (placement per E-4 as ruled).
+          - **Benchmark values are context, never criteria** (C-4, E-1, B-12).
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["sdr-loop-ready", "B-12"]
+        signals: ["targets", "quota", "funnel", "conversion", "segmented", "standard deal", "repeatability"]
+        provenance: authority-backed
+        refresh: ["calibration-run"]
+        version: v1.0
+  PRODUCT:
+    band: "Band 1 -- seed-funded B2B SaaS/infra, pre-Series A (reference-corpus-calibrated), US scope"
+    subcategories:
+
+      - id: PRODUCT-01
+        criterion: |-
+          **Criteria (Band 1):**
+          - A product roadmap artifact exists and is discoverable. Format is unscored (per **C-1 ruling**): outcome-based, now-next-later, or feature/timeline all satisfy; existence, currency, and honesty are what score.
+          - Roadmap items trace to intended outcomes or customer problems, not only outputs (A1/A2 convergence).
+          - A stated prioritization method governs roadmap composition (RICE, Kano, MoSCoW, value/effort, or an articulated equivalent — A9). The method's existence scores; the choice of method does not.
+          - The roadmap is dated/versioned and recognizably current; a long-stale roadmap is a thinness signal.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: []
+        signals: ["roadmap doc/board", "horizon or outcome labels", "a prioritization rubric or score column", "revision dates."]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: PRODUCT-02
+        criterion: |-
+          **Criteria (Band 1):**
+          - A repeatable spec/PRD practice exists (PRD = product requirements document — the written what-and-why of a feature). Lightweight is stage-appropriate; written-and-discoverable is what scores.
+          - A discovery→delivery distinction is documented or observable: some evidence of validating what to build before building it (A2; A1 "nail it before you scale it").
+          - Product decisions leave a trail (rationale captured).
+          - Design/UX evidence homes here and in PRODUCT-03 (**E-1 ruling:** folded at Band 1, mirroring B-8; promotion deferred until a corpus demands it).
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-8", "PRODUCT-03"]
+        signals: ["PRD/spec templates or instances", "discovery notes feeding specs", "release/validation notes", "design artifacts (mockups, usability notes)."]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: PRODUCT-03
+        criterion: |-
+          **Criteria (Band 1):**
+          - Evidence of recurring customer contact feeding product decisions (A2's continuous-discovery cadence), as distinct from a one-time upfront research burst.
+          - A research synthesis artifact exists (interview snapshots, opportunity maps/opportunity-solution trees, design-partner logs); raw contact never landed in a durable artifact is a thinness signal.
+          - Research ties to outcomes/opportunities (A2 OST; JTBD framing).
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: []
+        signals: ["interview notes", "opportunity trees/lists", "story-based prompts", "design-partner records."]
+        provenance: authority-backed
+        refresh: ["classifier-consumption"]
+        version: v1.0
+
+      - id: PRODUCT-04
+        criterion: |-
+          **Criteria (Band 1, per C-2 ruling — an assessment must exist; no numeric threshold is scored):**
+          - **A PMF assessment exists with a defined, honest methodology.** Acceptable instances: a Sean Ellis-style necessity survey on the correct population (active users who reached core value, canonical phrasing — A5); a defined organic-pull/word-of-mouth signal; structured design-partner necessity evidence. The method and its population must be stated.
+          - Any reported figure is honestly bounded (population, sample size, date) — a bare asserted score is a thinness signal.
+          - Segmentation is present or acknowledged where an aggregate would mislead (A6).
+          - **Retention (E-3 ruling):** retention/churn RATES are scored in **GTM-21**, which owns the commercial traction record (B-15 as refined 2026-07-15: rates in GTM-21, churn-reason capture in GTM-17). PRODUCT-04 may cite retention as *supporting* evidence with a cross-reference to GTM-21, and only as a bounded proxy — retention alone does not satisfy this criterion.
+          **Benchmark context annotations (non-scoring, dated):** Ellis 40% "very disappointed" threshold (A5, ~2009); "40–55% typical B2B SaaS; 60%+ narrow-persona enterprise" (secondary, 2026); Vohra's sub-15–20% wrong-product/wrong-market observation (A6, 2018).
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["GTM-21"]
+        signals: ["a survey instrument or results with a stated population", "organic-acquisition-share evidence", "design-partner conversion/renewal narratives", "segmentation of responses."]
+        provenance: authority-backed
+        refresh: []
+        version: v1.1
+
+      - id: PRODUCT-05
+        criterion: |-
+          **Criteria (Band 1):**
+          - The product is instrumented (instrumentation = event tracking wired into the product so behavior is measurable).
+          - A primary product metric is defined — a North Star or equivalent that expresses customer value, leads rather than lags, is measurable, and is not a vanity metric (A3's checklist) — with named input metrics (the North-Star tree).
+          - Metric definitions are written (what "active" means, what the cohort is); an undefined metric behind a dashboard is a thinness signal.
+          **Benchmark context annotations (non-scoring, dated):** retention/engagement/NRR bands (secondary, 2026).
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: []
+        signals: ["analytics tooling references", "a North-Star/metric-tree doc", "written metric definitions", "vanity-vs-value framing."]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: PRODUCT-06
+        criterion: |-
+          **Criteria (Band 1; the moat criterion is scored with a low-confidence flag per E-4):**
+          - A product strategy artifact exists at the operational horizon — how the product wins its near-term market (product positioning, sequencing, differentiation). Enterprise-horizon, 2–5-year company positioning belongs to Vision (B-1) and its absence here is correct.
+          - A defensibility thesis is articulated and honestly reasoned (per **C-3 ruling**): which moat/power the product compounds, mapped to a recognized type (Helmer's scale / network / counter-positioning / switching-cost / branding / cornered-resource / process — A4), stating benefit and barrier, with an honest erosion caveat. What scores is that a reasoned argument exists; whether the moat is real or durable is unscored.
+          - IP-moat *strategy* homes here; IP legal paperwork → Legal (B-3). The *technical* defensibility split (**E-4 ruling, binds the Engineering run → B-16**): the defensibility thesis is PRODUCT-06; the architecture implementing it is Engineering.
+          - Pricing/packaging (**E-2 ruling**): artifacts stay in GTM-16 per B-9. A non-scoring cross-reference marker notes packaging-as-product-decision in PLG motions (PLG = product-led growth, where the product itself drives acquisition/expansion), keeping the seam visible without double-homing the artifact.
+          **Refresh note (highest volatility in the run):** 2025–26 practitioner sources argue AI erodes several classical powers at the application layer; re-audit this subcategory's authority set on the next protocol review or on a consensus shift. [refresh: classifier-consumption]
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-1", "B-3", "B-9", "B-16", "GTM-16"]
+        signals: ["operational-horizon strategy doc", "an explicit defensibility section naming power + benefit + barrier", "competitive-differentiation framing", "IP/FTO strategy narrative (FTO = freedom to operate — clearance that your product doesn't infringe existing patents)."]
+        provenance: mixed(authority-backed/expert-authored)
+        refresh: ["classifier-consumption"]
+        version: v1.1
+  OPS:
+    band: "Band 1 -- seed-funded B2B SaaS/infra, pre-Series A (reference-corpus-calibrated), US scope"
+    subcategories:
+
+      - id: OPS-01
+        criterion: |-
+          Band-1 completeness criteria:
+          - A written ownership map exists: for each business function/component the company
+            actually runs (product, GTM, finance ops, vendor relationships, infrastructure,
+            physical ops where applicable), ONE named owner. Form is free — an EOS-style
+            Accountability Chart, a DRI register, a RACI (Responsible/Accountable/Consulted/
+            Informed matrix) for load-bearing cross-functional work, or a functions-and-owners
+            page. Condition: single named owner per function/outcome (the one-Accountable rule /
+            Amazon STL); "shared ownership" of a function is a thinness signal.
+          - The map is current (reflects the actual team) and discoverable (somewhere a new hire
+            or the board could find it).
+          - [Sprint-L prereq]: an automation loop cannot be designed against an unowned process.
+            Sprint L's per-arrow design presupposes a human owner per function who approves and
+            supervises the automation.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: []
+        signals: ["accountability chart", "DRI/owner register", "single-threaded owner/"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: OPS-02
+        criterion: |-
+          Band-1 completeness criteria:
+          - The company's recurring management meetings are defined and documented: which
+            meetings exist, at what cadence, with what purpose and participants. Operator-canon
+            convergent set at seed: 1:1s between managers and reports on a regular cadence; a
+            leadership/staff meeting (weekly is the convergent norm — context annotation); a
+            team-sync mechanism — a daily standup OR its documented replacement (async check-in,
+            written snippets; GitLab's documented asynchronous operation is this criterion's
+            at-scale existence proof); an all-hands on some cadence (weekly–monthly per Mochary —
+            context annotation). Condition: scored on the rhythm being defined, documented, and
+            evidenced as actually running (recurring notes/agendas exist) — never on matching
+            any framework's frequency. A seed company that deliberately runs no standup but
+            documents its async replacement is complete; an undocumented ad-hoc meeting culture
+            is thin.
+          - Internal communication keystones exist (Hughes Johnson OS definition): some regular
+            company-wide mechanism (all-hands, written weekly update, state-of-the-company)
+            through which plans and results reach everyone.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: []
+        signals: ["recurring meeting agendas/notes (1:1 templates, leadership-meeting"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: OPS-03
+        criterion: |-
+          Band-1 completeness criteria:
+          - A documented goal-setting rhythm exists: an annual plan layer + a short-cycle
+            priority mechanism (quarterly is the convergent norm across three lineages —
+            context annotation) + a recurring review cadence.
+          - A review artifact is produced by the cadence (scorecard, tracked goal list, meeting
+            notes) — evidence the rhythm actually runs, not just that it is described.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: []
+        signals: ["OKR/Rocks/flat-goal-list docs", "annual plan", "scorecard/KPI review"]
+        provenance: mixed(authority-backed/expert-authored)
+        refresh: []
+        version: v1.0
+
+      - id: OPS-04
+        criterion: |-
+          Band-1 completeness criteria:
+          - The load-bearing repeatable processes exist as written artifacts — SOPs (standard
+            operating procedures, i.e. written "how we do X" runbooks) or equivalent — for the
+            handful of operations the business actually depends on (e.g. release/deploy,
+            customer onboarding, incident response, employee on/offboarding). Condition:
+            "load-bearing" is stage-scoped — a seed company is complete with a SMALL set of real
+            runbooks, not a process library. Coverage breadth is not scored; existence,
+            ownership, and currency of the core set is.
+          - Each documented process has an owner (cross-refs OPS-01) and a last-reviewed signal
+            (date, author, or version). A stale runbook is a thinness signal, not a completeness
+            one (B-12 honesty clause).
+          - [Sprint-L prereq]: this subcategory IS the automation-target inventory. Sprint L's
+            candidate list — which processes can be enhanced or automated, and which should stay
+            human — is drawn from the documented-process set plus the gaps this tile surfaces.
+            The classifier's process inventory is preserved as a STRUCTURED OUTPUT (not just a
+            tile color) for Sprint L to consume.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-12", "OPS-01"]
+        signals: ["runbooks/SOPs/playbooks", "a process index or handbook", "ownership +"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: OPS-05
+        criterion: |-
+          Band-1 completeness criteria:
+          - A vendor inventory exists (single source of truth: cloud, SaaS, contractors,
+            subprocessors), with critical vendors identified and each carrying a named owner
+            (cross-refs OPS-01). Tier by real risk — data access, system criticality; heavy
+            diligence reserved for high-risk vendors. "Not in the inventory = not approved" is
+            the convergent practitioner norm.
+          - A selection/intake and renewal practice exists: how vendors get approved, and how
+            renewals/spend get reviewed (a lightweight annual review ritual suffices).
+          - Vendor offboarding revokes access and addresses data return/destruction (multi-homes
+            with OPS-06).
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["OPS-01", "OPS-06"]
+        signals: ["vendor/subprocessor register", "procurement or vendor policy"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: OPS-06
+        criterion: |-
+          Band-1 completeness criteria:
+          - An inventory of internal tools/SaaS the company runs on exists (the source of truth
+            for what is in use; internal operating tools per B-4).
+          - Access provisioning and de-provisioning is documented: how a joiner gets access, how
+            a leaver loses it (joiner/mover/leaver). Least-privilege (grant only the access
+            needed) and SSO (single sign-on — one identity gate) where applicable; conditions on
+            company size and whether an identity provider is in use.
+          - Offboarding revokes tokens/credentials/API keys. Multi-homes with People (onboarding
+            docs) and Compliance (access-management artifacts) — expected, not double-counting.
+          - [9E-b amendment v1.1, 2026-07-11, ruled per the device-inventory finding]: a **device/asset inventory** — a LIGHTWEIGHT ALWAYS-ON record of who holds what company hardware (laptops/equipment), issued when. A simple list satisfies at Band 1; MDM/asset-management tooling is annotation-only (401(k) treatment). Absence of this basic operating record renders THIN on this element (review doctrine: a missing basic operating record is thin). Compliance references it per B-17 multi-homing (as COMP-03 references OPS-05), never re-scored.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-4", "B-17", "OPS-05", "COMP-03"]
+        signals: ["SaaS/tool inventory or register", "IT/access policy", "onboarding/"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.1
+
+      - id: OPS-07
+        criterion: |-
+          Band-1 completeness criteria:
+          - A lightweight change-management practice exists: changes to production systems/
+            config are tracked, reviewed, and reversible — who changed what, when, with an
+            approval gate for significant changes. Condition: oversight matched to risk (ITIL 4
+            change enablement) — routine low-risk changes are not gated; material-risk changes
+            are reviewed. A change-approval-board bottleneck on every change is an anti-pattern,
+            not a completeness signal.
+          - Where the company runs projects, a basic project-tracking mechanism exists (a board,
+            a tracker). Existence, not methodology.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: []
+        signals: ["change log / RFC (request-for-change) records", "deploy/release"]
+        provenance: mixed(authority-backed/expert-authored)
+        refresh: []
+        version: v1.0
+
+      - id: OPS-08
+        criterion: |-
+          Activation rule (B-22, ruled): conditional on the company's physical footprint. Band-1
+          pure-SaaS remote-first (the reference company): documented n/a — never scored absent (B-6 pattern,
+          extended to assets/facilities). Company with physical product, inventory, facilities,
+          or real property (plausibly Customer A): the subcategory activates and scores.
+          Completeness criteria when active:
+          - Named owners for supply chain and for real-property/facilities responsibilities
+            (cross-refs OPS-01).
+          - The load-bearing physical processes documented (ordering/fulfillment/inventory flow;
+            lease and facilities obligations tracked — the lease documents themselves are
+            Legal's record; the operating responsibility is Ops).
+          - Key physical dependencies (suppliers, logistics providers) present in the OPS-05
+            vendor inventory with criticality noted.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: trigger-conditional
+        references: ["B-6", "B-22", "physical-footprint", "OPS-01", "OPS-05"]
+        signals: ["supply-chain/fulfillment runbooks", "inventory records", "supplier"]
+        provenance: expert-authored
+        refresh: []
+        version: v1.0
+
+      - id: OPS-09
+        criterion: |-
+          Provenance: expert-authored. ISO 9001 invoked at detection level only (certification
+          affirmatively NOT a Band-1 requirement; the Sept 2026 revision does not change the
+          band posture — refresh vocabulary only). Renders as an informational cross-reference,
+          not a scored tile; promotable if a real corpus (Customer A) shows quality machinery
+          living outside Engineering.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: informational
+        references: []
+        signals: ["bug/issue tracker", "QA or test-plan docs", "code-review policy"]
+        provenance: expert-authored
+        refresh: []
+        version: v1.0
+  PEOPLE:
+    band: "Band 1 -- seed-funded B2B SaaS/infra, pre-Series A (reference-corpus-calibrated), US scope"
+    subcategories:
+
+      - id: PEOPLE-01
+        criterion: |-
+          Band-1 completeness criteria — two-tier bar (C-1 ruling: low weight for full machinery).
+          Floor (scores "present"): the corpus contains documented hiring intent — a role definition/scorecard or JD for open/filled roles, a stated evaluation approach, and a consistent decision step (founder debrief counts). This is the "write down the calibration brief" maturation step the seed-hiring canon identifies as the system/vibe line.
+          Green bar (scores "complete" — LOW WEIGHT at Band 1): the full structured machinery — a structured interview (consistent pre-defined question/competency set per role) with a written scoring rubric and a collaborative/independent decision check (Bar-Raiser-class, scaled). This is where the operator canon and the current academic ranking converge, so it is the reference direction — but the empirical base (founder-led hiring the norm; average first HR hire at 40–50 employees) means its absence below ~15–20 headcount renders thin-with-annotation, never red. Weighting graduates with headcount.
+          Conditioned: posting pay-range + no salary-history solicitation where a covered jurisdiction applies (Legal, B-10).
+          Not required, and affirmatively not a gap at Band 1: a recruiter/TA team or ATS; interviewer training; competency architecture across roles; hiring committees. Founder-led, referral-driven hiring is the documented norm; the gap is only the undocumented version of it.
+          [9E-b amendment v1.1, 2026-07-11: the floor additionally requires a hiring-infrastructure AWARENESS record — a roadmap/notes line acknowledging future hiring tooling (e.g. ATS exploration). This element is FLAT: it applies regardless of hiring velocity. Its absence anywhere in the corpus renders THIN.]
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-10", "hiring-infra-awareness-flat"]
+        signals: ["Present: role scorecards/JDs, a stated evaluation approach, debrief notes/offer-decision records. Complete: interview guides + written rubrics + independent-check evidence. Thin: hires happened with no written role definition or decision record. Absent: no hiring documentation of any kind despite hires in the record."]
+        provenance: authority-backed
+        refresh: ["classifier-consumption"]
+        version: v1.1
+
+      - id: PEOPLE-02
+        criterion: |-
+          Band-1 completeness criteria. (a) An articulated compensation philosophy (market positioning, cash/equity mix, merit linkage — the artifact every source requires even where they disagree on content, per C-2); (b) a leveling framework (autonomy/complexity/influence tiers pay maps to); (c) salary and equity bands tied to levels (market-anchored estimates acceptable); (d) consistent application — offers and adjustments reference levels/bands. Never scores pay values against market percentiles (B-12); benchmarks are dated annotations. Equity design (how much, by level) lives here; equity instruments/administration (409A, 83(b), plan admin) → Capital per B-25.
+          Not required at Band 1: survey subscriptions, comp consultants, comp committees, radical transparency.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-12", "B-25"]
+        signals: ["Present: philosophy doc + leveling matrix + band tables + offer model referencing levels. Thin: ad-hoc market references, no written framework. Absent: per-candidate negotiation with no framework."]
+        provenance: authority-backed
+        refresh: ["classifier-consumption"]
+        version: v1.0
+
+      - id: PEOPLE-03
+        criterion: |-
+          Band-1 completeness criteria. (a) A documented new-hire onboarding program covering the operator-canon triad, mapping onto Bauer's evidence-based structure: the why (mission/story — Bauer's Culture), the what (priorities, role, first-90-days — Clarification), the how (operating principles, ways of working — Culture/Connection), plus the paperwork/access ramp (Compliance — the checklist multi-homes with OPS-06 for provisioning, OPS-02 for cadence). (b) Cross-tier consistency (operator ruling 2026-07-08): the onboarding program's mission/values content must reflect and be consistent with the Vision-layer artifacts (per B-24) and the PEOPLE-06 operating principles. The onboarding doc is a consumer of Vision content, not a second author of it: onboarding materials that contradict or silently diverge from the Vision corpus are a first-class inconsistency finding for the Ma layer. Evidence multi-homes (B-17): the same onboarding doc is PEOPLE-03 completeness evidence, PEOPLE-06 culture-transmission evidence, and a Vision-consistency probe.
+          Not required at Band 1: LMS, multi-week curriculum, cohorts, a dedicated onboarding owner.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-17", "B-24", "OPS-02", "OPS-06", "PEOPLE-06"]
+        signals: ["Present: onboarding doc/checklist covering why-what-how", "90-day template", "leadership-session reference. Thin: IT-provisioning checklist only (OPS-06 evidence", "content thin)", "or onboarding content inconsistent with Vision artifacts (present-with-inconsistency-flag). Absent: no documented onboarding."]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: PEOPLE-04
+        criterion: |-
+          Band-1 completeness criteria. (a) A defined evaluation standard — the criteria against which performance is judged (competencies, goals, values, or an articulated bar such as a talent-density/Keeper-Test standard), written rather than implicit; (b) a feedback practice — how feedback is delivered and how honestly (the canon's central claim is candor and quality, not tooling); (c) a promotion/level-change basis connecting evaluation to PEOPLE-02/05 leveling. Stage calibration (sweep-established): the reference direction at Band 1 is lightweight — regular 1:1s (OPS-02 machinery) plus an articulated standard and a simple review moment 1–2×/year; the field's guidance is to formalize around 20–30 employees / Series A (YC) and reach semiannual-plus-continuous approaching 50 (Index Ventures). A pre-15-headcount company running continuous informal feedback against a written standard is at the Band-1 bar, not below it.
+          Not required at Band 1: 9-boxes, 360 tooling, forced ranking, PIP libraries, review software. B-23 earned override (source-backed): an articulated philosophy artifact plus evidenced substitute machinery converts the tile to complete-with-annotation; the philosophy memo alone renders thin-with-annotation. L&D folds here at Band 1.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-23", "OPS-02", "PEOPLE-02", "B-11", "exclusion-class"]
+        signals: ["Present: evaluation rubric/competency matrix or written performance bar", "feedback framework", "promotion criteria. Thin: cadence evidence (OPS-03) without content criteria — the B-21 seam. Absent: no evaluation standard."]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: PEOPLE-05
+        criterion: |-
+          Band-1 completeness criteria. Current, intentional reporting structure; leveling architecture (ties to PEOPLE-02); design rationale where a deliberate structural choice exists. Boundary note (from B-21+B-17): People owns the design; Ops owns the ownership map; one org chart multi-homes.
+          Not required at Band 1: full job architecture, workforce-planning models. A flat 12-person org is a design, not an absence.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-17", "B-21", "PEOPLE-02"]
+        signals: ["Present: org chart + leveling + rationale. Thin: bare org chart, no leveling or rationale. Absent: no documented structure."]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: PEOPLE-06
+        criterion: |-
+          Band-1 completeness criteria. Documented values / operating principles as behavioral norms, written and transacted on, scaled-down GitLab-genre. Scores documentation existence + internal consistency, never culture content. Per B-24: enterprise identity/mission → Vision; operationalized behavioral norms → here; one values artifact multi-homes. Handbook conduct/policy sections → PEOPLE-08; values sections → here.
+          Not required at Band 1: a GitLab-scale public handbook; a culture deck; codified rituals; engagement surveys. Oral-only culture at Band 1 → annotate, don't red-alarm.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-24", "PEOPLE-08"]
+        signals: ["Present: values/operating-principles doc", "how we work\" page", "onboarding materials teaching culture (multi-homes PEOPLE-03). Thin: values named on a website with no operational content. Absent: no documented culture artifacts."]
+        provenance: expert-authored
+        refresh: []
+        version: v1.0
+
+      - id: PEOPLE-07
+        criterion: |-
+          Band-1 completeness criteria.
+          (a) A written leave/PTO policy — vacation/PTO terms, sick leave, holidays, parental-leave approach (a stated "state program + unpaid supplement" posture qualifies; silence does not). Conditioned: meets the applicable state minimum where a covered jurisdiction applies (21–22 states + DC); written with awareness that several states convert accrued vacation to wages. FMLA affirmatively n/a below 50. Compliance dimension homes in Legal (B-10); People scores that the policy exists, is written, is internally consistent, and is the one actually administered.
+          (b) A documented benefits program — what is offered (health at minimum in practice; dental/vision/retirement if any), employee-facing plan summaries/enrollment documentation, carrier/broker/PEO arrangement identified. PEO delivery is a fully legitimate Band-1 form.
+          (c) Pre-hire communicability (operator ruling 2026-07-08, empirically grounded): the benefits package exists in a form clearly communicable to a candidate before/at offer — a benefits summary or offer-stage one-pager, not knowledge locked in a carrier portal. Benefits are a top-two offer-acceptance factor; a Band-1 company whose benefits are real but uncommunicable is leaving its strongest recruiting asset undocumented — a thinness finding with direct commercial consequence. Multi-homes with PEOPLE-01's offer step (B-17).
+          (d) Policy-instrument consistency: handbook text, offer-letter benefit references (Legal artifacts, read-across), and payroll/enrollment records agree — a classic Ma-layer inconsistency probe.
+          Not required, and affirmatively not a gap at Band 1: a 401(k) (annotation only; state auto-IRA mandates are Legal-homed conditioning where applicable); rich perks; total-rewards statements; benchmarking exercises; self-insurance; leave-administration software.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-10", "B-17", "PEOPLE-01"]
+        signals: ["Present: leave policy doc/handbook section + benefits summary + offer-stage benefits communication + carrier/PEO record. Thin: benefits visible only in payroll records with no employee-facing summary (administered-undocumented — the B-23 default finding), or a policy contradicting the instruments. Absent: no written leave policy and no benefits documentation."]
+        provenance: authority-backed
+        refresh: ["classifier-consumption"]
+        version: v1.0
+
+      - id: PEOPLE-08
+        criterion: |-
+          Band-1 completeness criteria. An assembled HR policy set — a handbook or equivalent policy corpus. The Band-1 floor is the practitioner five-policy starter set: (1) at-will employment statement (policy text; signed instruments → Legal), (2) anti-harassment & anti-discrimination policy with a defined complaint/reporting channel (conditioned: written-policy and training mandates where a covered jurisdiction applies; training evidence multi-homes Compliance; even unmandated, this is the reasonable-care floor), (3) confidentiality expectations (policy statement; the PIIA instrument → Legal), (4) PTO/leave policy (the PEOPLE-07 artifact, multi-homed here as a handbook section), (5) code of conduct / workplace-behavior norms. Plus at Band 1: a work-arrangement statement (remote/hybrid/office) and a **written corrective-action & termination protocol** — how workplace concerns are raised (a general concern/grievance path, extending the complaint channel beyond harassment), how misconduct and performance failures are handled (what corrective steps are available, expressly including suspension and paid/unpaid administrative leave pending investigation, tied to the complaint-channel investigation process), that disciplinary actions are documented, and how termination and severance decisions are made and recorded (offboarding process content; access-revocation runbook → OPS-06, termination paperwork and exempt-status suspension mechanics → Legal per B-10, all multi-homed B-17); and a **timekeeping/overtime policy where non-exempt employees exist** (conditioned; wage-hour compliance homes Legal); and a **workplace-safety & injury-reporting policy where a physical footprint exists** (conditioned on the B-22 physical-footprint trigger — warehouse/lab/facilities/physical assets: safety expectations plus an injury-reporting procedure, as handbook content; an office-only / pure-SaaS instance renders documented-n/a for this element, never red; evidence multi-homes OPS physical operations and Compliance per B-17; workers'-comp insurance remains Compliance per B-26).
+          Currency criterion (source-backed): the set is versioned, distributed, and current — SHRM guidance is annual review; an outdated handbook can be worse than none. A handbook contradicting practice or newer artifacts is a thinness/inconsistency finding, not a green tile.
+          Threshold honesty: the classifier conditions on the federal matrix — at typical Band-1 headcount (<15–20), Title VII/ADA-triggered obligations may not yet formally attach (15+), COBRA/ADEA not until 20+, FMLA/ACA not until 50+ — so missing policies tied to un-crossed thresholds are affirmatively not gaps, while the five-policy floor stands regardless because its risk exists from employee one.
+          Not required at Band 1: a GitLab-scale public handbook; a 100-page template handbook; policy software; a dedicated HR owner; union/labor machinery (documented n/a, B-6 pattern); EU-style documentation (out of scope per the US-only ruling); a full progressive-discipline ladder (the canon itself stages formal disciplinary process at ~20+ employees) — the Band-1 bar is that the corrective-action and termination pathway is WRITTEN, even briefly, not that every escalation step is codified.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-6", "B-10", "B-17", "B-22", "B-26", "physical-footprint", "OPS-06", "PEOPLE-07", "contradicted-artifact"]
+        signals: ["Present: handbook/policy wiki with the five-policy floor + reporting channel + work-arrangement + offboarding approach + version history/acknowledgments", "corrective-action / discipline policy or handbook section (incl. suspension / administrative-leave language)", "documented disciplinary actions in the record", "workplace-safety expectations + injury-reporting section where a physical footprint exists (B-22", "documented-n/a for office-only instances). Thin: scattered one-off policies, no assembled current set, or set contradicts practice. Absent: no written HR policies."]
+        provenance: authority-backed
+        refresh: ["date:2026-01"]
+        version: v1.0
+  LEGAL:
+    band: "Band 1 -- seed-funded B2B SaaS/infra, pre-Series A (reference-corpus-calibrated), US scope"
+    subcategories:
+
+      - id: LEGAL-01
+        criterion: |-
+          **Band-1 criteria:** (a) Certificate of incorporation, as currently amended/restated, present and matching the last financing's approved form; (b) bylaws present; (c) EIN record present; (d) Delaware annual report + franchise tax current — evidenced by a filing/payment record for the most recent March 1 deadline [unconditional: 8 Del. C. §§501–504; $200 + 1.5%/mo penalty and eventual charter voidness make this the one entity-tier item with hard statutory consequences]; (e) foreign qualification records for each state where the company has an office or W-2 employees [conditional on footprint], with jurisdiction depth for the two dominant operating states: **NY** — Application for Authority, current biennial statement, and (LLC-form only) the publication-requirement certificate; unqualified status carries a real consequence (barred from maintaining NY suits until cured); **CA** — qualification record plus evidence the $800 annual minimum franchise tax and Statement of Information are current [both anchored on the qualification sweep; "doing business" is fact-specific — the criterion scores that the footprint-to-qualification mapping was *assessed and recorded*, not that every conceivable state is covered]; (f) industry licensure record [conditional — activates only for regulated sectors; pure B2B SaaS renders documented-n/a, never red]; (g) federal ownership disclosure: **CTA/BOI reporting is affirmatively not a gap under current law** — domestic entities are exempt per FinCEN's 3/26/2025 interim final rule (final rule still pending as of 12/2025) — rendered as a documented-current-law annotation with a monitor flag, since the exemption is an IFR, not a statute; LLC-form NY instances add the NY LLC Transparency Act overlay [refresh-sensitive: re-verify at every calibration run]; (h) a current Delaware registered-agent record [soft signal — an RA lapse surfaces in the good-standing evidence anyway]; (i) director indemnification agreements [conditional on a priced round — an NVCA-suite ancillary; their absence in a SAFE-only company is affirmatively not a gap]; (j) assumed-name/DBA filings where the company operates under a name other than its legal name [conditional].
+          **Not required and affirmatively not a gap at Band 1:** committee charters; a standing corporate secretary function; D&O questionnaires; subsidiary structures (absence of subsidiaries is normal); charter amendments beyond those the financings required; Exchange Act ownership filings (Schedules 13D/G, Section 16) — public-company regimes, out of scope; CTA/BOI filings while the domestic exemption stands.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["inactive-licensure-sector"]
+        signals: ["filed charter with DE stamp", "bylaws doc", "franchise-tax receipt or annual-report confirmation", "state qualification certificates."]
+        provenance: authority-backed
+        refresh: ["classifier-consumption"]
+        version: v1.0
+
+      - id: LEGAL-02
+        criterion: |-
+          **Band-1 criteria:** (a) A board action record (consents and/or minutes) in which **every** stock issuance, option grant, financing, and officer appointment is traceable to a signed authorizing action [the arbitration bar from C-1 — corpus-verifiable]; (b) stockholder consents where DGCL requires stockholder action (charter amendments, certain financings), executed per 8 Del. C. §228 mechanics (minimum-votes threshold; 60-day delivery window; prompt notice to non-consenting holders where less than unanimous) [conditioned on DE incorporation]; (c) consents carry their referenced exhibits [no-authority — practitioner canon; written defensively: absence of an exhibit renders *thin*, not absent]; (d) a single organized record system (indexed minute book or equivalent digital room) [no-authority — soft].
+          **Not required and affirmatively not a gap:** formal annual stockholder meetings where §228 consent practice substitutes (expressly permitted unless the charter provides otherwise); a meeting cadence of any particular frequency — cadence is reported context per the C-1 arbitration; board observers' records.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: []
+        signals: ["signed consent PDFs", "resolution language matching issuance events found elsewhere in the corpus (cross-tile evidence, B-17)."]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: LEGAL-03
+        criterion: |-
+          **Band-1 criteria:** (a) Every SAFE round: each executed SAFE (identifying the YC version used — post-money v1.1 is the market standard) **plus every side letter** [model-doc genre: side letters modify terms and are first-class artifacts]; (b) if a priced round closed: the closing set against the NVCA-suite checklist (charter as filed, SPA, IRA, voting, ROFR/co-sale, board/stockholder approvals, closing index) [conditioned on a priced round existing — a SAFE-only Band-1 company with no NVCA set is *not* a gap]; (c) each financing's authorizing consents cross-referenced to LEGAL-02.
+          **Not required and affirmatively not a gap:** legal opinions for SAFE rounds; a data room in any particular platform; NVCA governance-policy suite adoption (Oct-2025 IRA trend — reported context only, market practice not yet a Band-1 bar).
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["LEGAL-02"]
+        signals: ["countersigned instrument sets", "per-round folder/index structure", "version-identifiable SAFE headers."]
+        provenance: authority-backed
+        refresh: ["classifier-consumption"]
+        version: v1.0
+
+      - id: LEGAL-04
+        criterion: |-
+          **Band-1 criteria:** (a) The one scored artifact: for compensatory issuances, a **written** equity plan or compensation contracts [unconditional for Rule 701 reliance: 17 CFR 230.701(c) — a document every company actually holds]; (b) everything else renders as a **standing-requirement flag with sourced annotations**, not artifact-scored completeness: the tile surfaces, per financing and per plan adoption, that (i) a Form D is due within 15 calendar days of first sale [17 CFR 230.503(a)(1), verified], (ii) state blue-sky notice obligations attach per C-2's ruling at existence level, (iii) Rule 701's 12-month limits and $10M disclosure trigger condition compensatory issuances [verified], and (iv) CA-employee option plans carry a state plan-exemption notice obligation [act-level, pinpoint deferred]. Evidence of filings found in the corpus *upgrades* the flag to evidenced; its absence never renders red — filing proof routinely lives at counsel and on EDGAR rather than in the company's own corpus, so scoring corpus possession would manufacture false alarms against B-13's grain.
+          **Not required and affirmatively not a gap:** 34 Act/public-company anything; CFIUS/OISP filings absent foreign-investor facts (the NVCA Oct-2025 reps make the *question* market-standard, not the filing); Rule 701 enhanced disclosure below the $10M trigger; a standing securities-counsel opinion file; per-state blue-sky completeness audits; filing-record archives in the corpus.
+          [9E-b amendment v1.1, 2026-07-11: the securities-filing record is scored ONLY on a PRICED equity round (SPA/closing set in corpus) — a missing Form D record with a clean ingest log then renders genuine-absence (event-activated; corpus-only scoring preserved). A convertible-only raise (SAFE/notes) renders INFORMATIONAL — "exemption approach is counsel's judgment; confirm with counsel" — never a scored gap. This governs (b)(i)-(ii) above; the (a) written-plan artifact is unchanged.]
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-13", "convertible-only-informational"]
+        signals: ["the plan document (scored)", "EDGAR accession numbers, filing receipts, or counsel closing memos if present (upgrade evidence only)", "financing events elsewhere in the corpus (which *activate* the flag — a SAFE closing with no securities-compliance flag rendered is a board bug, not a company gap)."]
+        provenance: authority-backed
+        refresh: []
+        version: v1.1
+
+      - id: LEGAL-05
+        criterion: |-
+          **Band-1 criteria:** (a) A PIIA/CIIA (proprietary information & invention assignment) from **every** founder, employee, and technical contractor — coverage is the criterion: the set is complete when it matches the People/Capital rosters [demand-side: both DD lists request these by name; coverage-vs-roster is corpus-verifiable]; (b) founder pre-formation IP assignment (technology assigned into the company at or after formation); (c) registrations *if any* — trademark on the company/product name is the typical Band-1 registration; its absence is thin-at-most, not red [stage-note: Kruze seed tier does not expect a patent portfolio]; (d) where an employee works in a state with an invention-assignment carve-out statute, the PIIA reflects the statutory limit and the required written notice was given — California anchor verified: §2870 carve-out cannot be contracted around (§2870(b): void as against public policy), §2872 notice due at the time the agreement is made [conditioned on employee state; the CA element is unconditional for CA employees on primary authority; the multi-state roster is a reference annotation, not a scored line]; overbroad post-employment assignment reach renders this element *thin with annotation*, not absent (Whitewater line); (e) open-source and third-party license paperwork only where the corpus shows distribution obligations [conditional].
+          **Not required and affirmatively not a gap:** patent filings (affirmatively normal to have none at seed for B2B SaaS); copyright registrations; IP litigation opinions; freedom-to-operate analyses.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: []
+        signals: ["executed PIIA PDFs matched against personnel rosters (cross-category evidence per B-17)", "USPTO registration certificates or serial numbers."]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: LEGAL-06
+        criterion: |-
+          **Band-1 criteria:** (a) Executed offer letter or employment agreement for every W-2 employee; (b) a completed, retained **Form I-9 for every employee** — unconditional from employee #1 [INA §274A/IRCA via USCIS primary: every employer, every hire, citizens included, contractors excluded; retention 3 years post-hire or 1 year post-termination, whichever later]; coverage is roster-checkable the same way as PIIAs; (c) executed contractor agreement for every 1099 contractor; (d) a worker-classification record — the company can show *which* workers are employees vs. contractors **and the stated basis for each call** [capability-level per B-12, deliberately test-agnostic: the DOL 29 CFR Part 795 economic-reality rule is under active rescission proposal (Feb 2026 NPRM), the IRS common-law test differs from it, and state ABC tests differ from both — encoding any single test would bake in a moving target; a written label or contractor agreement alone does not satisfy this, per the DOL's own guidance that labels do not control]; (e) jurisdiction-conditioned statutory compliance: for each state where the company has employees, the mandatory-policy and notice items that state requires at the company's headcount are addressed — using the statutory-landscape material homed here by the People run (pay-transparency, salary-history bans, paid sick leave, harassment-training mandates, new-hire wage notices of the NY/CA class, federal 1+/15+/20+/50+ threshold matrix) as **conditioning reference material, not separately scored line items** [my §2A-delegated judgment: scoring 50-state maximalism at Band 1 encodes a later-stage bar; the criterion scores that the company's *actual* state/headcount exposures are identified and addressed]; (f) **restrictive-covenant hygiene**: employee agreements for CA employees contain no void non-compete clauses [Cal. B&P §16600 voids restraints on lawful trade — corroborated in-thread via the Whitewater commentary] and any legacy void clauses were remediated per the 2023–24 CA notice legislation; stay-or-pay provisions checked against AB 692 (2025) [both at act-level, pinpoints deferred; a legacy clause renders *thin with annotation*, never absent — this is a records-quality element]; (g) **contractor IP capture**: contractor agreements carry present-assignment language rather than relying on work-for-hire, whose statutory categories do not cover most commissioned software [doctrine-level; the assignment-language check is corpus-verifiable and multi-homes with LEGAL-05]; (h) immigration sponsorship records [conditional on sponsored employees — their absence with an all-authorized workforce is not a gap]; (i) People-side criteria reference this subcategory generically for jurisdiction detail (as the People brief already does).
+          **Not required and affirmatively not a gap:** an employee handbook (People owns the handbook — PEOPLE-08's territory; its *legal sufficiency* is not separately scored here); ERISA plan documents beyond carrier contracts (B-26); employment-counsel opinions; multi-state registration where there are no employees in the state.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-12", "B-26", "LEGAL-05", "PEOPLE-08"]
+        signals: ["offer-letter/contractor-agreement sets matched against rosters", "I-9 set matched against the employee roster (B-17 multi-homing with People evidence)", "a classification memo or table stating the basis per worker."]
+        provenance: authority-backed
+        refresh: ["date:2027-01"]
+        version: v1.0
+
+      - id: LEGAL-07
+        criterion: |-
+          **Band-1 criteria:** (a) Fully-executed (countersigned) copies of every customer contract [B-9: executed → Legal; forms/templates → GTM]; (b) executed vendor agreements material to operations, including benefit-carrier contracts [B-26] — materiality at Band 1 proxied by the YC checklist's >$25K obligation threshold, reported as sourced context rather than a hard cutoff [stage-note]; (c) amendments and order forms attached to their parent agreements; (d) executed DPAs are inventoried here as contracts but scored in LEGAL-09 (cross-reference; evidence multi-homes, B-17).
+          **Not required and affirmatively not a gap:** a contract-lifecycle-management system (a folder that is *complete* beats a CLM that is not — capability not tooling, B-12 spirit); leases where the company is remote-first (documented-n/a); JV/partnership agreements (normal to have none).
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-9", "B-12", "B-17", "B-26", "LEGAL-09"]
+        signals: ["countersignature presence on final PDFs", "amendment linkage", "contract-to-revenue cross-checks (multi-homed with GTM-21 traction evidence, B-17)."]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: LEGAL-08
+        criterion: |-
+          **Band-1 criteria:** (a) A dispute record covering pending **and threatened** matters — demand letters, agency correspondence, employee prior-employment/IP claims [demand-side: the YC checklist requests threatened-action correspondence explicitly]; (b) where there are no disputes, an affirmative none-statement (a dated "no pending or threatened claims" record) so the classifier can distinguish a clean company from an un-ingested file [corpus-verifiable; mirrors the three-outcome discipline]; (c) litigation-hold *process* documentation where a hold is active [conditional; grounded in the preservation duty that arises on reasonable anticipation of litigation — stated as doctrine, deliberately without a pinpoint citation to avoid an unresolved flag; the §9E audit or Compliance run may add the cite].
+          **Not required and affirmatively not a gap:** an empty litigation docket is the *expected* Band-1 state — no disputes is green with the none-record, not thin; outside-counsel engagement letters; e-discovery tooling.
+          **Exclusion-class interaction (B-11, ruled per E-1):** where an instance's exclusion class keeps dispute materials out of the corpus by policy, this subcategory renders the **placeholder state** — "maintained outside the corpus by policy," visible to board viewers with neutral data-minimization framing — **never "absent," never green**. The placeholder affirms the organization obligation; the scorable elements are the hold/organization process record and the none-record, never contents; the People-side face (PEOPLE-04/08) renders identically.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-11", "exclusion-class", "PEOPLE-04"]
+        signals: ["demand-letter documents", "hold notices", "the none-record", "ingest-log exclusion entries (the *log entry* is the classifier's evidence for the policy-exclusion state)."]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: LEGAL-09
+        criterion: |-
+          **Band-1 criteria:** (a) A **posted, conspicuous privacy policy** on the company's website/app — unconditional for any commercial site collecting personal information from California residents, which in practice is every commercial site [CalOPPA — no revenue or volume threshold; the posting mandate, not CCPA, is what makes this a floor requirement]; (b) posted **terms of service**; (c) a **data-processing inventory** — what personal data is collected, where it is stored/processed, and which vendors/subprocessors touch it [the artifact the policy, DPAs, and breach response are all built from; demand-side: B2B enterprise security reviews request it, and it multi-homes with Compliance's SOC 2 evidence per B-17]; (d) a **state-privacy-law applicability assessment**: whether the company meets CCPA-class thresholds ($25M revenue / 100K consumers / 50% revenue from data sales — dated context annotations per B-12), recorded either way — at Band 1 the honest common outcome is "below threshold, reassessed at [trigger]," which scores *complete*, not thin [stage-note: encoding CCPA program mechanics as a Band-1 bar would import a later-stage norm; the assessment, not the program, is the criterion]; (e) **breach-notification readiness**: a record of who acts and what gets assessed on an incident — every state has a breach-notification statute, CA's includes AG notice above 500 residents [reference annotation]; a lightweight named-owner-plus-steps record satisfies Band 1; (f) **executed DPAs** where customer contracts require them [conditional on customer demand — their absence with no customer requiring them is not a gap]; (g) **sector-conditioned regimes** [B-22 activation pattern — sector detected from the corpus]: HIPAA business-associate posture (BAAs) where the company touches protected health information; GLBA where financial data; COPPA where child-directed services; each renders documented-n/a for an out-of-sector instance, never red [flag: the Customer A deployment is the likely first activation test — sector detection determines whether the HIPAA-class element fires]; (h) an **AI-regulatory applicability assessment** — whether the company develops or deploys automated decision-making technology that materially influences consequential decisions (employment, lending, housing, insurance, healthcare) and which state regimes reach it [assessment-level only, and deliberately so: the landscape is the most volatile in the entire model — Colorado's first-in-nation AI Act (SB 24-205) was repealed before ever taking effect, replaced by SB 26-189 (signed 5/14/2026, effective 1/1/2027, ADMT-disclosure framework, mandatory AG rulemaking), alongside CCPA ADMT regulations, Illinois, and NYC Local Law 144's hiring-tools regime; encoding any regime's mechanics today would score obligations that may be rewritten before the classifier runs; hard refresh flag — re-sweep every calibration run]; (i) **trade-controls applicability** [conditional on international sales or controlled technology: OFAC sanctions-screening practice where customers are international; export-classification awareness where the product is controlled software — assessment-level].
+          **Not required and affirmatively not a gap:** a GDPR program (non-US, out of Band-1 scope per the US-jurisdiction ruling); a DPO or privacy officer title; CCPA request-handling machinery while below threshold; cookie-consent banners absent an applicable mandate; privacy certifications; a COPPA program absent child-directed services; an AI risk-management program modeled on the repealed SB 24-205 regime (its duty-of-care/impact-assessment framework never took effect).
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-12", "B-17", "B-22"]
+        signals: ["the posted policy and ToS (URL-bearing artifacts in the corpus or crawlable from it)", "a processing-inventory document", "DPA-bearing executed contracts (multi-homed with LEGAL-07)", "an applicability memo."]
+        provenance: authority-backed
+        refresh: ["date:2027-01"]
+        version: v1.0
+
+      - id: LEGAL-10
+        criterion: |-
+          **Band-1 criteria:** (a) **CAN-SPAM mechanics** wherever an outbound email motion exists [conditional on motion — activated for any instance whose GTM corpus shows outbound; no B2B exception]: accurate sender identification, ad identification, valid physical postal address in the footer, a working conspicuous opt-out honored within 10 business days, and a suppression-list practice; liability is non-delegable to the email vendor, so "our ESP handles it" without a record renders *thin* [FTC primary — the agency that owns the rule; penalty context: up to $53,088 per email]; (b) an **ADA website-accessibility posture record**: the company knows its exposure (Title III applies to public accommodations; courts and DOJ extend it to websites; no small-business exemption) and holds either an accessibility audit/remediation record against WCAG 2.1 AA or a dated decision record accepting the risk [honesty note: **there is no codified technical standard for private-business websites** — WCAG 2.1 AA is the de facto litigation and settlement benchmark only, so this criterion scores posture-awareness, never WCAG conformance itself; conformance-scoring would encode a standard no rule imposes]; (c) **TCPA awareness record** where the motion includes texting/calling [conditional]; (d) marketing-claims discipline: testimonial/endorsement usage consistent with FTC guides [soft; no-authority as a scored line — folded].
+          **Not required and affirmatively not a gap:** WCAG conformance certification; accessibility overlays (affirmatively *not* a compliance answer — plaintiff firms target them); a do-not-call program absent a calling motion; marketing-compliance counsel on retainer.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: []
+        signals: ["email-footer artifacts (address + unsubscribe) in the corpus's outbound templates (multi-homed with GTM enablement assets, B-17)", "an accessibility audit or decision memo", "suppression-list exports or ESP configuration records."]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+  CAP:
+    band: "Band 1 -- seed-funded B2B SaaS/infra, pre-Series A (reference-corpus-calibrated), US scope"
+    subcategories:
+
+      - id: CAP-01
+        criterion: |-
+          Band-1 completeness criteria:
+          - A written capital plan exists connecting money to milestones: what the current capital must prove (externally verifiable — the next round's bar, a revenue mark, a technical demonstration), the runway it buys at planned burn, and when the next raise begins. Form free — a memo, a board-deck section, a planning doc. Scored on existence, currency, and milestone linkage; the 18–24-month norm and buffer math are context annotations.
+          - The plan evidences solvency awareness (PG default-alive frame): the company can state, from its own numbers, whether the current trajectory reaches profitability before cash-out, and which it is counting on — growth, cut, or raise — with facts explicitly separated from hopes. Cross-references the Finance-owned burn model (R-3): the model is Finance's; the stated posture drawing on it is this criterion's artifact.
+          - Dilution planning exists at decision points: before each instrument issuance, evidence the founders modeled post-conversion ownership (the post-money SAFE stacking problem named in canon). Cross-references CAP-05's terms register (the data that makes the math computable) and PEOPLE-02 (B-25 — band design is People's; the dilution consequence of the pool is planned here; option-pool-shuffle awareness is a classifier tell).
+          - Instrument-selection reasoning is recorded when the company chooses SAFE vs priced vs debt — a sentence in a consent or memo suffices. Existence of reasoning, never correctness of choice.
+          - [Sprint-L prereq]: the capital plan is the strategy input of the fundraising/IR loop — the analog of GTM strategy in the GTM loop.
+          [9E-b amendment v1.1, 2026-07-11: the underlying model (burn/runway + projection engine, Finance-owned per R-3) is the PRIMARY artifact of the plan's solvency and dilution elements. A board-deck-embedded plan is an acceptable PRESENTATION of that model, never a SUBSTITUTE for it: a deck section present with no underlying model anywhere and a clean ingest log renders THIN ("presentation-layer plan without underlying model").]
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-25", "CAP-05", "PEOPLE-02", "presentation-without-model-thin"]
+        signals: ["capital/fundraising plan docs", "runway or default-alive language in board materials", "dilution scenario tabs referenced from planning docs", "raise-timing discussion in minutes."]
+        provenance: expert-authored
+        refresh: []
+        version: v1.1
+
+      - id: CAP-02
+        criterion: |-
+          Band-1 completeness criteria:
+          - A current fully-diluted cap table exists (every class, every convertible as-converted, option pool granted/available), reconciled to the stock ledger — the record of stockholders of record and all issuances/transfers (DGCL §219(c)/§224; electronic form permitted).
+          - Authorization trace: every issuance and grant resolves to a board consent/minute, a compliant §157(c) delegation resolution, or a §204 ratification curing a defect. The C-1 traceability ruling (legal/BRIEF.md) cross-applies: a Carta subscription is never the criterion; the reconciled, authorization-traceable record is.
+          - Per-line instrument linkage: an executed instrument behind every cap-table line (the line with no document behind it is the canonical DD red flag; per Farrell Fritz the defect compounds to exit).
+          Informational element (E-2, ruled): QSBS support records — dated gross-asset-test evidence at issuance, basis/holding data, pre/post-2025-07-04 regime tag. Annotation only, never a tile-color input. [refresh: band-2]
+          B-11 design: an instance excluding capitalization data by policy renders PLACEHOLDER (LEGAL-08 pattern); scorable elements reduce to the administration-process record + affirmative none-record. On the reference company, cap-table material is in-corpus by instance policy.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-11", "exclusion-class", "LEGAL-08"]
+        signals: ["cap-table artifact + ledger + consent set with cross-referencing entities", "per-line instrument linkage", "delegation resolutions", "ratification certificates."]
+        provenance: authority-backed
+        refresh: ["band-2"]
+        version: v1.0
+
+      - id: CAP-03
+        criterion: |-
+          Band-1 completeness criteria:
+          - The equity incentive plan exists with board and stockholder approvals and form agreements.
+          - Grant-to-reserve-and-consent reconciliation exists in some form: a dedicated grant ledger, or a cap table whose option-pool detail ties each grant to the plan reserve and its authorizing consent (or a compliant §157(c) delegation; no self-grants). A reconciling cap table satisfies this element; a separate ledger document is one form of the reconciliation, never the requirement. [Amended v1.1, operator-ruled 2026-07-15.]
+          - An 83(b) administration record exists: the company tracks the 30-day deadline per grant of restricted/early-exercised stock and retains proof of filing (Form 15620 confirmation or mailed-election proof), with a copy furnished per §1.83-2 (company-side action items converged across Mintz/Goodwin/MoFo).
+          - Exercise records are maintained within the grant ledger (dates, prices, FMV at exercise tied to the governing 409A) — the dataset that §6039 reporting consumes. The §6039/Form 3921 reporting capability itself homes in Finance per B-29 (ruled this run); the exercise dataset multi-homes as evidence (B-17).
+          - Equity loans to employees/directors, if any are evidenced, are documented. No loan evidence anywhere in the corpus with a clean ingest log is not a gap and renders informational at most ("no equity loans evidenced"); an affirmative none-record is confirming evidence where one exists, never a required artifact. [Amended v1.1, operator-ruled 2026-07-15 — delegation/event pattern, cf. LEGAL-04.]
+          Documented n/a at Band 1: ESPP/§423 and Form 3922; §280G analysis (activates at change-of-control; B-6 pattern).
+          Boundary (B-25): compensation philosophy, leveling, and bands — including the equity band by level — are PEOPLE-02's; this subcategory scores instruments and administration; the grant dataset multi-homes (B-17).
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-6", "B-17", "B-25", "B-29", "PEOPLE-02"]
+        signals: ["plan document + approval consents", "grant ledger/register", "83(b) confirmations folder", "exercise records", "loan documents or none-record.", "reconciling cap table", "cap table option pool"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.1
+
+      - id: CAP-04
+        criterion: |-
+          Band-1 completeness criteria:
+          - A written 409A report by a qualified independent appraiser exists (or a documented illiquid-startup-method valuation meeting the §(B)(2)(iii) qualified-person bar), with board acknowledgment.
+          - The report satisfies the statutory condition as of each grant date: no more than 12 months old AND reflecting all information available that may materially affect value (26 CFR §1.409A-1(b)(5)(iv)(B), primary-verified). The refresh criterion is statutory-conditioned, never a bare annual cadence.
+          - A documented material-event assessment tied to each grant cycle exists (C-2 arbitration, ruled: process, never a fixed trigger taxonomy — the statute's condition is fact-based). Context annotation (operator rule-of-thumb, 2026-07-09; dated, never scored): six-figure SAFE raises typically do not trigger a refresh; larger convertible raises do — the scored artifact remains the documented assessment.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: []
+        signals: ["the 409A report", "report date vs latest grant consent date", "material-event check lines in grant-cycle minutes", "board acknowledgment."]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: CAP-05
+        criterion: |-
+          Band-1 completeness criteria:
+          - Every outstanding convertible and priced instrument is present and registered: SAFEs (YC post-money v1.1 anchor via legal/BRIEF.md §2) and notes with a terms register (valuation caps, discounts, MFN, side letters, pro-rata) sufficient to compute the pro-forma as-converted cap table. Ambiguous conversion mechanics are a named investor-side red flag (Farrell Fritz). The operating canon supplies the why: post-money SAFEs stack dilution silently; the register is what makes CAP-01's dilution planning computable.
+          - Priced-round document sets where they exist; the records multi-home with Legal's financing closing sets (B-17); content governance is Legal's.
+          - Securities-exemption compliance for any instrument renders as the flagged standing requirement cross-referenced to Legal (Legal-run E-2 precedent) — never re-scored here.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-17", "CAP-01"]
+        signals: ["instrument PDFs + terms register", "as-converted/pro-forma tabs", "side-letter registry."]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: CAP-06
+        criterion: |-
+          Band-1 completeness criteria:
+          - Hard fundraising-vision artifacts exist (R-1 / B-30): a current pitch deck, and fundraising financial projections (the raise-facing output; model machinery Finance-owned per R-3; artifact multi-homes B-17). Soft identity content the deck draws on — mission (Vision), culture (People) — is cross-referenced, never owned or re-scored here.
+          - A raise-process record exists for any active or completed raise: an investor pipeline/tracking artifact (targets, status, next steps — the CRM analog of the GTM loop [Sprint-L prereq]), and evidence the process was run as a process (parallel conversations, timeline — F-lineage pacing discipline). Between rounds, the criterion is the LAST raise's record plus CAP-01's next-raise timing; a live pipeline is affirmatively not required between raises.
+          - Diligence-answerability (E-3, ruled: scored, defensive): the records a YC/Cooley-class capitalization request demands are present and organized such that a data room could be assembled on demand — scored as presence-and-organization of the enumerated records, never a subjective readiness judgment. Stage-honest per the converged seed set (deck, projections, cap table, incorporation docs, instruments, team/traction).
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-17", "B-30", "CAP-01"]
+        signals: ["deck files with dates", "projection outputs", "investor pipeline trackers", "raise retro/close notes", "data-room index."]
+        provenance: expert-authored
+        refresh: []
+        version: v1.0
+
+      - id: CAP-07
+        criterion: |-
+          Band-1 completeness criteria:
+          - A relationship record exists: who is on and around the cap table — current investors and cultivated prospects — with an owner (default: CEO) and last-touch/next-step state. Form free (spreadsheet, CRM, notes page). This is the lines-not-dots artifact: the S-lineage doctrine scored as the existence of trajectory-building machinery, never as meeting quotas (C-3, ruled).
+          - An update practice exists and runs: defined cadence, consistent sends, substantive content (metrics, lowlights, asks — the ask element is the leverage arm: intros, hiring, follow-on cultivation). Cadence value is context (monthly is the Band-1 norm, dated); existence and consistency are the criteria (C-1, ruled). [Sprint-L prereq]: the update send is the loop's automation-candidate arm.
+          - Contractual deliverables (conditional activation, B-22 pattern): if a priced round with an IRA exists — deliverable obligations known (annual financials, quarterly unaudited, budget, to threshold-defined Major Investors; Oct-2025 NVCA form) and delivery evidenced. SAFE-only: documented-n/a, never absent — with the canon's reminder as an annotation: SAFE holders are on the cap table and hear nothing unless sent something (the voluntary practice covers them).
+          - Board vs investor communication split documented at the level of a sentence: what goes to the board (People/Ops machinery multi-homes) vs the investor list.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-22"]
+        signals: ["investor list/CRM artifacts", "sent updates with dates", "IRA + delivery evidence", "ask-and-response threads", "board-vs-update artifacts."]
+        provenance: expert-authored
+        refresh: []
+        version: v1.0
+  FIN:
+    band: "Band 1 -- seed-funded B2B SaaS/infra, pre-Series A (reference-corpus-calibrated), US scope"
+    subcategories:
+
+      - id: FIN-01
+        criterion: |-
+          Complete when: (a) an accounting system of record is set up and live (QBO-class
+          industry-standard tool -- standard matters because accountant, tax preparer, and future
+          hires must work in it), with a chart of accounts fit to the business model; (b) someone
+          owns the books -- a named owner and, at Band 1, typically an engaged outsourced
+          bookkeeping/accounting firm; founder-in-a-spreadsheet renders thin, not absent;
+          (c) expenditures are tracked as they happen: corporate cards and/or a spend-management
+          layer with categorization discipline, receipt capture, and stated approval/spend
+          limits -- real-time spend visibility is the operating point; (d) books are reconciled
+          and closed monthly (bank/card/processor tie-outs; a repeatable close the owner actually
+          runs); (e) the basis of accounting is stated and consistent -- cash is affirmatively
+          not a gap pre-revenue; recurring revenue, AR with terms, or an institutional round makes
+          accrual ("GAAP with exceptions") the reference direction. Rev-rec and equity-instrument
+          treatment are detection-level policy signals, never scored mechanics.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: []
+        signals: ["live GL with current-month activity", "spend-tool exports", "reconciliation", "bookkeeper", "accounting firm", "outsourced bookkeeping"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: FIN-02
+        criterion: |-
+          Complete when: (a) the P&L, balance sheet, and cash position come out of the system on
+          a defined cadence; (b) someone actually reviews them -- a financial review exists as an
+          operating rhythm, examining revenue vs. plan, gross-margin movement, spend by
+          category/department, and cash/burn/runway; (c) a reporting pack in a consistent format
+          goes to board/investors at least quarterly (C-1 ruling: quarterly is the Band-1
+          reference cadence; an executed covenant's terms govern where present; the monthly
+          practitioner norm is context, not a bar), with variances explained in narrative;
+          (d) headcount-vs-plan is a pack element; (e) where an executed IRA imposes
+          deliverables, production capability matches the covenant (obligation side CAP-07,
+          B-17). Stage honesty: unaudited statements are perfectly fine at Band 1 (C-2 ruling);
+          an audit is required only where the company's own executed documents or a regulation
+          require one -- its absence otherwise is affirmatively not a gap. A pack that changes
+          format every period renders thin; consistency is what makes trends and the future data
+          room real.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-17", "CAP-07"]
+        signals: ["packs in a stable format on cadence", "BvA commentary", "review-meeting artifacts", "P&L", "profit and loss", "income statement", "balance sheet", "financial statements"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: FIN-03
+        criterion: |-
+          Complete when: (a) an annual operating budget/plan exists and was adopted (board
+          approval recorded where a covenant or governance practice requires it); (b) it is used:
+          budget-vs-actuals runs on a cadence and demonstrably feeds decisions (spend
+          adjustments, hiring pace); (c) the plan is revisited when reality diverges -- an
+          in-year reforecast practice, however lightweight. A budget built once for a raise and
+          never reopened renders thin. Criteria score the artifact and its use; the B-2 planning
+          split's final ruling remains with the Vision run (Finance-side stress-test held).
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-2"]
+        signals: ["budget artifact with adoption date", "BvA in packs", "reforecast versions."]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: FIN-04
+        criterion: |-
+          Complete when artifacts 1, 3, 4 exist as distinguishable artifacts, the burn/runway
+          method is stated, and the model is maintained -- actuals flow in and the forecast
+          updates; a model last touched at the prior raise renders thin. One spreadsheet serving
+          all four functions identifiably renders thin-with-annotation, never absent.
+          Context annotations (dated, non-scoring per B-12): default-alive/default-dead framing
+          (Graham 2015); burn multiple = net burn / net new ARR (Sacks 2020; under 1 excellent,
+          ~2 the scrutiny line).
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-12"]
+        signals: ["model files with actuals-refresh dates", "runway in packs citing method", "driver"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: FIN-05
+        criterion: |-
+          Complete when: (a) a bank-account inventory exists with the FDIC-insurance posture of
+          each balance stated (sweep/ICS documented where balances exceed $250k at any one bank);
+          (b) a cash-management/investment policy exists -- board-ratified per the investor-side
+          canon -- stating where excess cash sits (operating buffer, insured sweep, T-bills/MMF)
+          and who may move it; (c) a cash forecast runs on a defined cadence; (d) concentration
+          risk is addressed (two banks or equivalent insured-sweep diversification). QSBS
+          interaction with fund products flagged for advisor review (cross-ref Capital E-2).
+          Stage honesty: two banks + an insured sweep + a one-page ratified policy is Band-1
+          complete; a treasury team or daily dashboard is a later-stage norm, context only.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: []
+        signals: ["account inventories", "policy statements with board approval", "sweep-program"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: FIN-06
+        criterion: |-
+          Complete when: (a) a tax preparer / CPA firm is engaged and a named internal owner
+          exists for the relationship -- the criterion's center of gravity; (b) filings are
+          current: federal returns filed or validly extended each year since incorporation;
+          Delaware franchise report and tax current; state registrations and filings current for
+          the actual footprint; (c) the compliance calendar exists or is demonstrably delegated
+          to the engaged firm; (d) the R&D-credit question has been answered -- claimed, or
+          not-claimed with a recorded decision (real money against burn for a pre-profit company;
+          silence renders thin); (e) the Sec. 174A treatment decision is on record [refresh:
+          state conformity volatile; the small-business retroactive window closed 2026-07-06, so
+          an unexercised election is historical fact, not an open gap]; (f) Form 5471 conditional
+          on foreign-corporation ownership; documented n/a otherwise. All form mechanics render
+          as dated context annotations (Sec. 1.4 annotation layer) feeding gap-closing
+          generation, never as scored elements.
+          [Amendment v1.1, operator-ruled 2026-07-15 — delegation doctrine (FIN-08 v1.1 pattern): filed or extended returns bearing an engaged preparer's signature are themselves delegation-in-practice evidence (B-32); per-year filing completeness is assessed against the filing exhaust that naturally exists, never a company-kept schedule. Where an engaged preparer/CPA relationship is evidenced, unanswered calendar (c), R&D-credit (d), or §174A (e) items render INFORMATIONAL ("typically handled by your accountant; confirm coverage"), never a scored gap; with no preparer evidenced they score per the ingest log. Element (a)'s named-internal-owner requirement is satisfied by the relationship demonstrably operating.]
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: []
+        signals: ["engagement letter", "filed returns/extensions in the corpus", "DE good-standing"]
+        provenance: authority-backed
+        refresh: ["state conformity volatile; the small-business retroactive window closed 2026-07-06, so an unexercised election is historical fact, not an open gap"]
+        version: v1.1
+
+      - id: FIN-07
+        criterion: |-
+          Complete when: (a) a payroll provider is set up (Gusto-class or PEO) and payroll runs
+          through it -- never by check -- with a named owner; the provider's automated filings
+          (941/940/W-2) are the compliance machinery, and the scored element is that the
+          machinery exists, is owned, and is current (B-31: the vendor operating process is Ops
+          OPS-05; compensation content is People; the register multi-homes); (b) contractor
+          payments route through a system that produces 1099s; (c) ISO-exercise reporting
+          capability exists (B-29): the cap-table platform or the engaged firm demonstrably
+          handles Form 3921 when exercises occur, FMV tied to the governing 409A (dataset =
+          Capital CAP-03; this criterion scores the records-for-filing and the filing act, never
+          Capital's records); a no-exercise year renders complete with an affirmative
+          none-record; (d) if the Sec. 41(h) payroll election was made, the credit is actually
+          flowing through the payroll provider (8974 follow-through ownership -- the canon's
+          named failure mode is providers botching it); (e) ACA information filings conditional
+          on ALE status; documented n/a below threshold. Deadlines and filing-channel mechanics
+          → annotation layer.
+          [Amendment v1.1, operator-ruled 2026-07-15 — event-conditionality and exhaust (LEGAL-04 / B-32 patterns): element (c) — no exercises evidenced anywhere with a clean ingest log renders the element complete; an affirmative none-record is confirming evidence where one exists, never required. Element (d) — absent evidence the §41(h) election was made, renders documented-n/a. Element (e) — below-ALE headcount renders documented-n/a without requiring a determination record at Band 1. Element (a)'s named-owner requirement is satisfied by the provider demonstrably running (ACH exhaust, filing confirmations).]
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-29", "B-31", "CAP-03", "OPS-05"]
+        signals: ["provider account with run history and filing confirmations", "1099 issuance", "payroll ACH entries", "Gusto", "PEO"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.1
+
+      - id: FIN-08
+        criterion: |-
+          Complete when: (a) someone has answered "do we owe sales tax anywhere?" with a dated
+          assessment against the real footprint -- physical nexus (any remote employee's state)
+          plus economic nexus (post-Wayfair thresholds; $100k modal; transaction prongs being
+          repealed state by state [refresh: classifier-consumption]) plus SaaS-taxability per candidate state (state by
+          state and unstable: CA exempts, PA/NY tax; bundling can convert the invoice --
+          separate-stating noted); (b) monitoring is owned -- an Anrok/TaxCloud-class tool wired
+          to billing, or the engaged firm, watches thresholds as the company grows;
+          (c) where the answer was yes: registered before collecting, returns filed on the
+          assigned cadence (registration may be required even where SaaS is exempt, for zero
+          returns). A completed assessment renders evidence-found whatever it concluded —
+          having assessed is the mature state (v1.1 green path governs); documented-n/a is
+          reserved for instances with no sales-tax-relevant footprint at all, never for a
+          completed assessment. The assessment artifact, its date, and a
+          refresh cadence are the scorable elements, not any registration count. Hard refresh
+          flag on the entire subcategory.
+          [9E-b amendment v1.1, 2026-07-11: the dated nexus-assessment record is the GREEN path (evidence-found), NOT a floor. Absent an assessment but WITH an evidenced accountant/tax-firm relationship, the tile renders INFORMATIONAL -- "state-tax exposure is typically handled by your accountant; confirm coverage." With neither the assessment nor an accountant relationship, the tile scores the gap (thin / genuine-absence per the ingest log).]
+          [Amended v1.2, operator-ruled 2026-07-15 — retires the pre-v1.1 documented-n/a sentence the 9E-b amendment superseded but never struck; surfaced by rollup R1 at gate4, fixture FX-41b.]
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-6", "B-22", "current-assessment-green"]
+        signals: ["assessment memo or tool configuration", "billing integration", "registration", "accountant relationship", "CPA engagement", "tax preparer", "filed return preparer signature", "ERO"]
+        provenance: authority-backed
+        refresh: ["classifier-consumption"]
+        version: v1.2
+  VIS:
+    band: "Band 1 -- seed-funded B2B SaaS/infra, pre-Series A (reference-corpus-calibrated), US scope"
+    subcategories:
+
+      - id: VIS-01
+        criterion: |-
+          Complete at Band 1 when:
+          (a) An articulated statement of what the company is and why it exists appears in any artifact form — one-liner, about page, deck purpose slide, handbook page. A single declarative sentence meets the bar (the demand-side bar, doubly sourced: Sequoia's single-declarative-sentence purpose; YC's picture-it-immediately one-liner).
+          (b) Where an enterprise-values artifact exists, its identity face homes here per B-24 (behavioral-norms face → PEOPLE-06; one artifact multi-homes per B-17). Absence of a separate values artifact is NOT a VIS-01 gap when identity is articulated in the mission/purpose content — the values-artifact bar is scored at PEOPLE-06; here it annotates.
+          (c) Use: the identity content appears in at least one operating context beyond fundraising materials (onboarding, handbook, site, planning doc). Where the ONLY articulation lives inside Capital-owned fundraising artifacts (B-30), VIS-01 renders thin-with-annotation, never absent — the content exists; it is not yet running the company. (Operator-confirmed rule, 2026-07-09; expert-authored, see Sec. 7 — downgrade-only: it can move complete→thin, never render absent.)
+          Affirmatively not gaps: a polished or public statement; separate "vision statement" and "mission statement" artifacts (one suffices — the canon holds the understanding is the substance, the statement the vehicle); statement length or component coverage (Pearce-David components are generation-layer context per C-2).
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-17", "B-24", "B-30", "PEOPLE-06"]
+        signals: ["our mission,\" \"we exist to,\" company one-liners in about/onboarding/handbook/deck-purpose content", "multi-homed pulls from the Capital corpus."]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: VIS-02
+        criterion: |-
+          Complete at Band 1 when:
+          (a) An enterprise-scoped, long-horizon (2–5+ year, B-1) strategy artifact exists carrying, in substance: a thesis about the situation (what is changing / why now), a chosen direction (where the company is going at enterprise level), and an approach (how it intends to win). These elements are the convergence of the strategy lineages and are the criterion's derivation, never a scored template. At seed, a documented strategic CHOICE across the enterprise-scoped domains (which customers, which technology, what identity, whom to compete against — the entrepreneurial-strategy vocabulary) qualifies as this artifact even where it does not read as a "strategy memo"; founding purpose serving as the recorded decision rule among futures links VIS-01 to VIS-02 and is strong-form evidence.
+          (b) Scope discipline per B-1: function-scoped, operational-horizon strategy (quarterly sales motion, product roadmap) is not this artifact and is never absorbed here; a single document carrying both multi-homes (B-17).
+          (c) Use per B-23's posture: the artifact is referenced in planning, goal-setting, or board discussion at least once since authorship. A used one-pager renders complete; an unused vision deck renders thin.
+          (d) Seams enforced, never re-scored: defensibility thesis → PRODUCT-06 (B-16); fundraising-facing narrative artifacts → Capital (B-30), admissible here as evidence; market analysis/TAM/positioning → GTM (B-7).
+          Affirmatively not gaps: a strategic-planning process, annual offsite, or multi-page strategic plan (the planning-formality debate is a dated context annotation per C-1); a strategy that names no framework. A strategy artifact contradicted by what the corpus shows the company actually doing renders inconsistency, not absence.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-1", "B-7", "B-16", "B-17", "B-23", "B-30", "PRODUCT-06", "VIS-01"]
+        signals: ["strategy memos, V/TO Vision pages, \"where we're going\" docs, why-now narratives, board-deck strategy sections", "recorded choice-domain language (target customer class, technology bet, identity, competitive posture)", "strong-form marker: an artifact recording what the company chose NOT to do (trade-off evidence — Porter) — a signal, never a required element."]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: VIS-03
+        criterion: |-
+          Complete at Band 1 when:
+          (a) A long-range target exists (3–10-year class: BHAG / 10-Year-Target / 3-year-picture equivalents) concrete enough that arrival is knowable — the finish-line test. Concreteness is capability-honesty (an unevaluable goal is not a usable goal); target VALUES are never scored (B-12).
+          (b) Current-period company-level goal content exists (annual company goals / objectives content) traceable to the long-range direction — the traceability element is the interconnection property the WMS targets dimension scores empirically (targets consistent through the organization; short- and long-horizon connected). B-2 governs the seams: goal-setting and review machinery → Ops; the financial plan → FIN-04; one planning artifact multi-homes all three (B-17).
+          (c) Use: the goals appear in operating contexts — planning documents, board updates, or team-level goals derived from them.
+          Affirmatively not gaps: any specific horizon length (the company's actually-used horizon governs; the 10–30-year BHAG is a lineage recommendation, context only); OKR/EOS/any framework conformance; a vivid-description or envisioned-future prose artifact; quarterly rocks (Ops machinery).
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-2", "B-12", "B-17", "FIN-04"]
+        signals: ["V/TO target sections, annual-plan goal content, company-level OKR objective text, board goal slides."]
+        provenance: mixed(authority-backed/expert-authored)
+        refresh: []
+        version: v1.0
+  ENG:
+    band: "Band 1 -- seed-funded B2B SaaS/infra, pre-Series A (reference-corpus-calibrated), US scope"
+    subcategories:
+
+      - id: ENG-01
+        criterion: |-
+          (a) A current architecture overview a senior outside engineer can navigate
+          the system from: components, data stores, external boundaries.
+          (b) Significant decisions carry recoverable rationale — ADR log is the
+          reference shape; design docs, RFC threads, or substantive PR descriptions
+          satisfy it. Scored: consequential choices dated and traceable,
+          supersessions visible.
+          (c) The team can enumerate its deliberate shortcuts — debt register,
+          tracker labels, or roadmap items; never a prose confession requirement.
+          (d) Where the corpus holds a defensibility thesis (PRODUCT-06, B-16), the
+          architecture record identifies what implements it; the thesis is not
+          re-scored here.
+          Staleness rule: an architecture doc contradicting the deployed system is a
+          staleness finding — worse than absence.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-16", "PRODUCT-06", "contradicted-artifact"]
+        signals: ["architecture/system docs, docs/adr/ or decision logs, diagrams,"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: ENG-02
+        criterion: |-
+          (a) Product code in version control, history intact, protected mainline —
+          merge gating observable in repo configuration, not asserted.
+          (b) Review in use: merged changes show review evidence wherever a second
+          engineer exists (a solo codebase is an observable fact, not a waiver to
+          file). Reference standard: Google eng-practices code-health principle.
+          (c) Tests exist, run in CI on every change, and are trusted: failures
+          block merges; a tolerated red mainline or mass-skipped suites is a
+          finding. Coverage percentages are context annotations only (B-12).
+          (d) Integration convention evidenced by repo history itself (C-1 ruling:
+          convention-practiced is the score; trunk-based vs. PR workflow is
+          reported context, never graded).
+          (e) No secrets in the repository — a scannable fact.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-12"]
+        signals: ["repo metadata/branch protection, PR/review artifacts, CI test"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: ENG-03
+        criterion: |-
+          (a) The pipeline gates merges: build and test on every change, required
+          checks enabled.
+          (b) Deploys automated or fully scripted; deploy history shows the path in
+          regular use.
+          (c) Rollback is a demonstrated capability: an automated mechanism, or
+          revert/recovery visible in history; a runbook only where the mechanism
+          needs hands.
+          (d) One path: staging and production promote through the same pipeline;
+          schema migrations travel through it; deploy history shows the single path
+          (never merely "stated").
+          Boundary: technical change control only. Change-management operating
+          process → OPS-07; SOC 2 change-management control → Compliance detection
+          (B-19). Evidence multi-homes (B-17).
+          DORA context annotation (dated 2025, non-scoring): delivery metrics
+          characterize health; the 2025 report finds AI adoption raising throughput
+          while adding instability where foundations are weak.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-17", "B-19", "OPS-07"]
+        signals: ["CI configs, required-check settings, deploy scripts/IaC, deploy"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: ENG-04
+        criterion: |-
+          (a) Failures reach a human: alerting configuration wired to a real
+          destination; at minimum uptime and error-level signal on customer-serving
+          paths.
+          (b) A named reachable responder. C-2 RULED: no on-call rotation and no
+          24/7 coverage expectation at Band 1; absence of a rotation is never a
+          gap; absence of any reachable responder is.
+          (c) Incidents leave traces: acknowledged alerts, incident threads/issues;
+          majors get a blameless postmortem whose follow-up items were actually
+          closed — follow-up completion is the "is used" bar.
+          (d) Where executed customer contracts promise availability (Legal-owned),
+          the reliability practice evidences the capability — multi-homed,
+          cross-referenced.
+          No written incident-response policy is required (B-32); an IR policy
+          document in the corpus is Compliance evidence, corroborating at most.
+          Certification status (SOC 2 report, ISO 27001) is Compliance-scored and
+          cross-referenced here as corroboration (B-17/B-32).
+          SLOs and error budgets are affirmatively not a Band-1 gap (later-stage
+          annotation; the SRE canon's own engagement model treats them as earned).
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-17", "B-32"]
+        signals: ["alerting configs and routing, status-page wiring, incident"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: ENG-05
+        criterion: |-
+          (a) The environment is reconstructible: infrastructure-as-code preferred;
+          where hand-built, configuration versioned or inventoried well enough that
+          an engineer could rebuild it. The test is reconstruction, not a memo.
+          (b) Production secrets live in a runtime secrets mechanism, not
+          hand-managed files — observable from configuration. (Access-management
+          process → Ops per B-4; certification-grade controls → Compliance.)
+          (c) A staging environment exists once real customers are served.
+          (d) Where load exists, the current bottleneck shows up in the team's own
+          issues/docs; pre-load, nothing here is a gap.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-4"]
+        signals: ["IaC files, environment configs, secrets-manager references,"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: ENG-06
+        criterion: |-
+          (a) Data stores and flows identifiable from the system's own artifacts —
+          schemas and migrations are the evidence, not a separate data-flow essay.
+          (b) Backups automated; configuration is the evidence.
+          (c) Redundancy substance (B-32 substance-extraction; operator-directed):
+          production data is not single-copy — backups live off the primary host,
+          or point-in-time recovery is enabled on the managed store; observable
+          from configuration.
+          (d) Restorability verified: a restore-test record or an actual recovery
+          in the history; an untested backup renders thin.
+          C-3 RULED: no written DR/BCP policy is required; continuity beyond
+          backups is evidenced by ENG-05 reconstructibility; BCP/DR policy
+          documents route to Compliance detection.
+          Data-protection instruments → LEGAL-09 (B-27), cross-referenced;
+          operational handling evidence multi-homes.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-27", "B-32", "ENG-05", "LEGAL-09"]
+        signals: ["backup configs/schedules, PITR settings, restore records,"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: ENG-07
+        criterion: |-
+          (a) Manifests with committed lockfiles — a fact of the repo.
+          (b) Updates flowing: merged dependency-update PRs or recent lockfile
+          churn; the mere presence of a Dependabot/Renovate config is not the score.
+          (c) Known-vulnerability response observable in the same stream.
+          (d) A license-bearing inventory of shipped components is producible from
+          the manifests (SBOM-class where present); the inventory is the
+          Engineering artifact; the OSS-license compliance judgment is Legal's
+          (B-3), multi-homed (B-17). Third-party product services appear in the
+          ENG-05 inventory; vendor operating process → OPS-05 (B-18).
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-3", "B-17", "B-18", "ENG-05", "OPS-05", "config-present-not-flowing"]
+        signals: ["lockfiles, manifests, merged update PRs, audit/scan outputs,"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: ENG-08
+        criterion: |-
+          (a) Setup documentation that works: a new engineer can build and run the
+          system from the README against the actual current toolchain. A doc
+          referencing dead scripts is a staleness finding — worse than none.
+          (b) Deploy/incident runbooks multi-home from ENG-03/04 (owned there).
+          (c) Conditional: where the product exposes an external API, a maintained
+          machine-readable description (OpenAPI-class; spec v3.2.0 current) or
+          equivalent reference docs; no external API → element does not activate.
+          (d) Contributor concentration (bus factor) renders as a context
+          annotation only — it is a metric (B-12). Bus-factor mitigation IS working
+          setup docs plus distributed review.
+          No-authority marker: (a) rests on demand-side convergence
+          [content-grade] plus the DORA documentation-quality capability; no
+          lineage-grade canon owns onboarding documentation as an artifact class.
+          Criteria written defensively (existence + sufficiency function, no format
+          requirements).
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-12", "ENG-03"]
+        signals: ["README/setup docs, onboarding guides, API specs."]
+        provenance: expert-authored
+        refresh: []
+        version: v1.0
+  AIOPS:
+    band: "Band 1 -- seed-funded B2B SaaS/infra, pre-Series A (reference-corpus-calibrated), US scope"
+    subcategories:
+
+      - id: AIOPS-01
+        criterion: |-
+          COMPLETE when the corpus evidences: (a) AI tools in business/revenue-ops
+          use via the traces use naturally leaves — provisioning/seat records,
+          AI-vendor rows in vendor or expense data, workspace admin exports, workflow
+          configurations; (b) a reconstructible footprint via a lightweight
+          inventory-class artifact (a tools page; the AI rows of the vendor list)
+          mapping tool → process → owner → data tier, with an optional cost column as
+          context; the inventory multi-homes with the OPS-05 vendor inventory
+          (B-18/B-17) and the LEGAL-09(h) AI-use inventory (B-28); (c) owner
+          attribution for material uses. THIN: use evidenced but footprint not
+          reconstructible or owners absent. ABSENT: no evidence of AI in
+          business/revenue-ops use — a genuine finding about the company (B-13),
+          never a default assumption.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-13", "B-17", "B-18", "B-28", "LEGAL-09", "OPS-05"]
+        signals: ["AI vendor names in vendor/expense entries", "provisioning"]
+        provenance: expert-authored
+        refresh: []
+        version: v1.0
+
+      - id: AIOPS-02
+        criterion: |-
+          COMPLETE when BOTH: (a) a stance artifact employees actually transact on —
+          a working guide of the GitLab-handbook class — containing at minimum:
+          permitted tools; data rules (what data may go into which tool, which
+          account tiers); human-review expectations for consequential AI output; and
+          a sanctioned path for proposing or trying a tool. Adoption-exhortation
+          content satisfies nothing and cannot make the tile greener. AND (b)
+          governed use-in-workflow: process-integrated traces — AI steps inside
+          documented workflows, transcription auto-filed per a defined process,
+          reviewed-AI-draft provenance in documents, CRM/support AI configured into
+          the motion. Seat-activity records alone never satisfy (b).
+          GUARDS (operator-ruled; B-32): a stance artifact with no process-integrated
+          use renders NOT complete — a documented AI stance with no governed use is
+          theater. Process-integrated use with no artifact renders THIN with
+          annotation — substance present, clarity absent; shadow-AI exposure (>90% of
+          firms show ungoverned personal-tool use — MIT, 2025; ~60% of employees
+          conceal AI use — KPMG, weight-marked secondary). Scattered individual tool
+          use without standardized process integration renders THIN — practice
+          evidenced, integration immature (interim-tool-thin family) — with RED
+          reserved for no adoption evidence anywhere with a clean ingest log.
+          [Amended v1.1, operator-ruled 2026-07-15 — element-grain alignment; fixtures FX-22/23 encode the ruled intent.]
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-32", "interim-tool-thin"]
+        signals: ["guide/handbook artifacts", "workflow documents naming AI"]
+        provenance: expert-authored
+        refresh: []
+        version: v1.1
+
+      - id: AIOPS-03
+        criterion: |-
+          ACTIVATION: presence of any automated AI workflow in business/revenue
+          operations. WHEN ACTIVE, complete per loop: a configuration artifact
+          (workflow-platform config, bot deployment); run traces landing in the
+          corpus; a named owner; and a defined human checkpoint / escalation path on
+          consequential outputs (substance-extracted from the GenAI-profile human-
+          review substance; corroborated by production intervention-rate reality and
+          the Klarna correction). ONE disciplined loop is Band-1 complete; agent
+          fleets are affirmatively not a gap. THIN: a loop running with owner,
+          checkpoint, or run evidence missing. WHEN INACTIVE (no automation): renders
+          DOCUMENTED-N/A — never red, never orange. Single-digit business-function
+          agent deployment is the 2026 norm (Stanford AI Index 2026); per the
+          category semantics rule, the board never treats not-automating as a
+          deficiency.
+          Provenance: authority-backed — the one such tag in this brief. Independent
+          empirical convergence on integration-with-oversight as the value condition:
+          McKinsey (workflow redesign the strongest of 25 value correlates; fielded
+          2025-06/07), MIT (integration is the divide; 2025), Gartner (integration/
+          governance failure drives cancellations; 2025–26), Forrester/Anaconda
+          (88% of agent pilots never reach production; evaluation and governance gaps
+          leading blockers; Q1 2026) — plus framework substance and the GitLab
+          exemplar.
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: trigger-conditional
+        references: []
+        signals: ["workflow configurations", "bot deployments with"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: AIOPS-04
+        criterion: |-
+          COMPLETE when: (a) data-handling rules are in effect AS PRACTICE —
+          tool-tier provisioning (enterprise/team accounts rather than personal ones
+          for company data; retention settings) plus a communicated what-goes-where
+          rule, which may live inside the AIOPS-02 artifact (one artifact multi-homes,
+          B-17); (b) decision ownership for new AI uses is identifiable — who
+          approves a tool or automation — and may be the OPS-05 vendor-intake owner,
+          multi-homed; (c) an intake/evaluation record exists: adoption AND decline
+          decisions on AI tools/uses recorded with reasons. A reasoned decline is
+          first-class completeness evidence — the filter observed working (added on
+          the customer-defense pass, 2026-07-09; multi-homes OPS-05/B-18).
+          Cross-references, never re-scored: the AI regulatory-applicability record →
+          LEGAL-09(h) (B-28); certification-class artifacts (ISO 42001, SOC 2
+          controls) → Compliance (B-32).
+          AFFIRMATIVELY NOT REQUIRED at Band 1 (and affirmatively not gaps): an AI
+          policy binder; an AI ethics board or committee; NIST RMF implementation;
+          model cards; a standalone AI acceptable-use legal instrument; an AI-first
+          mandate; AI-usage quotas or usage-based performance metrics; maximal tool
+          spend; in-house AI platform builds (buy-and-integrate is the sane Band-1
+          posture — internal builds fail at roughly twice the rate; MIT, 2025;
+          context annotation).
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: stage-conditional
+        references: ["B-17", "B-18", "B-28", "B-32", "AIOPS-02", "LEGAL-09", "OPS-05"]
+        signals: ["account-tier/provisioning records", "a data-rule passage"]
+        provenance: expert-authored
+        refresh: []
+        version: v1.0
+
+      - id: AIOPS-05
+        criterion: |-
+          Promotable to scored when a real corpus shows measurement machinery living
+          in business operations. Signal set (B-12-bounded: existence of checks,
+          never values): outcome expectations attached to material uses and
+          automations; any tracking trace; a periodic is-this-worth-it review;
+          kill/renewal decisions on tools and loops.
+          Context annotations (dated): 56% of CEOs report nothing from AI adoption
+          (PwC, 2026); 42% of companies abandoned most AI initiatives and ~46% of
+          PoCs were scrapped (S&P, 2025; Q1 2026 panel: 31% with any agent in
+          production); production token costs running 5–10x pilot projections
+          (Gartner-derived, 2026; weight-marked aggregate); cost-only evaluation of
+          an automated function degraded quality and forced reversal (Klarna, 2025;
+          cautionary exhibit).
+        state: *state_vocabulary
+        grain: per-subcategory
+        conditionality: informational
+        references: ["B-12"]
+        signals: []
+        provenance: expert-authored
+        refresh: []
+        version: v1.0
+  COMP:
+    band: "Band 1 -- seed-funded B2B SaaS/infra, pre-Series A (reference-corpus-calibrated), US scope"
+    subcategories:
+
+      - id: COMP-01
+        criterion: |-
+          Detection of the artifacts by which the company proves its security
+          posture to outsiders. All elements trigger-conditional per Sec. 4; all at
+          whole-artifact grain per Sec. 0.
+
+          (a) Attestation artifacts. SOC 2 report — ONE object; Type 1 = design
+              opinion at a point in time, Type 2 = operating-effectiveness opinion
+              over a period (AICPA TSP 100 para .16). ISO 27001 certificate — one
+              object. ISO 42001-class AI-management certificate — one object (B-28;
+              ISO/IEC 42001:2023, first AIMS standard, certification market in its
+              first growth wave 2026). Scored: where T-A/T-B/T-E exists, the
+              responsive artifact or a dated in-progress engagement record exists
+              and is current (a draft report or executed auditor engagement letter is
+              itself the in-progress engagement record) (a Type 2 report has a period;
+              a lapsed period is stale evidence — maturity is operational readiness,
+              never mere existence).
+          (b) Review-response record. Completed security questionnaires (SIG / CAIQ
+              / custom DDQ responses) retained and current. The Band-1-native form
+              of the category: the questionnaire arrives before the SOC 2 demand
+              does. Scored on T-A.
+          (c) Demanded-artifact match. Where a demand instrument names specific
+              artifacts (a policy document, a pen-test report, training records, a
+              COI), those artifacts exist or their absence is a recorded open item.
+              The demand's list is the list (Sec. 0 rule 1).
+
+          Cross-references, never re-scored: privacy/DPA/subprocessor → LEGAL-09;
+          accessibility/marketing → LEGAL-10; AI regulatory record → LEGAL-09(h);
+          AI governance practice → AI Operations; security practice-in-use →
+          Engineering; certification status cross-referenced BY operating categories
+          as corroboration (B-32/B-17).
+          [9E-b amendment v1.1, 2026-07-11: the certification DEFAULT is documented-n-a. The ONLY in-scope sector is B2B SaaS/infra handling customer data (off-sector instances -- e.g. CPG/agency with no B2B SaaS motion -- render documented-n-a). In-sector but PRE-DEMAND (no T-A/T-B/T-E trigger): score the roadmap/awareness record -- a certification-awareness or roadmap line; its absence anywhere renders THIN. Demand-trigger met: score the certification posture itself per (a)-(c) above.]
+          [Clarified v1.2, operator-ruled 2026-07-15 — fixture FX-05 encodes the ruled intent: an in-progress engagement satisfies element (a) at Band 1.]
+        state: *state_vocabulary
+        grain: whole-artifact
+        conditionality: trigger-conditional
+        references: ["B-17", "B-28", "B-32", "LEGAL-09", "LEGAL-10", "certification-awareness-floor"]
+        signals: ["auditor-letterhead PDFs (\"Type II\", \"Trust Services"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.2
+
+      - id: COMP-02
+        criterion: |-
+          B-5 as scoped by B-26: corporate risk insurance only. Detection of
+          EXECUTED policies matched to triggers:
+
+          (a) Policy schedule exists: carrier, coverage type, limits, period per
+              policy (declarations pages or a maintained schedule). Converged Band-1
+              baseline (multi-source market practice, weight-marked): GL (lease/
+              accelerator-driven); Tech E&O + cyber (contract/data-driven); D&O
+              (financing-driven); workers' comp (statutory on first employee).
+          (b) Trigger match: every active trigger (T-B COI clauses, T-C covenants,
+              T-D statute) has a responsive in-force policy. The executed
+              instrument's own terms govern; the NVCA-default 90-day D&O window is
+              context annotation only (single-source figure, weight-marked; the
+              covenant text in the closing set is the corpus-verifiable fact).
+          (c) Currency: renewal dates tracked. A lapsed policy against a live
+              covenant is the category's clearest red state.
+          (d) COI capability: certificates producible (contract-driven trigger
+              only).
+
+          Boundary discipline: obligation records → Legal/Capital; statutory
+          mandates → Legal; benefit insurance → People (B-26). Policies multi-home
+          as evidence into Legal's executed-contract record (B-17); the
+          portfolio-to-trigger adequacy join is owned here and nowhere else.
+        state: *state_vocabulary
+        grain: whole-artifact
+        conditionality: trigger-conditional
+        references: ["B-5", "B-17", "B-26"]
+        signals: ["ACORD forms, declarations pages, carrier names,"]
+        provenance: authority-backed
+        refresh: []
+        version: v1.0
+
+      - id: COMP-03
+        criterion: |-
+          B-18's Compliance half. Boundary anchor: AICPA TSC CC9.2 (verbatim at
+          Sec. 2). Two elements, whole-artifact grain:
+
+          (a) Minimal always-on bar (expert-authored, defensively written): critical
+              data processors identified on the OPS-05 vendor inventory (multi-
+              homed, B-17) and their attestations on file (their SOC 2 / ISO cert /
+              DPA). Nothing programmatic is required. Rationale: cheap artifact set;
+              universally requested by the demand side; an unchecked critical
+              processor is the company's most concentrated undocumented dependency.
+          (b) Post-trigger (T-A/T-B): the received review's vendor-management
+              section is answered — the demand defines any further requirement
+              (Sec. 0 rule 1). No standing TPRM program, tiering scheme, or
+              reassessment cadence is a Band-1 model criterion.
+
+          Boundary discipline: the vendor operating process is OPS-05's, never
+          re-scored; a GRC platform is never a criterion.
+        state: *state_vocabulary
+        grain: whole-artifact
+        conditionality: trigger-conditional
+        references: ["B-17", "B-18", "OPS-05"]
+        signals: ["third-party-attributed SOC 2 PDFs", "DPA"]
+        provenance: mixed(authority-backed/expert-authored)
+        refresh: []
+        version: v1.0

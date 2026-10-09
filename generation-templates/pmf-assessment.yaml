@@ -1,0 +1,49 @@
+# Templates are authored expert judgment, versioned as product assets. The template drives the
+# outline; the corpus never defines scope.
+#
+# PROVISIONAL v1 — landed under autonomous-run rules 2026-07-17; operator review by exception pending.
+# Fill modes: corpus | recommend | operator | structural | informational.
+
+template: pmf-assessment
+version: 1
+ruled: "2026-07-17"
+title: Product/Market-Fit Assessment
+deliverable: pmf-assessment
+applies_to: [PRODUCT-04]
+default_mode: plan   # MODE MATRIX (operator-ruled 2026-07-18); per-company default, subject to generation-time mode_conditions.
+professional_review: none
+
+exclusions:
+  - No benchmark pass/fail values — never present a "good/bad" threshold as a judgment.
+  - No internal reference-model language (B-##, band names, tile ids) in customer documents.
+  - No padding metrics or filler — every element earns its place.
+
+sections:
+  - id: method-statement
+    title: Purpose & method statement
+    fill_mode: [operator]
+    required_content:
+      - The assessment method chosen and why (Sean-Ellis necessity survey / organic-pull signal / structured design-partner evidence).
+    conditionality: The method is an operator choice; never assert a method the company has not run. If none has been run, this is a "run this assessment" scaffold, NOT a filled result.
+  - id: population-sampling
+    title: Population & sampling
+    fill_mode: [corpus, operator]
+    required_content:
+      - Who was measured, sample size, date — honestly bounded.
+    conditionality: No numeric threshold is scored; do not manufacture a PMF percentage.
+  - id: findings
+    title: Findings
+    fill_mode: [corpus]
+    required_content:
+      - The honestly-bounded result (only if an assessment has actually been run).
+  - id: segmentation
+    title: Segmentation
+    fill_mode: [recommend]
+    required_content:
+      - Present or acknowledge segmentation where aggregate misleads.
+  - id: decisions-required
+    title: Decisions required
+    fill_mode: [structural]
+    required_content:
+      - Aggregate every per-company decision as a plain-language question.
+    conditionality: Always present.

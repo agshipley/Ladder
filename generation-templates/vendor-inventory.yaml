@@ -1,0 +1,43 @@
+# Templates are authored expert judgment, versioned as product assets. The template drives the
+# outline; the corpus never defines scope.
+#
+# PROVISIONAL v1 — landed under autonomous-run rules 2026-07-17; operator review by exception pending.
+# Fill modes: corpus | recommend | operator | structural | informational.
+
+template: vendor-inventory
+version: 1
+ruled: "2026-07-17"
+title: Vendor Inventory & Management
+deliverable: vendor-inventory
+applies_to: [OPS-05]
+default_mode: artifact   # MODE MATRIX (operator-ruled 2026-07-18); per-company default, subject to generation-time mode_conditions.
+professional_review: none
+
+exclusions:
+  - No benchmark pass/fail values — never present a "good/bad" threshold as a judgment.
+  - No internal reference-model language (B-##, band names, tile ids) in customer documents.
+  - No padding metrics or filler — every element earns its place.
+
+sections:
+  - id: inventory
+    title: Vendor inventory
+    fill_mode: [corpus, operator]
+    required_content:
+      - Single source of truth (cloud, SaaS, contractors, subprocessors), critical vendors named with a named owner.
+  - id: risk-tiering
+    title: Risk tiering
+    fill_mode: [operator, recommend]
+    required_content:
+      - Tier vendors by real risk (data access, system criticality); heavy diligence reserved for high-risk.
+    conditionality: Tiering thresholds are an operator decision.
+  - id: intake-renewal
+    title: Intake & renewal ritual
+    fill_mode: [recommend]
+    required_content:
+      - A selection/intake and renewal review ritual ("not in the inventory = not approved").
+  - id: decisions-required
+    title: Decisions required
+    fill_mode: [structural]
+    required_content:
+      - Aggregate every per-company decision as a plain-language question.
+    conditionality: Always present.

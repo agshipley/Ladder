@@ -1,0 +1,43 @@
+# Templates are authored expert judgment, versioned as product assets. The template drives the
+# outline; the corpus never defines scope.
+#
+# PROVISIONAL v1 — landed under autonomous-run rules 2026-07-17; operator review by exception pending.
+# Fill modes: corpus | recommend | operator | structural | informational.
+
+template: values-operating-principles
+version: 1
+ruled: "2026-07-17"
+title: Values & Operating Principles
+deliverable: values
+applies_to: [PEOPLE-06]
+default_mode: plan   # MODE MATRIX (operator-ruled 2026-07-18); per-company default, subject to generation-time mode_conditions.
+professional_review: none
+
+exclusions:
+  - No benchmark pass/fail values — never present a "good/bad" threshold as a judgment.
+  - No internal reference-model language (B-##, band names, tile ids) in customer documents.
+  - No padding metrics or filler — every element earns its place.
+
+sections:
+  - id: operating-principles
+    title: Operating principles
+    fill_mode: [operator]
+    required_content:
+      - Operationalized behavioral norms (scaled-down GitLab-genre).
+    conditionality: The values are the company's — scaffold the frame and prompts, never author the culture content (documentation existence + internal consistency score, never culture content).
+  - id: transacted
+    title: How the norms are transacted on
+    fill_mode: [recommend]
+    required_content:
+      - Where the norms are referenced in practice.
+  - id: consistency
+    title: Internal-consistency check
+    fill_mode: [structural]
+    required_content:
+      - The norms do not contradict each other.
+  - id: decisions-required
+    title: Decisions required
+    fill_mode: [structural]
+    required_content:
+      - Aggregate every per-company decision as a plain-language question.
+    conditionality: Always present.

@@ -1,0 +1,49 @@
+# Templates are authored expert judgment, versioned as product assets. The template drives the
+# outline; the corpus never defines scope.
+#
+# PROVISIONAL v1 — landed under autonomous-run rules 2026-07-17; operator review by exception pending.
+# Fill modes: corpus | recommend | operator | structural | informational.
+
+template: sales-enablement
+version: 1
+ruled: "2026-07-17"
+title: Sales Enablement Pack
+deliverable: sales-enablement
+applies_to: [GTM-16]
+default_mode: plan   # MODE MATRIX (operator-ruled 2026-07-18); per-company default, subject to generation-time mode_conditions.
+professional_review: none
+
+exclusions:
+  - No benchmark pass/fail values — never present a "good/bad" threshold as a judgment.
+  - No internal reference-model language (B-##, band names, tile ids) in customer documents.
+  - No padding metrics or filler — every element earns its place.
+
+sections:
+  - id: discovery-guide
+    title: Discovery guide
+    fill_mode: [corpus, recommend]
+    required_content:
+      - The questions that qualify and open deals.
+    conditionality: Prefer discovery questions captured from this company's real calls; recommend a starter set only where absent (marked Recommended).
+  - id: objection-handling
+    title: Objection handling
+    fill_mode: [corpus, recommend]
+    required_content:
+      - Top objections and their answers, captured from real calls (a generic list is anti-evidence).
+  - id: pricing-packaging
+    title: Pricing & packaging
+    fill_mode: [corpus, operator]
+    required_content:
+      - The pricing/packaging structure and discount policy, written down.
+    conditionality: Standard-deal pricing is an operator decision; founder-discounted bespoke deals are repeatability anti-evidence.
+  - id: form-agreement
+    title: Form customer agreement
+    fill_mode: [operator]
+    required_content:
+      - A pointer to the standard form agreement (legal instrument — template-only, counsel-confirmed; not drafted here).
+  - id: decisions-required
+    title: Decisions required
+    fill_mode: [structural]
+    required_content:
+      - Aggregate every per-company decision as a plain-language question.
+    conditionality: Always present.

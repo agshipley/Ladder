@@ -1,0 +1,64 @@
+# Templates are authored expert judgment, versioned as product assets. The template drives the
+# outline; the corpus never defines scope.
+#
+# PROVISIONAL v1 — landed under autonomous-run rules 2026-07-17; operator review by exception pending.
+# Fill modes: corpus | recommend | operator | structural | informational.
+
+template: product-process
+version: 1
+ruled: "2026-07-17"
+title: Product Process & Definition
+deliverable: product-process
+applies_to: [PRODUCT-01, PRODUCT-02]
+default_mode: plan   # MODE MATRIX (operator-ruled 2026-07-18); per-company default, subject to generation-time mode_conditions.
+professional_review: none
+
+exclusions:
+  - No benchmark pass/fail values — never present a "good/bad" threshold as a judgment.
+  - No internal reference-model language (B-##, band names, tile ids) in customer documents.
+  - No padding metrics or filler — every element earns its place.
+
+sections:
+  - id: purpose-ownership
+    title: Purpose & ownership
+    fill_mode: [operator]
+    required_content:
+      - Who owns the product process and the review cadence.
+  - id: roadmap
+    title: Roadmap
+    fill_mode: [corpus, recommend]
+    required_content:
+      - A discoverable roadmap; format unscored (now-next-later, outcome-based, or feature/timeline all satisfy).
+    conditionality: Format is the company's choice; do not impose one — existence, currency, honesty score.
+  - id: prioritization
+    title: Prioritization method
+    fill_mode: [operator, recommend]
+    required_content:
+      - The stated method governing roadmap composition (RICE / Kano / MoSCoW / value-effort or an articulated equivalent).
+    conditionality: The method is an operator choice.
+  - id: outcome-tracing
+    title: Outcome tracing
+    fill_mode: [corpus]
+    required_content:
+      - Roadmap items trace to outcomes / customer problems, not only outputs.
+  - id: spec-practice
+    title: Spec / PRD practice
+    fill_mode: [corpus, recommend]
+    required_content:
+      - A repeatable written what-and-why per feature (lightweight is stage-appropriate).
+  - id: discovery-delivery
+    title: Discovery to delivery
+    fill_mode: [recommend]
+    required_content:
+      - Evidence of validating what to build before building it.
+  - id: decision-trail
+    title: Decision trail
+    fill_mode: [corpus]
+    required_content:
+      - Product decisions leave recoverable rationale.
+  - id: decisions-required
+    title: Decisions required
+    fill_mode: [structural]
+    required_content:
+      - Aggregate every per-company decision as a plain-language question.
+    conditionality: Always present.

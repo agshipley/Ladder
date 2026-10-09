@@ -1,0 +1,168 @@
+# Templates are authored expert judgment, versioned as product assets. The template
+# drives the outline; the corpus never defines scope.
+#
+# revenue-metrics v1 — operator-ruled 2026-07-17. The 12-section spine for a revenue &
+# GTM metrics-definitions document. Each section declares its fill_mode: how its content
+# is produced —
+#   corpus      : sourced from the company's own materials, cited inline
+#   recommend   : the standard practice, marked "Recommended — not currently evidenced"
+#   operator    : a question the draft cannot answer; it states the question + candidates
+#   structural  : an always-present scaffold section (Open Rulings)
+# A section may carry more than one mode (e.g. corpus + operator): corpus-fill the parts
+# the materials support, defer the rest to the operator.
+
+template: revenue-metrics
+version: 4
+ruled: "2026-07-17"
+title: Revenue & GTM Metrics Definitions
+deliverable: metrics-definitions   # draft filename stem: <id>-metrics-definitions-DRAFT.md
+applies_to: [GTM-20, GTM-22]        # GTM-22 folded in as the segmented-targets extension (v4)
+default_mode: artifact   # MODE MATRIX (operator-ruled 2026-07-18); per-company default, subject to generation-time mode_conditions.
+professional_review: none
+
+# Stated exclusions — enforced by the generation contract, not optional style.
+exclusions:
+  - No benchmark pass/fail values — never present a "good/bad" threshold as a judgment.
+  - No internal reference-model language (B-12, band names, tile ids) in customer documents.
+  - No padding metrics — every metric earns its place; no vanity or filler.
+
+sections:
+  - id: purpose-governance
+    title: Purpose & governance
+    fill_mode: [operator]
+    required_content:
+      - Who owns the metrics definitions.
+      - The change process for editing a definition.
+      - The review cadence for the definitions themselves.
+
+  - id: source-of-truth
+    title: Source of truth
+    fill_mode: [operator]
+    required_content:
+      - Per metric family, the authoritative system of record.
+      - The precedence rule when two systems disagree.
+    conditionality: >
+      The draft LISTS the candidate sources found in the materials and ASKS which is
+      authoritative; it does not pick one.
+
+  - id: revenue-definitions
+    title: Revenue definitions
+    fill_mode: [corpus, operator]
+    required_content:
+      - ARR and MRR definitions.
+      - Committed-revenue qualification — how pilots, ramps, and discounts are treated.
+      - The Strategic Customer qualification test.
+      - Exclusions (what is not recurring revenue).
+    conditionality: >
+      Corpus supplies the definitions the materials already evidence; operator rulings
+      resolve the committed-qualification edge cases (pilots / ramps / discounts).
+
+  - id: arr-movement
+    title: ARR movement
+    fill_mode: [corpus, recommend]
+    required_content:
+      - The ARR bridge (opening to closing).
+      - Expansion, contraction, and churn.
+      - Cohort rules.
+
+  - id: retention-quality
+    title: Retention & quality of revenue
+    fill_mode: [recommend]
+    required_content:
+      - NRR and GRR.
+      - Logo retention.
+      - Expansion rate.
+      - Concentration risk — PRIORITY-FLAG for strategic-customer motions, with a stated
+        threshold (e.g. flag when any single customer exceeds a named share of ARR).
+
+  - id: pipeline-funnel
+    title: Pipeline & funnel
+    fill_mode: [corpus, recommend]
+    required_content:
+      - Stage exit criteria.
+      - Conversion by segment.
+      - Win rate.
+      - ACV (average contract value).
+      - Cycle length.
+      - Coverage.
+      - Slip rate.
+    conditionality: >
+      Stage definitions are drawn from the corpus IF a sales playbook exists in the
+      materials; recommend the rest.
+
+  - id: marketing-handoff
+    title: Marketing metrics & handoff
+    fill_mode: [recommend, operator]
+    required_content:
+      - MQL and SQL.
+      - Sourced pipeline by channel.
+      - Cost per opportunity.
+      - Blended vs paid CAC.
+    conditionality: >
+      The marketing-to-sales handoff criteria are operator-owned (state the question +
+      candidates); the metric definitions are recommended.
+
+  - id: sales-capacity
+    title: Sales capacity
+    fill_mode: [recommend]
+    required_content:
+      - Quota attainment.
+      - Sales productivity.
+      - Ramp.
+    conditionality: >
+      Conditional on sales headcount. If the materials show no sales hires, DEFER this
+      section with a note (do not fabricate a capacity model for a team that does not exist).
+
+  - id: unit-economics
+    title: Unit economics & efficiency
+    fill_mode: [corpus, recommend, informational]
+    required_content:
+      - CAC by motion.
+      - CAC payback (the primary efficiency measure) — all stages.
+      - Burn multiple (net burn / net new ARR) — all stages.
+      - Margin basis.
+      - LTV — caveated, secondary to payback.
+      - Rule of 40 and Magic Number — INFORMATIONAL trend lines only.
+    conditionality: >
+      Corpus supplies the spend inputs; recommend the rest. Payback and burn multiple are the
+      stage-appropriate PRIMARY measures at all stages. Rule of 40 and Magic Number are
+      INFORMATIONAL — shown as directional trend lines, never as targets or benchmarks, each with
+      the one-line caveat "Shown for directional awareness, not as targets — these become
+      meaningful benchmarks at ~$20M+ ARR." (Mirrors the reference model's informational state:
+      shown for awareness, never scored.) Payback is primary; LTV is caveated and never the headline.
+
+  - id: forecast-discipline
+    title: Forecast discipline
+    fill_mode: [recommend]
+    required_content:
+      - Commit / best-case / pipeline categories.
+      - Forecast cadence.
+      - Forecast-accuracy tracking.
+
+  - id: targets-assumptions
+    title: Targets & assumptions register
+    fill_mode: [corpus, operator]
+    required_content:
+      - A register of targets and assumptions — each dated and owned.
+      - Each entry marked assumption vs measured.
+
+  - id: segmented-targets
+    title: Segmented targets & operating model
+    fill_mode: [corpus, operator, recommend]
+    required_content:
+      - Targets broken out by the dimensions the company operates on (segment, stage, rep once reps exist), not a single top-line number.
+      - The funnel-math operating model — documented stage-to-stage conversion assumptions so plan-vs-actual is diagnosable.
+    conditionality: >
+      GTM-22 extension (folded into revenue-metrics v4 under autonomous-run rules). Segmentation
+      dimensions and target values are operator decisions; at Band-1 conversion assumptions may be
+      estimates — mark measured vs assumed. See DECISIONS-THIS-RUN.md for the fold + the flag that
+      GTM-20's deliverable now carries this section.
+  - id: decisions-required
+    title: Decisions required
+    fill_mode: [structural]
+    required_content:
+      - Aggregate every per-company decision the draft could not make as a plain-language
+        question — the register of a diligence questionnaire, one numbered question per line.
+    conditionality: >
+      Always present. This is where every `operator` deferral in the document collects, phrased
+      as questions a company officer could answer on paper.

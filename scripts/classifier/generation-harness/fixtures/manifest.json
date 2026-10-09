@@ -1,0 +1,13 @@
+{
+  "fixtures": [
+    {
+      "id": "known-bad-mis-gated",
+      "file": "known-bad-mis-gated.md",
+      "ruling": "bad",
+      "encodes": "GATING",
+      "template": null,
+      "synthetic": true,
+      "reason": "flippable:true with no gap_class; a field-presence gate would approve it, the correct gate must refuse"
+    }
+  ]
+}

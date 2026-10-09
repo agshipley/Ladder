@@ -1,0 +1,6 @@
+# SCRATCH run store: fixtures, smoke, reruns, in-progress board runs.
+# Ephemeral — stays ignored. Product artifacts of record (e.g. a committed board
+# run) are PROMOTED to /runs-of-record/ at the repo root, which IS tracked.
+# The board reads runs-of-record/ first, this scratch store second.
+runs/
+node_modules/

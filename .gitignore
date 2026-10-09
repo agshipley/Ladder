@@ -1,0 +1,25 @@
+.DS_Store
+.claude/scheduled_tasks.lock
+.claude/settings.json
+.claude/settings.local.json
+
+# Secrets — never commit. Values live here, set by the operator only.
+.env
+.env.*
+!.env.example
+
+# Office lock temp files
+~$*
+
+# board server runtime artifacts
+.board-server.pid
+board-server.log
+
+# generated-drafts tracking policy (2026-07-17, rev 2026-07-17): the drafts (.md), their review
+# sidecars (.review.json), the adopted bodies (.ADOPTED.md), and APPROVAL-LOG.jsonl (the ruling
+# history — approve/reject/void/supersede is record-of-decision, not runtime noise) ARE tracked.
+# Per-instance RUNTIME state is not — failure log, operator answers, debug rejects, authoring backlog.
+generated-drafts/GENERATION-FAILURES.jsonl
+generated-drafts/*.answers.json
+generated-drafts/*.rejected.md
+generation-templates/template-backlog.jsonl

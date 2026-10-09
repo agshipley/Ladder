@@ -1,0 +1,48 @@
+# Templates are authored expert judgment, versioned as product assets. The template drives the
+# outline; the corpus never defines scope.
+#
+# PROVISIONAL v1 — landed under autonomous-run rules 2026-07-17; operator review by exception pending.
+# Fill modes: corpus | recommend | operator | structural | informational.
+
+template: onboarding-success
+version: 1
+ruled: "2026-07-17"
+title: Onboarding & Customer Success Definition
+deliverable: onboarding-success
+applies_to: [GTM-18]
+default_mode: artifact   # MODE MATRIX (operator-ruled 2026-07-18); per-company default, subject to generation-time mode_conditions.
+professional_review: none
+
+exclusions:
+  - No benchmark pass/fail values — never present a "good/bad" threshold as a judgment.
+  - No internal reference-model language (B-##, band names, tile ids) in customer documents.
+  - No padding metrics or filler — every element earns its place.
+
+sections:
+  - id: purpose-ownership
+    title: Purpose & ownership
+    fill_mode: [operator]
+    required_content:
+      - Who owns onboarding (founder-led CS is Band-1 compliant).
+  - id: onboarding-sequence
+    title: Onboarding sequence
+    fill_mode: [corpus, recommend]
+    required_content:
+      - Signed contract to first value, as steps someone else could run (even a rudimentary v1).
+    conditionality: The real first-value path is company-specific — corpus where evidenced, recommend the structure.
+  - id: success-milestones
+    title: Success milestones
+    fill_mode: [operator]
+    required_content:
+      - Per-customer definition of "getting value," written down.
+  - id: ttfv
+    title: Time-to-first-value measure
+    fill_mode: [recommend]
+    required_content:
+      - The number that matters (CS canon), defined.
+  - id: decisions-required
+    title: Decisions required
+    fill_mode: [structural]
+    required_content:
+      - Aggregate every per-company decision as a plain-language question.
+    conditionality: Always present.

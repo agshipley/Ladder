@@ -1,0 +1,14 @@
+{
+  "name": "ladder-classifier",
+  "private": true,
+  "type": "module",
+  "description": "Sprint Ma Task 2 — maturity classifier harness (schema-independent scaffold).",
+  "scripts": {
+    "smoke": "node smoke.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.70.0",
+    "@modelcontextprotocol/sdk": "^1.22.0",
+    "dotenv": "^17.2.0"
+  }
+}

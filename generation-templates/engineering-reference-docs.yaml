@@ -1,0 +1,69 @@
+# Templates are authored expert judgment, versioned as product assets. The template drives the
+# outline; the corpus never defines scope.
+#
+# PROVISIONAL v1 — landed under autonomous-run rules 2026-07-17; operator review by exception pending.
+# Fill modes: corpus | recommend | operator | structural | informational.
+
+# MEDIUM fabrication risk: a generated README that does not match the real toolchain is "worse than
+# none"; architecture/ADR content must reflect the real system. Operator-verify, flagged per section.
+
+template: engineering-reference-docs
+version: 1
+ruled: "2026-07-17"
+title: Engineering Reference Documentation
+deliverable: engineering-reference
+applies_to: [ENG-01, ENG-08]
+default_mode: artifact   # MODE MATRIX (operator-ruled 2026-07-18); per-company default, subject to generation-time mode_conditions.
+mode_conditions:                 # authored per operator ruling 2026-07-18 (ENG-01)
+  - test: docs-live-in-GitHub
+    description: Engineering docs live in the code repository (GitHub / README / docs tree), not the ingested corpus
+    signals: ["README", "docs directory", "repository docs", "architecture decision record", "ADR", "developer docs in repo"]
+    resolves_to: plan
+professional_review: none
+
+exclusions:
+  - No benchmark pass/fail values — never present a "good/bad" threshold as a judgment.
+  - No internal reference-model language (B-##, band names, tile ids) in customer documents.
+  - No padding metrics or filler — every element earns its place.
+
+sections:
+  - id: architecture
+    title: Architecture overview
+    fill_mode: [corpus, operator]
+    required_content:
+      - Components, data stores, external boundaries a senior outside engineer can navigate.
+    conditionality: Must reflect the ACTUAL system (corpus/code-derived); never a plausible-but-wrong diagram.
+  - id: adr
+    title: Decision rationale (ADR)
+    fill_mode: [corpus]
+    required_content:
+      - Consequential decisions dated and traceable, supersessions visible.
+    conditionality: ADRs are HISTORICAL — cannot fabricate past decisions; scaffold the log and prompt for real ones.
+  - id: debt-register
+    title: Deliberate-shortcuts / debt register
+    fill_mode: [corpus, operator]
+    required_content:
+      - The team's enumerated deliberate shortcuts.
+  - id: setup-docs
+    title: Setup documentation
+    fill_mode: [corpus]
+    required_content:
+      - A README a new engineer can build and run from, against the current toolchain.
+    conditionality: Must be operator-VERIFIED to actually work (stale docs are worse than none).
+  - id: runbooks
+    title: Runbooks
+    fill_mode: [corpus, recommend]
+    required_content:
+      - Deploy/incident runbooks (multi-home from ENG-03/04).
+  - id: api-description
+    title: API description
+    fill_mode: [corpus]
+    required_content:
+      - A machine-readable external API description (OpenAPI-class) where an external API exists.
+    conditionality: Conditional — only where the product exposes an external API.
+  - id: decisions-required
+    title: Decisions required
+    fill_mode: [structural]
+    required_content:
+      - Aggregate every per-company decision as a plain-language question.
+    conditionality: Always present.

@@ -1,0 +1,60 @@
+# Templates are authored expert judgment, versioned as product assets. The template drives the
+# outline; the corpus never defines scope.
+#
+# PROVISIONAL v1 — landed under autonomous-run rules 2026-07-17; operator review by exception pending.
+# Fill modes: corpus | recommend | operator | structural | informational.
+
+# MEDIUM fabrication risk: these ARE draftable documents, but every legal-accuracy claim needs
+# counsel confirmation (flagged per section). The blank-form/records half (LEGAL-01/06, COMP-02)
+# is NOT here — it stays a proposal, generation-excluded.
+
+template: legal-draftable-policies
+version: 1
+ruled: "2026-07-17"
+title: Posted Policies & Compliance Posture
+deliverable: legal-policies
+applies_to: [LEGAL-09, LEGAL-10]
+default_mode: artifact   # MODE MATRIX (operator-ruled 2026-07-18); per-company default, subject to generation-time mode_conditions.
+professional_review: attorney
+
+exclusions:
+  - No benchmark pass/fail values — never present a "good/bad" threshold as a judgment.
+  - No internal reference-model language (B-##, band names, tile ids) in customer documents.
+  - No padding metrics or filler — every element earns its place.
+
+sections:
+  - id: privacy-policy
+    title: Privacy policy
+    fill_mode: [recommend, operator]
+    required_content:
+      - A posted, conspicuous privacy policy (CalOPPA floor for any commercial site collecting CA-resident PII).
+    conditionality: The stated data practices must match reality (corpus/operator supplies actual practices); counsel confirms language.
+  - id: terms-of-service
+    title: Terms of service
+    fill_mode: [recommend, operator]
+    required_content:
+      - Posted terms of service.
+    conditionality: Counsel-confirmed.
+  - id: data-inventory
+    title: Data-processing inventory
+    fill_mode: [corpus, operator]
+    required_content:
+      - A register of what personal information is processed.
+  - id: can-spam
+    title: CAN-SPAM mechanics
+    fill_mode: [recommend]
+    required_content:
+      - Sender ID, ad ID, valid physical address, working opt-out honored within 10 business days, suppression-list practice.
+    conditionality: Conditional on an outbound email motion (activate only if the GTM corpus shows outbound); liability is non-delegable.
+  - id: ada-tcpa
+    title: ADA / TCPA posture
+    fill_mode: [recommend, operator]
+    required_content:
+      - WCAG accessibility posture; TCPA posture if a texting/calling motion exists.
+    conditionality: Risk-acceptance vs remediation is an operator decision.
+  - id: decisions-required
+    title: Decisions required
+    fill_mode: [structural]
+    required_content:
+      - Aggregate every per-company decision as a plain-language question.
+    conditionality: Always present.

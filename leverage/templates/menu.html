@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ladder — Leverage Menu v2 ({{COMPANY}}, resolution {{RES_NO}})</title>
+<style>
+  /* Board token convergence — fonts + palette adopted from board/src/styles.css (only the clothes change). */
+  @import url("https://fonts.googleapis.com/css2?family=Spectral:wght@500;600&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
+  :root{
+    --paper:#f7f8f6; --panel:#ffffff; --ink:#182420; --ink-soft:#6c7a74; --line:#dde3df;
+    /* disposition remap → board pairs: available=green, not-yet=amber, pilot=violet(loop), not-offered=slate */
+    --spruce:#2e7d5b; --spruce-soft:#eaf3ee; --spruce-mid:#b5d2c4;
+    --amber:#c77e28; --amber-soft:#faf1e3;
+    --violet:#7c3aed; --violet-soft:#efe9fb;
+    --gray:#5b6b75; --gray-soft:#edf1f3;
+    --serif:"Spectral",Georgia,"Times New Roman",serif;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    --sans:"Public Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --paper:#14171c; --panel:#1c2027; --ink:#e6e9ee; --ink-soft:#99a1ac; --line:#2b313a;
+      --spruce:#4fb98a; --spruce-soft:#17281f; --spruce-mid:#2f5a49;
+      --amber:#e0a24e; --amber-soft:#2a2113;
+      --violet:#a273f0; --violet-soft:#1f1830;
+      --gray:#8fa2ad; --gray-soft:#1e252b;
+    }
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55}
+  .wrap{max-width:920px;margin:0 auto;padding:0 24px 96px}
+  header{padding:40px 0 0}
+  .brand{font-weight:800;letter-spacing:-.02em;font-size:17px}
+  .brand span{color:var(--spruce)}
+  .prov{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);margin-top:6px}
+  .backlink{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:12px;color:var(--spruce);text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:5px 12px;margin-bottom:16px;background:var(--panel)}
+  .backlink:hover{background:var(--spruce-soft)}
+  .backlink:focus-visible{outline:2px solid var(--spruce);outline-offset:2px}
+  h1{font-family:var(--serif);font-size:28px;font-weight:600;letter-spacing:-.02em;margin:34px 0 6px}
+  .lede{color:var(--ink-soft);max-width:62ch}
+  .tally{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0 0}
+  .chip{font-family:var(--mono);font-size:12px;padding:5px 12px;border-radius:99px;border:1px solid var(--line);background:var(--panel)}
+  .chip b{font-weight:700}
+
+  /* ---- where to start ---- */
+  .start{margin:30px 0 8px;border:2px solid var(--spruce);border-radius:10px;background:var(--panel);overflow:hidden}
+  .start-head{background:var(--spruce);color:#fff;padding:10px 18px;font-family:var(--mono);font-size:11px;letter-spacing:.14em}
+  .start-body{padding:16px 18px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:0}
+  .start-col{padding:0 18px;border-left:1px solid var(--line)}
+  .start-col:first-child{padding-left:0;border-left:none}
+  .start-n{font-family:var(--mono);font-size:11px;color:var(--spruce);font-weight:700;margin-bottom:4px}
+  .start-t{font-weight:700;font-size:14.5px;margin-bottom:4px}
+  .start-d{font-size:13px;color:var(--ink-soft)}
+  .unlock{display:inline-block;font-family:var(--mono);font-size:10.5px;background:var(--spruce-soft);color:var(--spruce);border-radius:4px;padding:2px 7px;margin-top:8px;font-weight:700}
+  @media(max-width:720px){.start-body{grid-template-columns:1fr}.start-col{border-left:none;padding:10px 0;border-top:1px solid var(--line)}}
+
+  .classhead{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin:36px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  .item{border:1px solid var(--line);background:var(--panel);border-radius:8px;margin:10px 0;overflow:hidden}
+  .item-head{width:100%;display:flex;align-items:flex-start;gap:14px;padding:14px 18px;background:none;border:none;cursor:pointer;text-align:left;font:inherit}
+  .item-head:hover{background:#F3F6F5}
+  .item-head:focus-visible{outline:2px solid var(--spruce);outline-offset:-2px}
+  .ht{flex:1}
+  .item-title{font-weight:650;font-size:15.5px}
+  .subline{font-size:13px;color:var(--ink-soft);margin-top:3px}
+  .badge{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em;padding:4px 10px;border-radius:5px;white-space:nowrap;margin-top:2px}
+  .b-available{background:var(--spruce-soft);color:var(--spruce)}
+  .b-notyet{background:var(--amber-soft);color:var(--amber)}
+  .b-pilot{background:var(--violet-soft);color:var(--violet)}
+  .b-notoffered{background:var(--gray-soft);color:var(--gray)}
+  .caret{color:var(--ink-soft);font-size:12px;transition:transform .15s;margin-top:6px}
+  .item.open .caret{transform:rotate(90deg)}
+  .item-body{display:none;padding:2px 18px 18px;border-top:1px solid var(--line)}
+  .item.open .item-body{display:block}
+  .what{color:var(--ink-soft);font-size:14px;margin:13px 0 2px;max-width:70ch}
+
+  .seclab{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin:16px 0 8px}
+  .seclab.ok{color:var(--spruce)}
+  .seclab.warn{color:var(--amber)}
+
+  /* evidence chips */
+  .evrow{display:flex;flex-wrap:wrap;gap:8px}
+  .evc{font-family:var(--mono);font-size:11.5px;border:1px solid var(--spruce-mid);background:var(--spruce-soft);color:var(--spruce);border-radius:5px;padding:4px 9px}
+  .evc.thin{border-color:#E4D3A8;background:var(--amber-soft);color:var(--amber)}
+  .evc.fact{border-style:dashed}
+  /* deep-link affordance for board-derived tile references (rungs + solid evidence chips) */
+  a.tlink{color:inherit;text-decoration:none;cursor:pointer}
+  a.tlink:hover{text-decoration:underline;text-decoration-color:var(--spruce)}
+  a.tlink::after{content:"↗";font-family:var(--mono);font-size:.78em;opacity:.5;margin-left:2px}
+
+  /* rungs */
+  .rungs{margin:4px 0 4px;position:relative;padding-left:26px}
+  .rungs::before{content:"";position:absolute;left:8px;top:8px;bottom:8px;width:2px;background:var(--amber);opacity:.45}
+  .rung{position:relative;padding:8px 0 8px 6px;font-size:14px}
+  .rung::before{content:"";position:absolute;left:-22px;top:20px;width:16px;height:2px;background:var(--amber)}
+  .rung .ev{font-family:var(--mono);font-size:11px;color:var(--ink-soft);margin-left:6px}
+  .who-closes{display:block;font-size:12.5px;margin-top:3px}
+  .who-closes.ladder{color:var(--spruce)}
+  .who-closes.you{color:var(--ink-soft)}
+  .who-closes b{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em}
+
+  .caveat{font-size:13px;color:var(--ink-soft);margin-top:12px;padding-left:14px;border-left:2px solid var(--line);max-width:68ch}
+  .subrec{margin-top:14px;padding:11px 14px;background:var(--spruce-soft);border-radius:6px;font-size:13.5px;max-width:70ch}
+  .subrec b{color:var(--spruce)}
+  .pending{font-size:12.5px;color:var(--ink-soft);margin-top:10px;font-style:italic}
+  .delivery{margin-top:6px}
+  .dopt{display:flex;gap:10px;font-size:13.5px;padding:7px 0;border-top:1px dashed var(--line)}
+  .dopt .who{font-family:var(--mono);font-size:11px;min-width:74px;color:var(--spruce);font-weight:700;padding-top:2px}
+  .dopt .cost{display:block;font-size:12px;color:var(--ink-soft);margin-top:2px}
+
+  /* compact not-offered */
+  .item.compact .item-head{padding:11px 18px}
+  .item.compact{background:var(--gray-soft);border-style:dashed}
+  .item.compact .item-title{font-weight:600;color:var(--ink-soft);font-size:14px}
+
+  .excl{margin-top:40px;padding:18px;border:1px dashed var(--line);border-radius:8px}
+  .excl h3{font-size:14px;font-weight:700;margin-bottom:8px}
+  .excl p{font-size:13.5px;color:var(--ink-soft);margin:6px 0}
+  footer{margin-top:48px;font-family:var(--mono);font-size:11px;color:var(--ink-soft)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <!-- return nav: root-relative to the board (shared origin — board serves this at /leverage) -->
+    <a class="backlink" href="/">← Back to board</a>
+    <div class="brand">Ladder <span>/ Leverage</span></div>
+    <div class="prov">{{COMPANY_FULL}} · resolution {{RES_NO}} · board {{RUN_ID}} · deterministic resolve, no model calls</div>
+  </header>
+
+  <h1>Your Leverage menu.</h1>
+  <p class="lede">Ten automation opportunities, each qualified against your own maturity board. Every verdict below traces to a board state or an answer you gave — nothing is generated.</p>
+
+  <div class="tally">
+{{TALLY}}
+  </div>
+
+  <!-- WHERE TO START — computed from the resolution -->
+  <div class="start">
+    <div class="start-head">WHERE TO START — COMPUTED FROM YOUR RESOLUTION</div>
+    <div class="start-body">
+{{STRIP}}
+    </div>
+  </div>
+
+  <div class="classhead">Enhance — AI compresses the work, your team approves it</div>
+
+  <div class="item" id="i1">
+    <button class="item-head" onclick="tog('i1')" aria-expanded="false">
+      <span class="ht">
+        <span class="item-title">Meeting &amp; call capture into your knowledge base</span>
+        <span class="subline">{{I1_SUBLINE}}</span>
+      </span>
+      {{I1_BADGE}}<span class="caret">▶</span>
+    </button>
+    <div class="item-body">
+      <p class="what">Calls and meetings transcribed and filed into your corpus and CRM — conversations become searchable evidence instead of lost audio.</p>
+      <div class="seclab ok">Why it's available — your board</div>
+      <div class="evrow">
+{{I1_CHIPS}}
+      </div>
+      <div class="seclab">How you can get it</div>
+      <div class="delivery">
+        <div class="dopt"><span class="who">ADOPT</span><span>An off-the-shelf recorder with CRM sync.<span class="cost">Cost shape: low per-seat subscription; setup in days.</span></span></div>
+        <div class="dopt"><span class="who">LADDER</span><span>We ingest transcripts into your corpus and re-assess affected areas as new evidence arrives — the part no recorder does.<span class="cost">Cost shape: included in your Ladder deployment; per-call processing is pennies.</span></span></div>
+        <div class="dopt"><span class="who">HYBRID</span><span>Their recorder, our corpus.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="item" id="i2">
+    <button class="item-head" onclick="tog('i2')" aria-expanded="false">
+      <span class="ht">
+        <span class="item-title">Records freshness &amp; enrichment</span>
+        <span class="subline">{{I2_SUBLINE}}</span>
+      </span>
+      {{I2_BADGE}}<span class="caret">▶</span>
+    </button>
+    <div class="item-body">
+      <p class="what">Scheduled flagging of stale records and filling of missing fields in the systems you already run. Enriching an unowned store multiplies noise — ownership comes first.</p>
+      <div class="seclab warn">Climb first</div>
+      <div class="rungs">
+{{I2_RUNGS}}
+      </div>
+      <div class="seclab ok">Already in place</div>
+      <div class="evrow">
+{{I2_CHIPS}}
+      </div>
+{{I2_CAVEAT}}
+    </div>
+  </div>
+
+  <div class="item" id="i3">
+    <button class="item-head" onclick="tog('i3')" aria-expanded="false">
+      <span class="ht">
+        <span class="item-title">Drafting from your own material</span>
+        <span class="subline">{{I3_SUBLINE}}</span>
+      </span>
+      {{I3_BADGE}}<span class="caret">▶</span>
+    </button>
+    <div class="item-body">
+      <p class="what">First drafts of operational documents — process docs, talk tracks, KPI definitions — generated from your corpus, always for human review, never auto-final.</p>
+      <div class="seclab warn">Climb first</div>
+      <div class="rungs">
+{{I3_RUNGS}}
+      </div>
+{{I3_CAVEAT}}
+    </div>
+  </div>
+
+  <div class="classhead">Fully automate — closed flows, humans on exceptions</div>
+
+  <div class="item" id="i4">
+    <button class="item-head" onclick="tog('i4')" aria-expanded="false">
+      <span class="ht">
+        <span class="item-title">Bill payment &amp; ledger sync</span>
+        <span class="subline">{{I4_SUBLINE}}</span>
+      </span>
+      {{I4_BADGE}}<span class="caret">▶</span>
+    </button>
+    <div class="item-body">
+      <p class="what">Invoice capture → approval routing → payment → automatic reconciliation into your accounting system.</p>
+      <div class="seclab warn">Climb first</div>
+      <div class="rungs">
+{{I4_RUNGS}}
+      </div>
+      <div class="seclab ok">Already in place</div>
+      <div class="evrow">
+{{I4_CHIPS}}
+      </div>
+{{I4_CAVEAT}}
+      <div class="seclab">When available — how you'd get it</div>
+      <div class="delivery">
+        <div class="dopt"><span class="who">ADOPT</span><span>A mature bill-pay platform synced to your ledger — usually the right call, and we say so.<span class="cost">Cost shape: monthly platform fee; setup in weeks.</span></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="item" id="i5">
+    <button class="item-head" onclick="tog('i5')" aria-expanded="false">
+      <span class="ht">
+        <span class="item-title">Continuous compliance monitoring</span>
+        <span class="subline">{{I5_SUBLINE}}</span>
+      </span>
+      {{I5_BADGE}}<span class="caret">▶</span>
+    </button>
+    <div class="item-body">
+      <p class="what">Automated evidence collection against your security framework, replacing point-in-time audit scrambles.</p>
+      <div class="seclab ok">Why it's available — your board</div>
+      <div class="evrow">
+{{I5_CHIPS}}
+      </div>
+{{I5_CAVEAT}}
+      <div class="seclab">How you can get it</div>
+      <div class="delivery">
+        <div class="dopt"><span class="who">ADOPT</span><span>This is a buy category — mature platforms exist. We help you choose and sequence; we don't build a rival.<span class="cost">Cost shape: annual platform subscription; connect infra and identity provider in days.</span></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="item" id="i7">
+    <button class="item-head" onclick="tog('i7')" aria-expanded="false">
+      <span class="ht">
+        <span class="item-title">Employee onboarding / offboarding cascade</span>
+        <span class="subline">{{I7_SUBLINE}}</span>
+      </span>
+      {{I7_BADGE}}<span class="caret">▶</span>
+    </button>
+    <div class="item-body">
+      <p class="what">One record change in your HR system driving payroll, access, and devices — and revoking everything on exit.</p>
+      <div class="seclab warn">Climb first</div>
+      <div class="rungs">
+{{I7_RUNGS}}
+      </div>
+{{I7_SUBREC}}
+      <div class="evrow" style="margin-top:10px">
+{{I7_CHIPS}}
+      </div>
+{{I7_PENDING}}
+    </div>
+  </div>
+
+  <div class="item" id="i8">
+    <button class="item-head" onclick="tog('i8')" aria-expanded="false">
+      <span class="ht">
+        <span class="item-title">Inbound lead handling</span>
+        <span class="subline">{{I8_SUBLINE}}</span>
+      </span>
+      {{I8_BADGE}}<span class="caret">▶</span>
+    </button>
+    <div class="item-body">
+      <p class="what">Form fill → enrichment → routing → scheduling, in minutes. The most-marketed automation in the category; we offer it late, not first.</p>
+      <div class="seclab ok">Already in place</div>
+      <div class="evrow">
+{{I8_CHIPS}}
+      </div>
+      <div class="seclab warn">Climb first</div>
+      <div class="rungs">
+{{I8_RUNGS}}
+      </div>
+    </div>
+  </div>
+
+  <div class="item" id="i9">
+    <button class="item-head" onclick="tog('i9')" aria-expanded="false">
+      <span class="ht">
+        <span class="item-title">Customer-health scoring with triggered playbooks</span>
+        <span class="subline">{{I9_SUBLINE}}</span>
+      </span>
+      {{I9_BADGE}}<span class="caret">▶</span>
+    </button>
+    <div class="item-body">
+      <p class="what">Usage and support signals scored per account, breaches triggering defined plays. Practitioners themselves say version-one scores are calibration exercises.</p>
+      <div class="seclab warn">Climb first</div>
+      <div class="rungs">
+{{I9_RUNGS}}
+      </div>
+{{I9_PENDING}}
+    </div>
+  </div>
+
+  <!-- compact not-offered -->
+  <div class="item compact" id="i6">
+    <button class="item-head" onclick="tog('i6')" aria-expanded="false">
+      <span class="ht">
+        <span class="item-title">Failed-payment recovery — {{I6_TITLE_REASON}}</span>
+      </span>
+      {{I6_BADGE}}<span class="caret">▶</span>
+    </button>
+    <div class="item-body">
+      <p class="what">Automated retries when a recurring charge fails. This isn't a gap and there's nothing to climb — it doesn't fit your motion. It would reappear only if you moved to recurring billing.</p>
+    </div>
+  </div>
+
+  <div class="classhead">Net-new — capabilities with no pre-AI equivalent</div>
+
+  <div class="item" id="i10">
+    <button class="item-head" onclick="tog('i10')" aria-expanded="false">
+      <span class="ht">
+        <span class="item-title">Whole-corpus intelligence</span>
+        <span class="subline">{{I10_SUBLINE}}</span>
+      </span>
+      {{I10_BADGE}}<span class="caret">▶</span>
+    </button>
+    <div class="item-body">
+      <p class="what">Questions asked across everything at once — every call, document, and record — with sourced answers: what objections killed lost deals, where your documents contradict each other, what you promised a customer.</p>
+      <div class="seclab ok">Why it's live</div>
+      <div class="evrow">
+{{I10_CHIPS}}
+      </div>
+{{I10_CAVEAT}}
+      <div class="seclab">How you can get it</div>
+      <div class="delivery">
+        <div class="dopt"><span class="who">LADDER</span><span>This is the Memory layer plus your diagnosis — no adopt equivalent exists for the full scope.<span class="cost">Cost shape: included in deployment; query costs are pennies.</span></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="excl">
+    <h3>Not on your menu — and why</h3>
+    <p><strong>Autonomous outbound sales agents.</strong> Our research found no corroboration beyond the sellers of the tooling. Excluded until that changes.</p>
+    <p><strong>Whole-stack "automate everything" packages.</strong> Automating an undocumented process makes its failures faster. Your board fixes the process first; the menu sequences automation behind it.</p>
+  </div>
+
+  <footer>Resolution {{RES_NO}} · inputs: {{RUN_ID}} + intake/{{COMPANY_SLUG}}.json · every disposition, rung, and evidence chip traces to a board state or an intake answer — nothing here is generated</footer>
+</div>
+
+<script>
+function tog(id){
+  const el=document.getElementById(id);
+  const open=el.classList.toggle('open');
+  el.querySelector('.item-head').setAttribute('aria-expanded', open);
+}
+</script>
+</body>
+</html>

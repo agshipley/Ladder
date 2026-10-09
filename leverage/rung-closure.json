@@ -1,0 +1,15 @@
+{
+  "note": "Rung closure classification for the Leverage menu surface (v2). 'draftable' = Ladder can produce a first-pass draft from corpus evidence (a human names/reviews it); 'yours' = a company/founder action no tool creates. Keyed by the rung's subcategory id or operator-fact gate key. Per-rung explanatory copy is verbatim from the approved v2 reference (leverage/templates/menu-v2-approved.html), keyed by (item, rung), and rendered by the resolver.",
+  "labels": { "draftable": "LADDER CAN DRAFT THIS", "yours": "YOURS TO CLOSE" },
+  "closure": {
+    "OPS-01": "draftable",
+    "OPS-05": "draftable",
+    "PEOPLE-03": "draftable",
+    "OPS-04": "draftable",
+    "PRODUCT-05": "draftable",
+    "GTM-18": "draftable",
+    "FIN-01": "yours",
+    "inbound_lead_volume": "yours",
+    "account_count": "yours"
+  }
+}

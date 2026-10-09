@@ -1,0 +1,12 @@
+{"criterionId":"GTM-01","state":"evidence-found","conditionApplied":null,"evidenceChunkIds":["1120","1121","1150"],"runId":"fixture-demo","model":"fixture","effort":null,"timestamp":"2026-07-10T12:00:00.000Z"}
+{"criterionId":"GTM-02","state":"not-ingested","conditionApplied":null,"evidenceChunkIds":[],"runId":"fixture-demo","model":"fixture","effort":null,"timestamp":"2026-07-10T12:00:01.000Z"}
+{"criterionId":"GTM-03","state":"evidence-found","conditionApplied":null,"evidenceChunkIds":["2201","2202"],"runId":"fixture-demo","model":"fixture","effort":null,"timestamp":"2026-07-10T12:00:02.000Z"}
+{"criterionId":"GTM-04","state":"evidence-found","conditionApplied":null,"evidenceChunkIds":["2310"],"runId":"fixture-demo","model":"fixture","effort":null,"timestamp":"2026-07-10T12:00:03.000Z"}
+{"criterionId":"GTM-05","state":"genuine-absence","conditionApplied":null,"evidenceChunkIds":[],"runId":"fixture-demo","model":"fixture","effort":null,"timestamp":"2026-07-10T12:00:04.000Z"}
+{"criterionId":"GTM-06","state":"evidence-found","conditionApplied":null,"evidenceChunkIds":["2450","2451"],"runId":"fixture-demo","model":"fixture","effort":null,"timestamp":"2026-07-10T12:00:05.000Z"}
+{"criterionId":"GTM","state":"loop-ready","conditionApplied":"SDR-loop prerequisites all green (illustrative)","evidenceChunkIds":[],"runId":"fixture-demo","model":"fixture","effort":null,"timestamp":"2026-07-10T12:00:06.000Z"}
+{"criterionId":"OPS-08","state":"documented-n-a","conditionApplied":"physical-footprint trigger unmet (pure-SaaS)","evidenceChunkIds":[],"runId":"fixture-demo","model":"fixture","effort":null,"timestamp":"2026-07-10T12:00:07.000Z"}
+{"criterionId":"OPS-09","state":"informational","conditionApplied":null,"evidenceChunkIds":["3001"],"runId":"fixture-demo","model":"fixture","effort":null,"timestamp":"2026-07-10T12:00:08.000Z"}
+{"criterionId":"LEGAL-08","state":"placeholder","conditionApplied":"exclusion-class active (litigation hold)","evidenceChunkIds":[],"runId":"fixture-demo","model":"fixture","effort":null,"timestamp":"2026-07-10T12:00:09.000Z"}
+{"criterionId":"AIOPS-05","state":"informational","conditionApplied":null,"evidenceChunkIds":[],"runId":"fixture-demo","model":"fixture","effort":null,"timestamp":"2026-07-10T12:00:10.000Z"}
+{"criterionId":"PRODUCT-01","state":"thin","conditionApplied":null,"evidenceChunkIds":["4090"],"runId":"fixture-demo","model":"fixture","effort":null,"timestamp":"2026-07-10T12:00:11.000Z"}

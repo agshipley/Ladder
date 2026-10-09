@@ -1,0 +1,53 @@
+# Templates are authored expert judgment, versioned as product assets. The template drives the
+# outline; the corpus never defines scope.
+#
+# PROVISIONAL v1 — landed under autonomous-run rules 2026-07-17; operator review by exception pending.
+# Fill modes: corpus | recommend | operator | structural | informational.
+
+template: capital-plan
+version: 1
+ruled: "2026-07-17"
+title: Capital Plan
+deliverable: capital-plan
+applies_to: [CAP-01]
+default_mode: artifact   # MODE MATRIX (operator-ruled 2026-07-18); per-company default, subject to generation-time mode_conditions.
+professional_review: none
+
+exclusions:
+  - No benchmark pass/fail values — never present a "good/bad" threshold as a judgment.
+  - No internal reference-model language (B-##, band names, tile ids) in customer documents.
+  - No padding metrics or filler — every element earns its place.
+
+sections:
+  - id: purpose-ownership
+    title: Purpose & ownership
+    fill_mode: [operator]
+    required_content:
+      - Who owns the capital plan.
+  - id: milestone-linkage
+    title: Milestone linkage
+    fill_mode: [corpus, operator]
+    required_content:
+      - What the current capital must prove (externally verifiable: next-round bar, revenue mark, technical demonstration).
+    conditionality: The milestone is an operator/board decision.
+  - id: runway
+    title: Runway at planned burn
+    fill_mode: [corpus]
+    required_content:
+      - Runway from the burn model (the 18-24-month norm is context, not a benchmark).
+  - id: solvency-posture
+    title: Solvency posture
+    fill_mode: [operator]
+    required_content:
+      - Default-alive / default-dead, separating facts from hopes.
+  - id: instrument-selection
+    title: Instrument-selection reasoning
+    fill_mode: [corpus, operator]
+    required_content:
+      - SAFE vs priced vs debt, in a memo.
+  - id: decisions-required
+    title: Decisions required
+    fill_mode: [structural]
+    required_content:
+      - Aggregate every per-company decision as a plain-language question.
+    conditionality: Always present.
