@@ -1,24 +1,41 @@
 # Ladder
 
-**A company knowledge system that reads a company's documents, shows it what a well-run company
-at its stage maintains, and helps close the difference with real work.**
+**Your company has thousands of documents. Does it actually have the systems and practices it needs to operate?**
 
-Many companies build up knowledge without compounding it. Documents sit across a dozen
-tools, nobody can say what is missing, and the leverage that a company's own knowledge could
-provide goes unused. Ladder treats this as a path a company climbs, one rung at a time:
+Most AI knowledge systems help companies find information they already have. **Ladder goes further:** it uses a company's own evidence to assess operational maturity, identify missing capabilities, and help close the gaps.
+
+Ladder is a company intelligence product built around three dependent layers:
 
 ```mermaid
 flowchart LR
-    M["<b>Memory</b><br/>Documents, decks, sheets<br/>and transcripts, searchable<br/>as cited evidence"]
-    MA["<b>Maturity</b><br/>Scored against a reference model<br/>of a well-run company:<br/>what's in place, thin, or missing"]
-    L["<b>Leverage</b><br/>Automation offered only where<br/>the company is ready for it"]
-    M --> MA --> L
-    MA -. "drafts what's missing,<br/>from the company's own material" .-> M
+    M["Memory<br/>Company evidence, searchable<br/>with source citations"]
+    D["Maturity<br/>83 operating areas<br/>11 functions"]
+    L["Leverage<br/>Automation gated by<br/>actual readiness"]
+    M --> D --> L
+    D -. "Evidence-grounded<br/>remediation" .-> M
 ```
 
-Each layer depends on the one below it. You can't automate a sales loop without a CRM, you
-can't build the CRM well without the pipeline data, and you won't know either is missing until
-something reads the corpus and says so.
+- **Memory:** Ingest and query company documents through a cited, MCP-accessible knowledge system.
+- **Maturity:** Evaluate the available evidence against an operational reference model covering **83 areas across 11 company functions**, from engineering and GTM to finance, legal and compliance.
+- **Leverage:** Help resolve diagnosed gaps and identify automation opportunities whose prerequisites are actually satisfied.
+
+## What makes Ladder different?
+
+Imagine a seed-stage company with hundreds of sales-call transcripts, a spreadsheet pipeline, and quarterly sales targets.
+
+A conventional retrieval system can summarize those conversations. **Ladder asks whether the company has the underlying capabilities to run an effective sales operation.** Are there an approved talk track, a functioning CRM, reliable scheduling, and segmented performance measurement? What evidence supports each conclusion?
+
+Those aren't interchangeable problems. A missing talk track may be addressed with an evidence-grounded draft. A missing CRM requires an actual system. A missing operating practice requires evidence that people follow it. And when a relevant data source hasn't been ingested, Ladder says **“we couldn't see it”** rather than inventing an absence.
+
+The [worked GTM scenario](Ladder-Product-Concept.md#3-a-worked-example-maturing-a-gtm-function) explains this progression. It is illustrative, not a customer case study.
+
+## What's working today?
+
+The memory layer operates in production company instances. The maturity board has been exercised across the complete 83-area model against a real company corpus, with human adjudication. Evidence-grounded drafting, citation validation, independent review, human approval, and the automation-readiness resolver are implemented.
+
+**Live closed-loop automations inside third-party business applications are the next major development stage**, not an already-deployed capability.
+
+The objective isn't to produce more documents. It's to help a company understand its actual operating capabilities—and systematically improve them.
 
 ---
 
