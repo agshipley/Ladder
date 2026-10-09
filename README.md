@@ -22,6 +22,23 @@ something reads the corpus and says so.
 
 ---
 
+## Technical and deployment overview
+
+Ladder is a **company-specific diagnostic and remediation system**, not a generic chatbot over documents. Its principal engineering is in the operational reference model, evidence classification, gap-specific remediation, and the controls around generated work. Parsing, embeddings, storage, and MCP serving deliberately use established components.
+
+| Layer | Implementation and boundary | Current maturity |
+|---|---|---|
+| **Memory** | Mixed-format ingestion through Unstructured; Postgres/pgvector corpus and gbrain retrieval behind a swappable interface; OAuth-protected MCP service in an isolated company instance | Used in live company instances |
+| **Maturity** | 83 operating areas across 11 categories; evidence-linked verdicts, explicit ingestion coverage, and separate *missing* versus *not observed* states | Full-board run against a real company corpus, with human adjudication |
+| **Remediation** | Gap-class routing; template-driven drafting, exact-quotation checks, reviewer stages, and explicit human approval/adoption | End-to-end draft and review lifecycle implemented; quality still varies by document type |
+| **Leverage** | Deterministic eligibility resolver linking automation proposals to prerequisite board areas | Resolver and UI built; live third-party automation loops not yet established |
+
+**Trust boundaries are part of the product:** customer corpora remain in their own instances; company-authored evidence can be evaluated separately from Ladder-generated material; a completed *plan* does not count as an implemented *practice*. The reference model is currently calibrated for a US, seed-stage B2B software company, not validated as a universal cross-sector standard.
+
+For evidence of implementation and the explicit open issues, see [State of Ladder](STATE-OF-LADDER.md). For dependency and licensing boundaries, see the [portability ledger](PORTABILITY-LEDGER.md). The [board fixture](board/fixtures/demo-run.jsonl) is demonstrative data, not a disclosed customer run.
+
+---
+
 ## What a company gets
 
 ### 1. Memory: the company's own record, searchable and cited
