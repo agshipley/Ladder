@@ -1,178 +1,173 @@
-# State of Ladder — the canon entry point
+# State of Ladder
 
-_Single source of truth for what Ladder is and what stands today. Written for a reader with no
-prior context. Every claim here traces to a repo document or commit; anything unverified is listed
-under "Open items," never asserted as fact. When this document and an older one disagree, this one
-wins — the older document should carry a banner saying so._
+What Ladder is, what is built and working, the rules it operates under, and what is still open.
+This is the entry point after the [README](README.md); every claim points to the document or code
+that backs it.
 
-Last authored: 2026-07-21.
+_Last updated: 2026-10-08._
 
 ---
 
 ## 1. What Ladder is
 
-Ladder is a single-tenant, self-hostable "company knowledge OS." Each customer company gets its own
-isolated instance — its own repository, database, and services; there is no shared multi-tenant
-system. It has three layers, built in order (see `Ladder-Product-Concept.md`, `CLAUDE.md`).
+Ladder is a single-tenant, self-hostable company knowledge system. Each customer company gets its
+own isolated instance (its own repository, database and services), and no shared system holds
+several companies' data. It has three layers, built in order
+([`Ladder-Product-Concept.md`](Ladder-Product-Concept.md)).
 
-**Memory** — the company's documents, calls, and records are ingested once and become searchable
-evidence. Ladder adopts a proven engine for this rather than building one; the corpus is treated as
-evidence and is never rewritten after ingestion (`Sprint-M-Memory.md`, `Ladder-Roadmap.md`).
+**Memory.** The company's documents, decks, spreadsheets and records are ingested once and become
+searchable, cited evidence. Ladder adopts a proven ingestion and serving engine for this and keeps
+it behind an interface it controls ([`Sprint-M-Memory.md`](Sprint-M-Memory.md),
+[`PORTABILITY-LEDGER.md`](PORTABILITY-LEDGER.md)).
 
-**Maturity** — a reference model of what a well-run company at this stage should have. Ladder scores
-the company's real evidence against it and produces a maturity board: a color-coded read of every
-operating area, with the reasoning and the source documents behind each verdict (`Sprint-Ma-Maturity.md`,
-`reference-model/TAXONOMY.md`).
+**Maturity.** A reference model describes what a well-run company at this stage maintains. Ladder
+scores the company's real evidence against it and produces a maturity board: a color-coded read of
+every operating area, with the reasoning and source documents behind each verdict
+([`Sprint-Ma-Maturity.md`](Sprint-Ma-Maturity.md), [`reference-model/`](reference-model/README.md)).
 
-**Leverage** — for the gaps and strengths the board surfaces, a menu of automation opportunities,
-each qualified against the company's own board so the menu only offers what the company is actually
-ready for (`Sprint-L-Leverage.md`, `leverage/MENU-CATALOG.md`).
+**Leverage.** For what the board surfaces, Ladder offers a menu of automation opportunities, each
+qualified against the company's own board so the menu offers only what the company is ready for
+([`Sprint-L-Leverage.md`](Sprint-L-Leverage.md), [`leverage/MENU-CATALOG.md`](leverage/MENU-CATALOG.md)).
 
 ---
 
 ## 2. What is built and working
 
-**Memory (built).** Heterogeneous document ingestion into a corpus store, with search and full-recall
-sweep, running on the adopted engine (gbrain) behind a swappable interface (`scripts/classifier/retrieval.ts`,
-`PORTABILITY-LEDGER.md`). Indexing happens at write time (embeddings are computed on save). Every board
-run carries an honest **coverage disclosure** — what was and was not ingested; for the reference company
-(the reference company) that reads: documents ingested; code repository not ingested; call recordings present as video,
-not transcribed, not ingested; community channels not ingested (`runs-of-record/ref-board-003.rich.json`
-stats, surfaced on the board via `board/src/App.tsx`).
+**Memory.** Mixed-format document ingestion (Office files, PDFs, spreadsheets, decks) into a corpus
+store with search and a full-recall sweep, served over the Model Context Protocol so any compatible
+AI client can query it. The parser is Unstructured; the serving engine is gbrain, behind the
+`RetrievalClient` interface in [`scripts/classifier/retrieval.ts`](scripts/classifier/retrieval.ts).
+Embeddings are computed when a document is saved. Memory instances run in production for more
+than one company.
 
-**Maturity (built).** The reference model covers **11 categories and 83 operating areas (CRITERIA-SCHEMA.yaml v1.5, 2026-07-15, commit 1454f39)**
-(`reference-model/CRITERIA-SCHEMA.yaml`, `reference-model/TAXONOMY.md`). The current board run of record
-is **ref-board-003** — all 83 areas judged against the live company corpus (`runs-of-record/BOARD-003-SUMMARY.md`).
-The full **generation pipeline** turns a surfaced gap into a reviewable draft, end to end
-(`reference-model/GENERATION-STANDARD.md`): a fixed template drives the outline; the corpus is queried
-per section for evidence; a deterministic mechanical validator checks structure and **citation truth**
-(quoted attributions must appear verbatim in the cited source); a structural self-review and an
-authority review run; and finally a **blind quality gate** — a fresh-context reviewer sees only the
-finished document and a recipient persona, with no hint it is machine-produced, and blocks anything
-not client-ready. A document that clears the pipeline enters a **lifecycle**: it is reviewed and approved
-as *working* or *final*, one document at a time, explicitly — never in a batch, never auto-adopted
-(`scripts/board-server.ts`, `reference-model/GENERATION-STANDARD.md`).
+**Maturity.**
+- **Reference model:** 11 categories and 83 operating areas, defined in
+  [`reference-model/CRITERIA-SCHEMA.yaml`](reference-model/CRITERIA-SCHEMA.yaml) (v1.5) and
+  [`reference-model/TAXONOMY.md`](reference-model/TAXONOMY.md).
+- **Board:** the full 83-area board has been run end to end against a real company corpus and its
+  results adjudicated by a human reviewer. Each board run carries a **coverage disclosure** stating
+  what was and wasn't ingested (for example: documents ingested; code repository, call recordings
+  and community channels not ingested), shown on the board itself ([`board/`](board/)).
+- **Generation pipeline:** a surfaced gap becomes a reviewable draft, end to end
+  ([`reference-model/GENERATION-STANDARD.md`](reference-model/GENERATION-STANDARD.md)). A fixed
+  template drives the outline. The corpus is queried per section for evidence. A deterministic
+  validator checks structure and **citation truth**: quoted attributions must appear word for word
+  in the cited source. A structural self-review and an authority review follow, and a **blind
+  quality gate** comes last: a fresh-context reviewer sees only the finished document and the
+  persona of the person who would receive it, and blocks anything that isn't ready for them.
+- **Document lifecycle:** a draft that clears the pipeline is reviewed and approved as *working* or
+  *final*, one document at a time, explicitly, with no batch approval and no automatic adoption
+  ([`reference-model/GENERATION-STANDARD.md`](reference-model/GENERATION-STANDARD.md),
+  [`scripts/board-server.ts`](scripts/board-server.ts)).
 
-**Leverage (built).** A ruled automation **menu** (`leverage/MENU-CATALOG.md`, ten items across
-enhance / fully-automate / net-new) plus a deterministic **resolver** that qualifies each item against
-the company's board and answers to a short intake, producing an "available / not yet / not offered /
-pilot" verdict with the exact prerequisites to climb (`leverage/RESOLVER-MAPPING.md`,
-`scripts/leverage/resolve-menu.ts`, `runs-of-record/ref-menu-001.md`). The menu surface and the board
-are integrated on one origin: the board has a Leverage tab, the menu links each prerequisite back to its
-board tile, and each tile's drawer shows which menu items it gates (`scripts/board-server.ts` `/leverage`,
-`board/build-data.mjs`).
-
----
-
-## 3. The binding rules in force
-
-Each rule is stated plainly here; its full text lives in the pointer.
-
-- **Corpus immutability** — once a document is ingested it is never rewritten; there is no autonomous
-  content mutation on a Ladder instance. → `Ladder-Roadmap.md`, `Ladder-Build-Lessons.md`.
-- **Plan never flips** — a "gap-closure plan" is an internal working artifact and can never flip a board
-  area to green on adoption; only a true target document can. → `reference-model/GENERATION-STANDARD.md`
-  (mode matrix), `scripts/classifier/generate.ts` (invariants).
-- **Professional-review gates** — documents in areas needing attorney or HR review cannot be finalized
-  until that review is attested. → `reference-model/GENERATION-STANDARD.md`.
-- **Generation exclusions** — Ladder generates nothing in litigation and dispute areas; those materials
-  are kept outside the corpus by policy and refused before any model call. → `reference-model/GAP-CLASS-DOCTRINE.md`,
-  `scripts/classifier/generate.ts` (generation-excluded).
-- **Provenance blindness + disclosure** — the drafting and review stages sit outside a "firewall" and
-  never see whether evidence is company-native or Ladder-generated; separately, any non-company-native
-  evidence is disclosed openly on the board. → `reference-model/GENERATION-STANDARD.md` (firewall boundary).
-- **Segmentation / company-evidence-only view** — retrieval and the board can be scoped to company-native
-  evidence only, excluding anything Ladder generated, so a pristine pre-generation view is always available.
-  → `scripts/classifier/retrieval.ts` (origin scope), `board/src/App.tsx` ("Company evidence only").
-- **Model routing + spend caps** — generation, both reviews, and the blind gate all run on the cost-point
-  model (Claude Sonnet); the more expensive model is reserved for the diagnostic judge only; batch runs
-  carry an explicit dollar cap and abort rather than overrun. → `reference-model/GENERATION-STANDARD.md`
-  (model routing), `scripts/leverage/…` and `scripts/classifier/rerun.ts` (per-run cap).
-- **Stop rule** — a failure at a deterministic gate is a finding, not a retry target: one regeneration
-  attempt maximum, then the failure is filed and the item stops; unchanged input is never retried.
-  → `reference-model/RESEARCH-PROTOCOL.md` (§ Stop rule of record).
+**Leverage.**
+- **Menu:** ten automation opportunities across three kinds (enhance what exists, fully automate,
+  net-new) ([`leverage/MENU-CATALOG.md`](leverage/MENU-CATALOG.md)).
+- **Resolver:** a deterministic resolver qualifies each item against the company's board and a short
+  intake, returning *available*, *not yet*, *not offered* or *pilot*, with the exact prerequisites
+  to climb ([`leverage/RESOLVER-MAPPING.md`](leverage/RESOLVER-MAPPING.md),
+  [`scripts/leverage/resolve-menu.ts`](scripts/leverage/resolve-menu.ts)).
+- **Integration with the board:** the menu and board share one origin. The board has a Leverage
+  tab, each prerequisite links back to its board tile, and each tile shows which menu items it
+  gates.
 
 ---
 
-## 4. Live infrastructure
+## 3. The rules Ladder operates under
 
-- **Serving/query engine:** gbrain, pinned at v0.42.53.0 (a fork), running on Railway behind the
-  `RetrievalClient` interface (`PORTABILITY-LEDGER.md`, `scripts/classifier/retrieval.ts`).
-- **Database + hosting:** Supabase Postgres (with pgvector) + Railway. The reference instance's live
-  query server is the reference instance's Railway query service. It is a
-  single serving service — the former nightly enrichment worker was retired 2026-07-17 in favor of
-  inline indexing (`PORTABILITY-LEDGER.md`).
-- **Tier limits:** the reference instance's Supabase is on the **free tier — there are no database
-  backups and no point-in-time recovery** (`runs-of-record/HANDOFF-2026-07-17.md`).
-- **Recoverability floor:** recovery does **not** depend on a database snapshot. By design, every
-  adopted (Ladder-generated) document lives under a `remediation/` slug prefix, deletion is a 72-hour
-  soft delete, and deleting that page returns the store to its pre-adopt state; the pre-adopt board
-  verdicts are committed at `runs-of-record/ref-board-003.rich.json` as the comparison baseline
-  (`runs-of-record/HANDOFF-2026-07-17.md`).
-
----
-
-## 5. What is NOT built / open rulings
-
-Pulled from the standing exception queue and carried-open lists
-(`runs-of-record/HANDOFF-2026-07-17.md`, `runs-of-record/SPRINT-MA-CLOSE.md`, `DECISIONS-THIS-RUN.md`).
-
-- **Railway cron worker deletion** — the retired enrichment worker was set to be
-  deleted in the Railway dashboard; that operator action was still pending and cannot be verified from
-  the repo. Nothing depends on it (code already single-service).
-- **Contested templates** — the legal-records template and the strategy-and-targets proposal are held,
-  awaiting an operator ruling before they land (`generation-templates/proposals/`).
-- **Engineering practice re-classifications (ENG-03 / ENG-07)** — a conservative re-class is proposed,
-  awaiting confirmation.
-- **The exception queue itself** — `DECISIONS-THIS-RUN.md` logs every conservative call and gate catch
-  and is awaiting operator review-by-exception; it is a live queue, not a closed record.
-- **Golden fixtures deferred** — the deterministic test-fixture suite is deferred (`reference-model/FIXTURES-DEFERRED.md`);
-  one fixture (FX-15) flips on inherent judge nondeterminism rather than a regression.
-- **Carried open rulings** — CAP-03 (83(b) treatment) and FX-41 (expected-state) remain open;
-  the FIN-06/FIN-08 merge and a board visual restyle were deferred by ruling (`runs-of-record/SPRINT-MA-CLOSE.md`).
-- **Board badge bake** — tile "working"/flip badges are not yet baked onto a fresh board render; the
-  saved snapshot predates the first adopt (`runs-of-record/HANDOFF-2026-07-17.md`).
-- **PEOPLE-07 (HR handbook) generation** — regeneration reliably fabricates source quotes, caught by the
-  citation-truth gate, so no clean draft is produced; this is a generation-quality gap, not a checker
-  fault (`generated-drafts/GENERATION-FAILURES.jsonl`; commit `44c57af`). Needs a generation-side fix,
-  not a gate change.
+- **The corpus is evidence.** Ingested documents are never rewritten by Ladder. Nothing on an
+  instance changes content autonomously.
+- **Plans don't flip tiles.** A gap-closure plan is a working artifact. Only the actual target
+  document, approved by a person, can move an area to green
+  ([`GENERATION-STANDARD.md`](reference-model/GENERATION-STANDARD.md)).
+- **Gap class decides the remedy.** Only artifact gaps are closed by generating a document; system
+  and practice gaps get recommendations and scaffolds
+  ([`GAP-CLASS-DOCTRINE.md`](reference-model/GAP-CLASS-DOCTRINE.md)).
+- **Professional review gates.** Documents in areas that need attorney or HR review can't be
+  finalized until that review is recorded.
+- **Generation exclusions.** Ladder generates nothing in litigation or dispute areas. Those materials
+  are kept out of the corpus by policy, and requests are refused before any model call.
+- **Provenance blindness and disclosure.** The drafting and review stages never see whether
+  evidence is company-native or Ladder-generated. Separately, any evidence Ladder generated is
+  labeled on the board.
+- **Company-evidence-only view.** Retrieval and the board can be limited to company-native evidence,
+  so a pristine baseline view is always available
+  ([`retrieval.ts`](scripts/classifier/retrieval.ts), [`board/src/App.tsx`](board/src/App.tsx)).
+- **Model routing and spend caps.** Generation, both reviews and the blind gate run on a cost-efficient
+  model; the more capable model is reserved for the diagnostic judge. Batch runs carry an explicit
+  dollar cap and stop before overrunning it.
+- **Stop rule.** A failure at a deterministic gate is a finding to investigate. A draft gets one
+  regeneration attempt at most, then the failure is filed and the item stops
+  ([`RESEARCH-PROTOCOL.md`](reference-model/RESEARCH-PROTOCOL.md)).
 
 ---
 
-## 6. Doc map — where everything lives
+## 4. Architecture
 
-Classification from the 2026-07-21 inventory. **CURRENT-BINDING** = in force; **HISTORICAL** =
-point-in-time record; **SUPERSEDED** = replaced (banner added in the doc's own header).
+```mermaid
+flowchart TB
+    subgraph Instance["One company's instance (isolated)"]
+        direction TB
+        D[Company documents] --> P[Parser<br/>Unstructured]
+        P --> G[Glue<br/>per-format vault entries]
+        G --> S[(Corpus store<br/>Postgres + pgvector)]
+        S --> Q[Query server<br/>MCP over HTTP, OAuth]
+    end
+    Q --> AI[AI clients<br/>Claude, ChatGPT, …]
+    Q --> C[Classifier + judge<br/>83 areas]
+    C --> B[Maturity board]
+    B --> GEN[Generation pipeline]
+    GEN -->|approved drafts only| S
+    B --> R[Leverage resolver]
+```
 
-**Root — concept, specs, standing rules (all CURRENT-BINDING):**
-`Ladder-Product-Concept.md` (what Ladder is) · `Ladder-Roadmap.md` (build sequence + principles) ·
-`Ladder-Build-Lessons.md` (measured facts + standing rules) · `Sprint-M-Memory.md`, `Sprint-Ma-Maturity.md`
-(closed 2026-07-16), `Sprint-L-Leverage.md` (carries a 2026-07-22 status banner: the built Leverage layer
-is the board-qualified menu + resolver, not the bespoke SDR loop the spec body scopes) — the three layer
-specs · `CLAUDE.md` (agent operating instructions + infra gate) ·
-`CREDENTIALS.md` (names/procedures, never values) · `VOICE-DISCIPLINE.md` (customer-register language) ·
-`PORTABILITY-LEDGER.md` (adopted-tech ledger) · `README.md`.
-Historical: `DECISIONS-THIS-RUN.md` (07-17 run log / live exception queue), `Thread-Transition-2026-07-08.md` (banner added).
+- **Parser:** Unstructured (Apache-2.0). Tables are read from their HTML form so column alignment
+  survives; an empty parse result is treated as a failure to investigate.
+- **Corpus and serving:** gbrain on Postgres with pgvector, hosted per instance. A single service
+  embeds at write time and serves queries over MCP with OAuth.
+- **Judge and generation:** Anthropic models, behind configuration in
+  [`scripts/classifier/`](scripts/classifier/).
+- **Swap discipline:** each adopted dependency is logged with its license and swap boundary in
+  [`PORTABILITY-LEDGER.md`](PORTABILITY-LEDGER.md).
 
-**`reference-model/` — the maturity canon (CURRENT-BINDING unless noted):**
-`TAXONOMY.md` (categories + boundary rules) · `CRITERIA-SCHEMA.yaml` (the 83-area schema of record) ·
-`RESEARCH-PROTOCOL.md` (research + stop rule) · `GENERATION-STANDARD.md` (generation doctrine, 7 stages) ·
-`GAP-CLASS-DOCTRINE.md` · `CRITERIA-YAML-FIDELITY.md` · `LIFECYCLE.md` · `BOARD-REVIEW-PROTOCOL.md` ·
-`MODEL-DOC-SOURCES.md` · `REFRESH.md` · `DECOMPOSITION-BACKLOG.md` · `FIXTURES-DEFERRED.md` (deferral in force) ·
-the 11 per-category `*/BRIEF.md` files (each category's landed brief).
-Historical: `9EA-STATE.md` (audit checkpoint, banner added). Superseded: `REF-BOARD-001.md` → board-003 (banner added).
+---
 
-**`leverage/` — the leverage layer (CURRENT-BINDING):**
-`MENU-CATALOG.md` (the ruled menu) · `RESOLVER-MAPPING.md` (prerequisite mapping + resolution semantics) ·
-`templates/menu.html` (the customer surface) · `intake/reference.json` · `rung-closure.json`.
+## 5. What is not built yet
 
-**`generation-templates/` — the template layer:**
-`TEMPLATE-METHOD-LOG.md` (method record) · `proposals/` (14 proposed templates + index, several
-awaiting operator ruling — historical/proposed record; adopted templates are the `.yaml` files).
+- **Live automation loops.** The leverage layer qualifies and recommends automation; implementing
+  closed loops inside a company's own tools (CRM, scheduler, call capture) is the next stage. It is
+  a hard systems-integration problem and the least-tested part of the design
+  ([`Sprint-L-Leverage.md`](Sprint-L-Leverage.md)).
+- **Reference-model generality.** The model was calibrated on one mature company. Running the full
+  board against an early-stage company in a different sector is the planned test of how well it
+  generalizes ([`Ladder-Roadmap.md`](Ladder-Roadmap.md), gate 3).
+- **Generation quality on a few document types.** Some templates still produce drafts that the
+  citation-truth gate rejects (for example, an HR handbook draft that quoted sources inaccurately).
+  The gate is working as intended; the fix belongs on the generation side.
+- **More test fixtures.** A golden set of 56 fixture cases checks the judge against known
+  expected verdicts. Several further fixtures were set aside at review because they need a
+  different test shape (for example, contradictions between two areas), and are recorded for later
+  ([`FIXTURES-DEFERRED.md`](docs/working-notes/reference-model/FIXTURES-DEFERRED.md)).
+- **Open design rulings.** A handful of criteria and template questions are held for a ruling, for
+  example the treatment of 83(b) elections in the capital category. They are tracked in the
+  [working notes](docs/working-notes/README.md).
 
-**`runs-of-record/` — committed run outputs:**
-Current: `BOARD-003-SUMMARY.md`, `BOARD-003-ADJUDICATION.md` (the current board run) · `SPRINT-MA-CLOSE.md`
-(maturity-layer close) · `ref-menu-001.md` (current leverage resolution) · the board/menu JSON outputs.
-Historical: `HANDOFF-2026-07-17.md` (banner added). Superseded: `ref-board-002-adjudication.md` → board-003 (banner added).
+---
 
-_(There are no `loop/` documents on the main branch as of this writing.)_
+## 6. Where everything lives
+
+| Path | Contents |
+|---|---|
+| [`README.md`](README.md) | Overview |
+| [`Ladder-Product-Concept.md`](Ladder-Product-Concept.md) | The thesis, the three layers, a worked go-to-market example, the gap classes |
+| [`Ladder-Roadmap.md`](Ladder-Roadmap.md) | Build sequence, principles, decision gates, risks |
+| [`Sprint-M-Memory.md`](Sprint-M-Memory.md) · [`Sprint-Ma-Maturity.md`](Sprint-Ma-Maturity.md) · [`Sprint-L-Leverage.md`](Sprint-L-Leverage.md) | Per-layer build specs |
+| [`PORTABILITY-LEDGER.md`](PORTABILITY-LEDGER.md) | Adopted dependencies, licenses, swap boundaries |
+| [`reference-model/`](reference-model/README.md) | Taxonomy, criteria schema, research protocol, per-category briefs, generation and lifecycle standards |
+| [`generation-templates/`](generation-templates/README.md) | Templates that drive document generation |
+| [`leverage/`](leverage/) | Automation menu catalog, resolver mapping, menu surface |
+| [`board/`](board/) · [`scripts/`](scripts/) | The board UI, classifier, generation pipeline and resolver |
+| [`docs/working-notes/`](docs/working-notes/README.md) | The working record: build lessons, method logs, proposals, AI-collaboration rules |
+
+Runs of record, generated drafts and customer corpora are private to each instance and aren't
+included in this repository.

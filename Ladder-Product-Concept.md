@@ -2,7 +2,7 @@
 
 ### A Three-Layer Company Knowledge OS — Memory, Maturity, Leverage
 
-*Product Concept — Draft for Discussion*
+*Product concept*
 
 ---
 
@@ -26,7 +26,7 @@ The three layers are not parallel features. They are a dependency chain: each la
 
 The company's heterogeneous documents — spreadsheets, decks, PDFs, governance files, code, transcripts, financials — ingested into a single owned, cross-linked, queryable knowledge layer, accessible from any AI client through an open protocol. This is the corpus: durable, searchable, and self-enriching as it grows.
 
-This layer is **validated**. It is the AbrainOAG pilot, now generalized from conversation logs to arbitrary company documents.
+This layer is **built and in production**. It generalizes an earlier personal knowledge-base pilot (AbrainOAG, which ingested AI conversation logs) to arbitrary company documents.
 
 ### Layer 2 — Maturity
 
@@ -100,13 +100,13 @@ The GTM example is the whole thesis in miniature. The layers must be climbed in 
 - You cannot stand up that CRM well without the pipeline and transcript data — which lives in **Memory**.
 - You would not know to build any of it without the board flagging the absence — **Maturity** diagnosis reading **Memory**.
 
-So the leverage layer's automations are only ever as good as the maturity beneath them, and the maturity diagnosis is only as good as the memory beneath it. This is Ladder's spine and its defensibility: a company matures by moving from memory to maturity to leverage, and each rung earns the right to the next.
+So the leverage layer's automations are only ever as good as the maturity beneath them, and the maturity diagnosis is only as good as the memory beneath it. This is Ladder's spine: a company matures by moving from memory to maturity to leverage, and each rung earns the right to the next.
 
 ---
 
 ## 5. The Reference Model: Four Tiers
 
-The maturity layer depends on a **reference model** — a structured description of what an operationally mature company maintains, and what "complete" looks like for each area. This model is the intellectual core of the product and its most defensible asset. It spans four tiers, because a mature company is complete on all four, and an early-stage company is usually thin on the last two — which is exactly where Ladder earns value a fractional COO or a lawyer could not provide.
+The maturity layer depends on a **reference model** — a structured description of what an operationally mature company maintains, and what "complete" looks like for each area. This model is the intellectual core of the product. It was first framed as four tiers, because a mature company is complete on all four, and an early-stage company is usually thin on the last two — which is exactly where Ladder earns value a fractional COO or a lawyer could not provide.
 
 | Tier | What it covers |
 |------|----------------|
@@ -114,6 +114,8 @@ The maturity layer depends on a **reference model** — a structured description
 | **Compliance / Security** | SOC 2 and equivalent artifacts, security and access policies, incident response. The tier where audit-readiness is decided. |
 | **Engineering / Infrastructure** | Architecture, data pipelines, deployment and CI, monitoring, disaster recovery, dependency and API documentation. Vendor-agnostic — Ladder does not care which host or database; it cares whether the operation is documented and sound. |
 | **AI Operations** | A plan to integrate AI into business and revenue operations: where AI is applied, how existing processes are optimized, what new ones it enables, and the governance around all of it. Vendor-agnostic about tools (Claude vs. GPT is immaterial); mandatory about existence. |
+
+> **Since this concept was written**, the four tiers have been organized into **11 categories and 83 operating areas**: go-to-market, product, operations, people, legal, capital, finance, vision, engineering, AI operations and compliance. The tiers above still describe the model's scope; the categories are how the board is organized. See [`reference-model/`](reference-model/README.md).
 
 **An honest seam in the model.** The first three tiers are derived from a mature reference company (see Section 7). The AI-operations tier cannot be — the reference corpus predates the requirement. This tier is **authored from expertise rather than derived**, because in 2026 a plan to integrate AI into operations is a category every startup must have and few yet do, but which a 2024–25 reference company would not itself contain. Naming this seam is deliberate: most of the model is *observed* from a real company; this tier is *asserted* from judgment about where operations are heading.
 
@@ -133,7 +135,7 @@ The resolution is that gap *class* is first-class in the maturity layer. The ref
 
 **Practice gaps.** The hardest class, and the one that keeps the product honest. A review cadence that actually runs, dependency updates that actually flow, a budget that actually gets reopened against actuals — no document closes these, because the criterion was never about a document. It was about evidence that the practice operates. Here Ladder generates the *scaffold* — the meeting template, the checklist, the tracked-goal format — and then says the honest thing: the scaffold exists; now the practice has to run. The tile flips only when naturally-produced evidence of the running practice appears in the corpus on a later evaluation. There is no shortcut, because the shortcut would be a lie.
 
-That last sentence is a differentiator, not a limitation. Every competitor in this space will happily generate the theater — the polished policy, the unused playbook, the binder of documents that satisfies a checklist and changes nothing. Ladder's board scores practice, its remediation respects the difference between a document and an operation, and the gap between those two philosophies is the gap between a compliance product and a maturity product.
+That last sentence is deliberate. Generating the theater is easy — the polished policy, the unused playbook, the binder of documents that satisfies a checklist and changes nothing. Ladder's board scores practice, its remediation respects the difference between a document and an operation, and the gap between those two philosophies is the gap between a compliance product and a maturity product.
 
 (Governing statement: reference-model/GAP-CLASS-DOCTRINE.md.)
 
@@ -164,16 +166,12 @@ Within a company's instance, access control governs which employees see which sl
 
 The three layers are not equally validated, and the concept is stronger for saying so plainly.
 
-- **Memory — proven.** The AbrainOAG pilot demonstrates ingestion, hosting, retrieval, and self-enrichment end to end. Extending it to heterogeneous documents is a commodity integration — the tooling is mature and widely used. The only open variables are which engine and how much custom glue, scoped by the Section 10 selection probe.
+- **Memory — proven.** Heterogeneous ingestion, hosting and retrieval run end to end on live company instances. The ingestion engine was chosen by a selection probe on real documents (see [`Sprint-M-Memory.md`](Sprint-M-Memory.md)).
 - **Maturity — tractable.** A real build, but on known primitives: classification against a reference model, and generation from the corpus. The hard part is precision — distinguishing a genuine absence from a document that simply has not been ingested yet, so the board does not raise false alarms that erode trust.
 - **Leverage — the ambitious destination.** Designing and implementing live automation loops into a company's operational tools is a genuinely hard systems-integration problem, and the part furthest from anything yet tested. It is Ladder's highest-value function and its deepest end. The right framing is the ladder: memory and maturity are the proven base that earns the right to attempt leverage, which Ladder climbs toward rather than ships whole.
 
 ---
 
-## 10. Immediate Next Step
+## 10. Where It Stands
 
-Heterogeneous document ingestion is a solved, commodity capability — many companies do it daily. So the first step is not a viability test but an engine-selection one: take a small, deliberately diverse sample of real reference-company documents — one structurally complex spreadsheet, one deck, one image-heavy file, and one plain-prose document as a control — and run them through two or three license-clear ingestion engines. The question is "which engine's output is closest to what the maturity layer needs, and how much thin custom glue turns it into a good vault entry." That result picks the engine and scopes the glue. It is an effort-and-selection decision, not a gate on whether the product can exist.
-
----
-
-*Draft prepared for internal discussion. Nothing here is a commitment. Heterogeneous ingestion is commodity capability; the Section 10 probe selects an engine and scopes glue rather than testing viability. The leverage layer is a staged ambition, not a shippable feature. The concept is presented with those seams visible by design.*
+Memory and Maturity are built: documents are ingested and served on live instances, the full 83-area board has been run against a real company corpus, and the generation pipeline turns artifact gaps into reviewed drafts. Leverage is built as a board-qualified automation menu; live automation loops are the next stage. The current state, including what is still open, is in [`STATE-OF-LADDER.md`](STATE-OF-LADDER.md).

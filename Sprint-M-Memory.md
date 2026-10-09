@@ -3,6 +3,7 @@
 **Layer:** Memory (Layer 1)
 **Goal:** ingest a company's heterogeneous documents into an owned, queryable, cross-linked corpus — generalizing AbrainOAG's conversation-only pipeline to arbitrary real-world formats, with meaning preserved.
 **Depends on:** nothing above it. This is the foundation.
+**Status:** complete. The selection probe chose Unstructured as the parser and kept gbrain for serving; the resolved stack and design rules are in [`Ladder-Roadmap.md`](Ladder-Roadmap.md) §3. This spec is kept as written, as the record of how the layer was scoped.
 **Proven base:** AbrainOAG's serving/hosting/retrieval/enrichment stack works. The net-new work is the ingestion front-end.
 
 ---

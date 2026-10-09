@@ -1,7 +1,7 @@
-# Ladder — Product Roadmap Spec
+# Ladder — Product Roadmap
 
-**Status:** Draft for build planning
-**Governs:** the Ladder product build (successor scope to AbrainOAG)
+**Status:** Memory and Maturity built; Leverage built as a board-qualified menu, with live automation loops next (current detail in [`STATE-OF-LADDER.md`](STATE-OF-LADDER.md)).
+**Governs:** the Ladder product build. Ladder generalizes an earlier personal knowledge-base pilot, AbrainOAG, to company documents.
 **Companion docs:** `Ladder-Product-Concept.md` (the what and why), the three sprint specs (the how)
 
 ---
@@ -21,7 +21,7 @@ These governed the AbrainOAG build and govern this one. They are not re-litigate
 - **Probe before parse.** Never assume the shape of an input. Read one real record, map it, then build. The most expensive mistakes come from assuming a structure and discovering it wrong after it has propagated.
 - **Verify on one before scaling.** Every phase proves itself on a single record or known query before running on the full set.
 - **Scale verification to what is at risk.** Full probe/verify/dry-run rigor for anything that writes to the tracked corpus. A dry-run glance, not a source investigation, for disposable local infrastructure that gets rebuilt or replaced.
-- **Own the differentiated layer; adopt the commodity layer behind a boundary.** "Own the code" does not mean write every line — it means control the stack, the data, and the interface, and never get locked in. Ladder *writes* the code that is differentiated and defensible — the reference model, the gap-detection logic, the maturity board, the leverage loops. Ladder *adopts* the commodity primitives the AI-enablement space has offered for years — heterogeneous document ingestion, chunking, embedding, vector search, retrieval. Reinventing those is the wheel-reinvention to avoid; building the reference model is the moat. The same instinct already governs the stack: Obsidian for the vault, gbrain for serving, Supabase and Railway for infrastructure — none written from scratch. Adoption is disciplined by two hard gates, checked in this order:
+- **Own the differentiated layer; adopt the commodity layer behind a boundary.** "Own the code" does not mean write every line — it means control the stack, the data, and the interface, and never get locked in. Ladder *writes* the code that is differentiated and defensible — the reference model, the gap-detection logic, the maturity board, the leverage loops. Ladder *adopts* the commodity primitives the AI-enablement space has offered for years — heterogeneous document ingestion, chunking, embedding, vector search, retrieval. Reinventing those is the wheel-reinvention to avoid; the reference model is where Ladder's own work belongs. The same instinct already governs the stack: Obsidian for the vault, gbrain for serving, Supabase and Railway for infrastructure — none written from scratch. Adoption is disciplined by two hard gates, checked in this order:
   - **License gate (first, non-negotiable for a replicated product).** Because Ladder is deployed as a separate instance for each paying customer, an adopted engine's license must permit commercial multi-deployment. Permissive licenses (MIT, Apache 2.0, BSD) allow this freely. Restrictive ones (AGPL, SSPL, "open-core" with commercial-use riders, modified-Apache multi-tenant conditions — e.g. Dify's) may forbid exactly what Ladder does. An engine Ladder cannot legally deploy for a customer is disqualified regardless of quality. License is checked *before* reliability, not after.
   - **Boundary + ledger (the swap discipline).** Whatever passes the license gate sits behind the stable interface Ladder controls, with every dependency logged in a portability ledger — the same rule that governs gbrain. Ladder can swap the engine without the customer noticing. That is what "own the code" means in practice: own the boundary and the differentiated layer; rent the commodity engine behind glass you can replace.
 - **Single-tenant, replicated.** Each company its own isolated instance. No shared multi-tenant system in the pilot. Multi-tenancy deferred, not foreclosed.
@@ -42,7 +42,7 @@ The layers are a dependency ladder. Each is a sprint (or sprint cluster) with it
 **Gate to next phase:** the reference-corpus selection probe (Sprint M, Task 1) identifies which license-clear engine produces the most usable output, and a per-format vault-entry taxonomy plus the glue scope are defined. This is an engine-and-effort decision, not a viability test — ingestion is a solved commodity capability.
 
 ### Phase Ma — Maturity (reference model + gap detection + board)
-**Goal:** score an ingested corpus against a four-tier reference model, diagnose absence/thinness/inconsistency, present the tile board, and generate missing documents/process from the corpus.
+**Goal:** score an ingested corpus against the reference model (originally four tiers, now 11 categories and 83 areas), diagnose absence/thinness/inconsistency, present the tile board, and generate missing documents/process from the corpus.
 **Why second:** it reads the memory layer. It cannot exist before Memory produces a reliable corpus.
 **Net-new:** the reference model (the intellectual core), the classifier, the gap-detection logic, the board UI, the generation flows.
 **Gate to next phase:** the board produces a trustworthy readout on the reference corpus (low false-positive rate against ingest-log ground truth), and at least one gap type can be generated from the corpus (e.g. a talk track from transcripts).
@@ -52,6 +52,7 @@ The layers are a dependency ladder. Each is a sprint (or sprint cluster) with it
 **Why last:** it depends on the maturity layer having built the CRM/scheduler/process it runs on. It is also the least-proven, highest-value, deepest-integration work.
 **Framing:** an R&D spike toward one narrow, real loop — not a general automation platform. Prove one loop end to end before generalizing.
 **Gate:** approached only after Memory and Maturity are proven on a real corpus. Committed as a spike with an explicit go/no-go after the first loop attempt.
+**Status:** the first deliverable became a board-qualified automation menu with a deterministic resolver ([`leverage/MENU-CATALOG.md`](leverage/MENU-CATALOG.md)), so each company is offered only the loops its board shows it is ready for. Building the first live loop is the next step.
 
 ---
 
@@ -67,14 +68,14 @@ The Memory layer is locked. Three components, one new.
 
 **Probe-validated design rules (Sprint M, Task 1):**
 
-1. Tables are consumed from `text_as_html`, never `.text`. The flattened `.text` collapses empty cells and breaks column alignment, rendering a cap table unreadable. `text_as_html` preserves row/column structure with empty cells as `<td/>`. Verified against the reference company's Series Seed cap table: nine columns, every ownership figure aligned to its header.
+1. Tables are consumed from `text_as_html`, never `.text`. The flattened `.text` collapses empty cells and breaks column alignment, rendering a cap table unreadable. `text_as_html` preserves row/column structure with empty cells as `<td/>`. Verified against a real multi-column cap table: every ownership figure aligned to its header.
 2. An empty partition result triggers verify/reject, never a silent pass. Unstructured can swallow an internal failure (e.g. an SSL cert error during model download) and return zero elements with no exception. Zero elements is not proof of an empty file.
 3. Three environment fixes are baked into gbrain ingestion setup: pinned `cryptography`/`numba` binary wheels, `numpy<2` (torch 2.2.x ABI compatibility), `SSL_CERT_FILE` via certifi.
 4. A raw table does not reliably survive embedding. gbrain's chunker enforces a hard cap (~1500 tokens / ~6032 chars, measured 2026-07-04) with size-based cuts that land mid-structure. The xlsx glue therefore emits a chunk-safe structural summary (row count, verbatim headers, row labels) as the retrieval target, followed by the intact HTML table as the source of record for the maturity layer.
 
 **Per-format glue scope:**
 
-- **xlsx** — non-trivial. Iterate Table elements, read `text_as_html`, preserve `sheet_name`/`page_name` so multi-sheet workbooks (Model v5: 97 tables) stay separated. The one real glue component.
+- **xlsx** — non-trivial. Iterate Table elements, read `text_as_html`, preserve `sheet_name`/`page_name` so multi-sheet workbooks (a single financial model can hold dozens of tables) stay separated. The one real glue component.
 - **docx** — trivial. Order-preserving concatenation of NarrativeText + ListItem; discard PageBreak/Footer.
 - **pptx** — moderate. Group by slide, treat Title as slide heading, apply the table HTML rule to embedded tables.
 - **pdf** — trivial plus the empty-result guard. `strategy="fast"` (text-layer only, no OCR) suffices for text-layer PDFs; e-signature layers don't block parsing.
@@ -93,8 +94,8 @@ The Memory layer is locked. Three components, one new.
 
 1. **Engine selection and glue scope** (end of Sprint M, Task 1): which license-clear engine produces the most usable output, and how much custom glue does a good vault entry require? This is an effort-and-selection decision — "engine X plus this much glue," or "write more glue," or "try a different engine." Ingestion capability is assumed (it is commodity); the decision is which tool and how much work, never whether the product can exist. Resolved — see §3 (Unstructured selected; glue scoped).
 2. **Engine choice** (during Sprint M): reuse the AbrainOAG/gbrain stack, or adopt a heterogeneous-ingestion framework (R2R, OpenDocuments, MMORE-style) behind the strangler boundary. Decided by the probe result, not in the abstract. Resolved — see §3 (gbrain stack retained; R2R rejected).
-3. **Reference-model generality** (during Sprint Ma): does a reference-corpus-derived model transfer to Customer A's different sector, or does it encode reference-company-specific assumptions? Tested by running the board against Customer A's real corpus.
-4. **Leverage go/no-go** (before Sprint L): only proceed if Memory and Maturity are proven. Then commit only to one narrow loop, with a second go/no-go after that loop is attempted.
+3. **Reference-model generality** (during Sprint Ma): does a reference-corpus-derived model transfer to Customer A's different sector, or does it encode reference-company-specific assumptions? Tested by running the board against Customer A's real corpus. **Open.**
+4. **Leverage go/no-go** (before Sprint L): only proceed if Memory and Maturity are proven. Then commit only to one narrow loop, with a second go/no-go after that loop is attempted. **Passed** for the menu and resolver; the first live loop is pending.
 
 ---
 
@@ -103,7 +104,7 @@ The Memory layer is locked. Three components, one new.
 | Phase | Reuses from AbrainOAG | Builds new |
 |-------|----------------------|------------|
 | Memory | Vault structure, Supabase+Railway hosting, MCP+OAuth serving, inline embedding, portability-ledger discipline | Heterogeneous ingestion front-end; per-format extraction + vault-entry taxonomy |
-| Maturity | The corpus as input; the graph | Reference model (4 tiers); classifier; gap detection (absence/thinness/inconsistency); tile-board UI; corpus-to-document generation |
+| Maturity | The corpus as input; the graph | Reference model (11 categories, 83 areas); classifier; gap detection (absence/thinness/inconsistency); tile-board UI; corpus-to-document generation |
 | Leverage | The corpus as input and sink | Automation loop design + implementation; integration with operational tools (CRM/scheduler); the closed feedback loop |
 
 ---
@@ -120,6 +121,4 @@ The Memory layer is locked. Three components, one new.
 
 ## 8. Sequence summary
 
-Prove ingestion on a reference-corpus sample → build heterogeneous ingestion (Memory) → author + build the reference model and board (Maturity) → prove one automation loop (Leverage) → generalize only what proved out. the reference company designs it; Customer A's is the first real deployment. Each rung earns the next.
-
-Next forward step (Maturity, after the board and GTM v2 element-grain landing): Checklist-annotation pass: per-element checklist labels + typical forms, derived from criteria, operator-reviewed by exception; gap_class tagging rides the same artifact. (No standalone artifact catalog — ruled: no canonical artifact per element exists.)
+Prove ingestion on a reference-corpus sample → build heterogeneous ingestion (Memory) → author + build the reference model and board (Maturity) → prove one automation loop (Leverage) → generalize only what proved out. The reference company calibrates it; Customer A is the first real deployment. Each rung earns the next.

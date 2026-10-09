@@ -1,31 +1,27 @@
 # Portability Ledger
 
-Per Ladder-Roadmap.md §1 ("Boundary + ledger — the swap discipline"): every adopted
-third-party dependency sits behind a boundary Ladder controls and is logged here, so it
-can be swapped without the customer noticing. This is the record of third-party adoptions.
+Ladder adopts proven components for the commodity layers (ingestion, embedding, storage, serving)
+and writes its own code for the parts that are specific to it. Every adopted dependency sits behind
+a boundary Ladder controls and is logged here with its license, so it can be replaced without the
+customer noticing ([`Ladder-Roadmap.md`](Ladder-Roadmap.md) §1, "Boundary + ledger").
 
-| Dependency | Version | Where | License | Purpose | Boundary / swap note | Adopted |
-|---|---|---|---|---|---|---|
-| gbrain | v0.42.53.0 (pinned) | serving/query engine (Railway) | (fork, agshipley/gbrain) | corpus store + MCP query/ingest | behind `scripts/classifier/retrieval.ts` `RetrievalClient` interface; swappable | pre-2026-07 |
-| Anthropic API | claude-opus-4-8 | judge + generation | commercial | LLM judge + remediation generation | behind `judgeConfigFromEnv` + `scripts/classifier/generate.ts`; model via `CLASSIFIER_JUDGE_MODEL` | pre-2026-07 |
-| Supabase + Railway | — | hosting/DB | commercial | Postgres + single serve service | infra layer; reused from AbrainOAG recipe (single-service now — see cron retirement below) | pre-2026-07 |
-| Railway cron worker (dream cycle) | — | RETIRED 2026-07-17 | — | nightly sync → embed → enrich | **Retired 2026-07-17** — superseded by inline embedding on `put_page` (writes index at storage time; verified live). Reason: corpus-immutability ruling — no autonomous content mutation on a Ladder instance. Live worker was its cron worker in project the reference instance's Railway project, deleted 2026-07-17; `VAULT_CLONE_TOKEN` retired with it. | retired 2026-07-17 |
-| docx | 9.7.1 (pinned exact) | board — review-surface DOCX export | MIT | render the clean adopted document to .docx (human deliverable) | client-side render only in `board/src/docx-export.ts`; no runtime egress; corpus still ingests Markdown (`adopt-draft.ts` unchanged); swappable/removable — Markdown download remains as fallback | 2026-07-16 |
+Because Ladder is deployed as a separate instance for each company, every dependency must also pass
+a **license gate**: its license has to permit commercial deployment across many instances.
+
+| Dependency | Version | Role | License | Boundary / swap note | Adopted |
+|---|---|---|---|---|---|
+| Unstructured | pinned per instance | Document parser (Office, PDF, spreadsheets, decks); runs in each instance's ingestion step, outside this repository | Apache-2.0 | Output is mapped to vault entries by a thin per-format glue layer; the parser can be replaced behind the glue | 2026-07 |
+| gbrain | v0.42.53.0, pinned fork | Corpus store, embedding at write time, retrieval, MCP serving with OAuth | MIT (fork of an MIT project) | Behind the `RetrievalClient` interface in [`scripts/classifier/retrieval.ts`](scripts/classifier/retrieval.ts) | before 2026-07 |
+| Anthropic API | configurable | Diagnostic judge and document generation | commercial | Model selected by environment configuration (`CLASSIFIER_JUDGE_MODEL`, `CLASSIFIER_GEN_MODEL`); calls are isolated in `scripts/classifier/` | before 2026-07 |
+| Postgres + pgvector (Supabase) | managed | Corpus database, one per instance | commercial host, open-source engine | Standard Postgres; any pgvector-capable host works | before 2026-07 |
+| Railway | managed | Hosts the instance's single query service | commercial | Standard container deployment; any container host works | before 2026-07 |
+| docx | 9.7.1, pinned exact | In-browser export of an approved document to .docx | MIT | Client-side only ([`board/src/docx-export.ts`](board/src/docx-export.ts)); Markdown download remains as a fallback if removed | 2026-07-16 |
 
 ## Notes
-- `docx` (2026-07-16): operator-approved one-time registry egress for install; MIT; no
-  runtime egress; no new credentials/env. It renders the review surface's clean document to
-  DOCX in-browser. It is a leaf UI dependency — nothing in the diagnostic/generation path
-  depends on it, and the board falls back to a Markdown download if it is removed.
-- Cron / dream-cycle retirement (2026-07-17): a Ladder instance runs ONE service — the
-  `gbrain serve --http` query server, which embeds inline on `put_page`. The nightly dream
-  worker is retired under the corpus-immutability ruling (Build-Lessons §8). Indexing happens
-  at storage time; there is no background sync/embed/enrich pass.
-- Service names: the stale identifiers `valiant-spirit` / `extraordinary-unity` appear only in
-  AbrainOAG's own vault ledger (out of scope — the personal-brain product keeps its dream
-  cycle). The live Ladder-recipe services were the reference instance's query server
-  and its cron worker, both in one Railway project; the worker is
-  deleted (2026-07-17), the query server remains.
-- Phase 5 (owned server): requires an ingest-and-index write path (embed at storage time);
-  it needs NO dream/enrichment worker. The retirement is forward-compatible — the owned
-  server reuses the inline-embed contract, not the batch cron.
+
+- **One service per instance.** A Ladder instance runs a single query service, which embeds each
+  document when it is saved. An earlier nightly sync-and-enrich worker was retired on 2026-07-17:
+  the corpus is evidence and is never rewritten in the background, so indexing happens at write time
+  instead.
+- **The docx export is a leaf dependency.** Nothing in the diagnostic or generation path depends on
+  it, it makes no network calls at runtime, and it needs no credentials.

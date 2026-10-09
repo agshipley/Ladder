@@ -1,7 +1,7 @@
 # Ladder
 
 **A company knowledge system that reads a company's documents, shows it what a well-run company
-at its stage maintains, and helps close the difference, without faking it.**
+at its stage maintains, and helps close the difference with real work.**
 
 Many companies build up knowledge without compounding it. Documents sit across a dozen
 tools, nobody can say what is missing, and the leverage that a company's own knowledge could
@@ -60,13 +60,12 @@ The distinction between **Missing** and **We couldn't see it** is deliberate. A 
 **coverage disclosure** stating what was and wasn't ingested.
 
 ### 3. Closing gaps honestly
-Not every gap is closed by writing a document, and Ladder doesn't pretend otherwise. Each gap is
-classified first (see [`GAP-CLASS-DOCTRINE.md`](reference-model/GAP-CLASS-DOCTRINE.md)):
+Different gaps close in different ways, so each gap is classified first (see [`GAP-CLASS-DOCTRINE.md`](reference-model/GAP-CLASS-DOCTRINE.md)):
 
 | Gap class | Example | What Ladder does | When the tile turns green |
 |---|---|---|---|
 | **Artifact** | No ICP definition, no metrics definitions | Drafts the document from the company's own material | A human approves it and it enters the corpus |
-| **System** | Pipeline lives in a spreadsheet, not a CRM | Recommends the class of system and seeds its structure from existing data | The system exists and the records migrate |
+| **System** | The pipeline lives in a spreadsheet and there is no CRM | Recommends the class of system and seeds its structure from existing data | The system exists and the records migrate |
 | **Practice** | A review cadence that's written down but never runs | Provides the scaffold (template, checklist, cadence) | Evidence that the practice actually runs shows up in later material |
 
 A generated policy that nobody follows is exactly what the board exists to catch. That's why a
@@ -88,15 +87,15 @@ A curated menu of ten automation opportunities, each qualified against the compa
 
 A deterministic resolver marks each item **available**, **not yet** (naming the exact
 prerequisite tiles to climb first), **not offered**, or **pilot**. The menu links back to the
-board, and a "not yet" lists every unmet prerequisite. Not every process should be automated;
-knowing what to leave to people is part of maturity too.
+board, and a "not yet" lists every unmet prerequisite. Knowing which processes to keep with people
+is part of maturity too.
 
 ---
 
 ## How a draft gets made
 
 When a gap is artifact-sufficient, Ladder drafts the missing document through a staged pipeline
-designed to produce a document fit for its intended reader, not boilerplate:
+designed to produce a document fit for its intended reader:
 
 ```mermaid
 flowchart LR
@@ -120,25 +119,26 @@ flowchart LR
   can't be finalized until that review is recorded.
 - **Hard exclusions.** Ladder generates nothing in litigation or dispute areas; those requests are
   refused before any model is called.
-- **Questions instead of guesses.** Where a document needs a decision only the company can make
-  (who owns the capital plan, what milestone the next raise must prove), the draft says
-  **Decision required** rather than inventing an answer.
+- **Decisions stay with the company.** Where a document needs a decision only the company can make
+  (who owns the capital plan, what milestone the next raise must prove), the draft states the
+  question, lists any candidate answers from the company's documents, and marks it
+  **Decision required**.
 
 ---
 
 ## Built for trust
 
 - **Single-tenant by design.** Each company gets its own isolated instance: its own repository,
-  database and services. Isolation is physical, not a permission setting, and no shared system
+  database and services. Isolation is physical, with separate databases and services, and no shared system
   holds several companies' data.
 - **Your evidence stays distinguishable.** The board and retrieval can be limited to
   company-native evidence, excluding anything Ladder generated, so an untouched baseline view is
   always available.
-- **Disclosed, not hidden.** Coverage gaps, generated content and conditional areas are labeled
+- **Disclosed on the board.** Coverage gaps, generated content and conditional areas are labeled
   on the board.
-- **Spend is capped.** Batch runs carry explicit dollar caps and stop rather than overrun. The
+- **Spend is capped.** Batch runs carry explicit dollar caps and stop at the cap. The
   expensive model is used only where judgment needs it.
-- **Commodity layers are adopted, not reinvented.** Ingestion, embedding and retrieval use proven
+- **Proven engines for the commodity layers.** Ingestion, embedding and retrieval use proven
   engines behind a swappable interface, with license and portability recorded in
   [`PORTABILITY-LEDGER.md`](PORTABILITY-LEDGER.md). Ladder's own engineering goes into the parts
   that differentiate it: the reference model, gap detection, the board and generation.
@@ -154,18 +154,17 @@ written [research protocol](reference-model/RESEARCH-PROTOCOL.md), which require
   apply, then established practitioner and investor sources (for example NVCA model documents,
   SEC and IRS rules, Delaware code, SOC 2 trust services criteria);
 - every area defines **what complete means at the company's stage** ("Band 1": seed-funded B2B
-  software, pre-Series A, US scope), so an early company isn't graded against a public-company
-  standard;
+  software, pre-Series A, US scope), so an early company is graded against its own
+  stage;
 - conditional areas activate only when their trigger is present, and areas that don't apply are
   never scored as absent.
 
 Three of its seams are stated openly:
 - **Most of the model is observed.** It was calibrated against the documents of a real, mature
   seed-stage company (anonymized here) that had completed SOC 2.
-- **The AI-operations category is authored.** It comes from expertise rather than observation,
-  because the reference company predates the requirement.
+- **The AI-operations category is authored.** It comes from expertise, because the reference company predates the requirement.
 - **The calibration company is a test case, never an oracle.** A genuine absence there is a finding
-  about that company, not proof the model is right.
+  about that company.
 
 Start with [`reference-model/TAXONOMY.md`](reference-model/TAXONOMY.md) and
 [`reference-model/CRITERIA-SCHEMA.yaml`](reference-model/CRITERIA-SCHEMA.yaml).
@@ -178,7 +177,7 @@ Start with [`reference-model/TAXONOMY.md`](reference-model/TAXONOMY.md) and
 |---|---|
 | **Memory** | Built and running in production on live company instances. |
 | **Maturity** | Built. The full 83-area board has been run end to end against a real company corpus, with human adjudication of the results. The draft pipeline, review lifecycle and blind gate are in place. |
-| **Leverage** | The menu and its board-qualified resolver are built. Live automation loops in a company's own tools are the next rung: a hard systems-integration problem, and the least-tested part of the design. They are staged, not shipped. |
+| **Leverage** | The menu and its board-qualified resolver are built. Live automation loops in a company's own tools are the next rung: a hard systems-integration problem, and the least-tested part of the design. They are the next stage of work. |
 
 Precision is the hard part of the maturity layer: telling a real absence apart from a document
 that simply wasn't ingested. Coverage disclosure, the ingest-log check and the separate
@@ -198,17 +197,18 @@ private working setup.
 
 | Path | What it is |
 |---|---|
+| [`STATE-OF-LADDER.md`](STATE-OF-LADDER.md) | What is built today, the rules Ladder operates under, architecture, and what is open |
 | [`Ladder-Product-Concept.md`](Ladder-Product-Concept.md) | The thesis, the three layers, and a worked go-to-market example |
-| [`STATE-OF-LADDER.md`](STATE-OF-LADDER.md) | What is built today, the binding rules, and open items |
-| [`Ladder-Roadmap.md`](Ladder-Roadmap.md) | Build sequence, governing principles, decision gates |
+| [`Ladder-Roadmap.md`](Ladder-Roadmap.md) | Build sequence, governing principles, decision gates, risks |
 | [`Sprint-M-Memory.md`](Sprint-M-Memory.md) · [`Sprint-Ma-Maturity.md`](Sprint-Ma-Maturity.md) · [`Sprint-L-Leverage.md`](Sprint-L-Leverage.md) | Per-layer build specs |
-| [`reference-model/`](reference-model/) | Taxonomy, criteria schema, per-category research briefs, gap-class doctrine, generation standard |
-| [`generation-templates/`](generation-templates/) | Document templates that drive remediation drafts |
-| [`leverage/`](leverage/) | The automation menu catalog and resolver mapping |
+| [`PORTABILITY-LEDGER.md`](PORTABILITY-LEDGER.md) | Adopted dependencies, licenses and swap boundaries |
+| [`reference-model/`](reference-model/README.md) | Taxonomy, criteria schema, research protocol, per-category briefs, gap doctrine, generation standard |
+| [`generation-templates/`](generation-templates/README.md) | The templates that drive document generation |
+| [`leverage/`](leverage/README.md) | The automation menu catalog and resolver mapping |
 | [`board/`](board/) | The maturity board (React + Vite) |
-| [`scripts/classifier/`](scripts/classifier/) | Board runs, the judge, retrieval, generation pipeline and validators |
+| [`scripts/classifier/`](scripts/classifier/) | Board runs, the judge, retrieval, the generation pipeline and validators |
 | [`scripts/leverage/`](scripts/leverage/) | The menu resolver |
-| [`Ladder-Build-Lessons.md`](Ladder-Build-Lessons.md) | Measured facts and standing rules from real instance builds |
+| [`docs/working-notes/`](docs/working-notes/README.md) | The working record: build lessons, method logs, template proposals, and the rules the build ran under with AI coding agents |
 
 ## Running the board locally
 

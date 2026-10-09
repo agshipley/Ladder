@@ -1,7 +1,7 @@
 # Ladder — Build Lessons (v2)
 
 **Status:** Living project memory. Everything learned through the first independent
-instance build (test-instance, July 2026), which validated the Memory layer
+instance build (the reference instance, July 2026), which validated the Memory layer
 end-to-end. Where this document states a rule, the rule was paid for. Companion:
 the constitution docs (concept/roadmap/sprints) for strategy; INSTALL-PROTOCOL.md
 in the template repo for the zero-context install procedure. One home per fact:
@@ -35,7 +35,7 @@ strategic decisions live in the constitution; this doc cross-references them.
   template and the pinned engine fork.
 - Embedding model/dimensions are PER-INSTANCE truths bound to the vectors already
   in that instance's DB. Never copy another instance's dimensions (reference
-  instance runs 1536; test-instance runs 3072; both are correct for themselves).
+  instance runs 1536; the reference instance runs 3072; both are correct for themselves).
 
 ## 2. Measured facts
 

@@ -3,6 +3,7 @@
 **Layer:** Leverage (Layer 3)
 **Goal:** design and implement ONE closed automation loop on a matured company function — the SDR/GTM loop — using the corpus as both input and beneficiary.
 **Depends on:** Sprint M (corpus) and Sprint Ma (a matured function: CRM, scheduler, talk track, KPIs must exist).
+**Status:** the first leverage deliverable became a board-qualified automation menu and resolver ([`leverage/MENU-CATALOG.md`](leverage/MENU-CATALOG.md), [`leverage/RESOLVER-MAPPING.md`](leverage/RESOLVER-MAPPING.md)), which decides which loops a company is ready for. The single SDR loop scoped below remains the plan for the first live loop.
 **Nature:** an R&D spike toward one narrow, real loop — not a general automation platform. This is the highest-value, least-proven, deepest-integration work in the product. Approach it as an experiment with an explicit go/no-go, not a feature with a delivery date.
 
 ---

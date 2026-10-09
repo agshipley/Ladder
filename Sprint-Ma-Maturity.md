@@ -1,8 +1,8 @@
 # Sprint Ma — Maturity: Reference Model, Gap Detection, Board
 
 **Layer:** Maturity (Layer 2)
-**Status: CLOSED 2026-07-16 — see runs-of-record/SPRINT-MA-CLOSE.md for the close record and post-close queue.**
-**Goal:** score an ingested corpus against a four-tier reference model, diagnose absence / thinness / inconsistency, present the tile board, and generate missing documents or process from the corpus.
+**Status:** complete (closed 2026-07-16). The reference model, classifier, board and generation pipeline described here are built; see [`STATE-OF-LADDER.md`](STATE-OF-LADDER.md). In this spec, "operator" means the project lead who rules on design questions.
+**Goal:** score an ingested corpus against the reference model (first framed as four tiers, now 11 categories and 83 areas), diagnose absence / thinness / inconsistency, present the tile board, and generate missing documents or process from the corpus.
 **Depends on:** Sprint M (a reliable, queryable heterogeneous corpus must exist first).
 **Net-new:** this is mostly greenfield. The reference model is the product's intellectual core.
 
